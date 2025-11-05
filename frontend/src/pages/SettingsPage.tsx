@@ -60,13 +60,13 @@ const SettingsPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20 md:pb-0">
+    <div className="min-h-screen bg-gray-50 dark:bg-dark-50 pb-20 md:pb-0">
       {/* 头部 */}
-      <div className="bg-gradient-to-r from-green-600 to-green-700 text-white shadow-lg">
+      <div className="hero-gradient text-white shadow-xl">
         <div className="container mx-auto px-4 py-6">
           <button
             onClick={() => navigate('/')}
-            className="flex items-center space-x-2 text-white/80 hover:text-white mb-4"
+            className="flex items-center space-x-2 text-white/80 hover:text-white mb-4 transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
             <span>返回首页</span>
@@ -74,8 +74,8 @@ const SettingsPage = () => {
           <div className="flex items-center space-x-3">
             <Settings className="w-8 h-8" />
             <div>
-              <h1 className="text-3xl font-bold">高级设置</h1>
-              <p className="text-green-100 text-sm">数据源配置和手动同步</p>
+              <h1 className="text-3xl font-bold drop-shadow-lg">高级设置</h1>
+              <p className="text-white/90 text-sm">数据源配置和手动同步</p>
             </div>
           </div>
         </div>
@@ -83,15 +83,15 @@ const SettingsPage = () => {
 
       <div className="container mx-auto px-4 py-6 max-w-4xl">
         {/* API 配置 */}
-        <section className="card p-6 mb-6">
+        <section className="glass-card p-6 mb-6 animate-slide-up">
           <div className="flex items-center space-x-2 mb-4">
-            <Key className="w-5 h-5 text-green-600" />
-            <h2 className="text-xl font-bold">API 配置</h2>
+            <Key className="w-5 h-5 text-primary-600 dark:text-primary-400" />
+            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">API 配置</h2>
           </div>
 
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Football API Key
               </label>
               <input
@@ -99,31 +99,31 @@ const SettingsPage = () => {
                 value={config.apiKey}
                 onChange={(e) => setConfig({ ...config, apiKey: e.target.value })}
                 placeholder="输入你的 API Key"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="input"
               />
-              <p className="text-xs text-gray-500 mt-1">
-                从 <a href="https://www.api-football.com/" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline">api-football.com</a> 获取免费 API Key
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                从 <a href="https://www.api-football.com/" target="_blank" rel="noopener noreferrer" className="text-primary-600 dark:text-primary-400 hover:underline">api-football.com</a> 获取免费 API Key
               </p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 API 基础URL
               </label>
               <input
                 type="text"
                 value={config.apiBaseUrl}
                 onChange={(e) => setConfig({ ...config, apiBaseUrl: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="input"
               />
             </div>
 
             <div className="flex items-center justify-between">
               <div>
-                <label className="text-sm font-medium text-gray-700">
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
                   启用自动同步
                 </label>
-                <p className="text-xs text-gray-500">每 {config.syncInterval} 分钟自动更新</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">每 {config.syncInterval} 分钟自动更新</p>
               </div>
               <label className="relative inline-flex items-center cursor-pointer">
                 <input
@@ -132,7 +132,7 @@ const SettingsPage = () => {
                   onChange={(e) => setConfig({ ...config, enableAutoSync: e.target.checked })}
                   className="sr-only peer"
                 />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                <div className="w-11 h-6 bg-gray-200 dark:bg-dark-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600 dark:peer-checked:bg-primary-500"></div>
               </label>
             </div>
 
@@ -146,17 +146,17 @@ const SettingsPage = () => {
         </section>
 
         {/* 手动同步 */}
-        <section className="card p-6 mb-6">
+        <section className="glass-card p-6 mb-6 animate-slide-up">
           <div className="flex items-center space-x-2 mb-4">
-            <RefreshCw className="w-5 h-5 text-green-600" />
-            <h2 className="text-xl font-bold">手动同步</h2>
+            <RefreshCw className="w-5 h-5 text-primary-600 dark:text-primary-400" />
+            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">手动同步</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
             <button
               onClick={() => handleSync('今日比赛', () => syncTriggerService.syncTodayMatches())}
               disabled={loading !== null}
-              className="flex items-center justify-center space-x-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition disabled:opacity-50"
+              className="flex items-center justify-center space-x-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white rounded-xl transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 shadow-lg"
             >
               {loading === '今日比赛' ? (
                 <Loader className="w-4 h-4 animate-spin" />
@@ -169,7 +169,7 @@ const SettingsPage = () => {
             <button
               onClick={() => handleSync('直播比赛', () => syncTriggerService.syncLiveMatches())}
               disabled={loading !== null}
-              className="flex items-center justify-center space-x-2 px-4 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg transition disabled:opacity-50"
+              className="flex items-center justify-center space-x-2 px-4 py-3 bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 text-white rounded-xl transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 shadow-lg"
             >
               {loading === '直播比赛' ? (
                 <Loader className="w-4 h-4 animate-spin" />
@@ -181,7 +181,7 @@ const SettingsPage = () => {
           </div>
 
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               同步联赛积分榜
             </label>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
@@ -190,7 +190,7 @@ const SettingsPage = () => {
                   key={league.id}
                   onClick={() => handleSync(`积分榜-${league.name}`, () => syncTriggerService.syncStandings(league.id))}
                   disabled={loading !== null}
-                  className="px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm transition disabled:opacity-50"
+                  className="px-3 py-2 bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 text-white rounded-xl text-sm transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 shadow-md"
                 >
                   {loading === `积分榜-${league.name}` ? (
                     <Loader className="w-4 h-4 animate-spin mx-auto" />
@@ -204,14 +204,14 @@ const SettingsPage = () => {
         </section>
 
         {/* 爬虫功能 */}
-        <section className="card p-6 mb-6">
+        <section className="glass-card p-6 mb-6 animate-slide-up">
           <div className="flex items-center space-x-2 mb-4">
-            <Globe className="w-5 h-5 text-green-600" />
-            <h2 className="text-xl font-bold">网页爬虫</h2>
-            <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">备用方案</span>
+            <Globe className="w-5 h-5 text-primary-600 dark:text-primary-400" />
+            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">网页爬虫</h2>
+            <span className="badge bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300">备用方案</span>
           </div>
 
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
             当 API 配额用完时，可以使用爬虫获取数据（可能不稳定）
           </p>
 
@@ -219,7 +219,7 @@ const SettingsPage = () => {
             <button
               onClick={() => handleSync('Google爬虫', () => syncTriggerService.scrapeGoogle())}
               disabled={loading !== null}
-              className="flex items-center justify-center space-x-2 px-4 py-3 bg-gray-700 hover:bg-gray-800 text-white rounded-lg transition disabled:opacity-50"
+              className="flex items-center justify-center space-x-2 px-4 py-3 bg-gray-700 hover:bg-gray-800 dark:bg-dark-200 dark:hover:bg-dark-300 text-white rounded-xl transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 shadow-lg"
             >
               {loading === 'Google爬虫' ? (
                 <Loader className="w-4 h-4 animate-spin" />
@@ -232,7 +232,7 @@ const SettingsPage = () => {
             <button
               onClick={() => handleSync('FlashScore爬虫', () => syncTriggerService.scrapeFlashScore())}
               disabled={loading !== null}
-              className="flex items-center justify-center space-x-2 px-4 py-3 bg-gray-700 hover:bg-gray-800 text-white rounded-lg transition disabled:opacity-50"
+              className="flex items-center justify-center space-x-2 px-4 py-3 bg-gray-700 hover:bg-gray-800 dark:bg-dark-200 dark:hover:bg-dark-300 text-white rounded-xl transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 shadow-lg"
             >
               {loading === 'FlashScore爬虫' ? (
                 <Loader className="w-4 h-4 animate-spin" />
@@ -245,7 +245,7 @@ const SettingsPage = () => {
             <button
               onClick={() => handleSync('ESPN爬虫', () => syncTriggerService.scrapeESPN())}
               disabled={loading !== null}
-              className="flex items-center justify-center space-x-2 px-4 py-3 bg-gray-700 hover:bg-gray-800 text-white rounded-lg transition disabled:opacity-50"
+              className="flex items-center justify-center space-x-2 px-4 py-3 bg-gray-700 hover:bg-gray-800 dark:bg-dark-200 dark:hover:bg-dark-300 text-white rounded-xl transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 shadow-lg"
             >
               {loading === 'ESPN爬虫' ? (
                 <Loader className="w-4 h-4 animate-spin" />
@@ -258,39 +258,39 @@ const SettingsPage = () => {
         </section>
 
         {/* 同步日志 */}
-        <section className="card p-6">
+        <section className="glass-card p-6 animate-slide-up">
           <div className="flex items-center space-x-2 mb-4">
-            <Database className="w-5 h-5 text-green-600" />
-            <h2 className="text-xl font-bold">同步日志</h2>
+            <Database className="w-5 h-5 text-primary-600 dark:text-primary-400" />
+            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">同步日志</h2>
           </div>
 
           {syncResults.length === 0 ? (
-            <p className="text-gray-500 text-center py-8">暂无同步记录</p>
+            <p className="text-gray-500 dark:text-gray-400 text-center py-8">暂无同步记录</p>
           ) : (
-            <div className="space-y-2 max-h-96 overflow-y-auto">
+            <div className="space-y-2 max-h-96 overflow-y-auto scrollbar-thin">
               {syncResults.map((result, index) => (
                 <div
                   key={index}
-                  className={`p-3 rounded-lg border ${
+                  className={`p-3 rounded-xl border ${
                     result.success
-                      ? 'bg-green-50 border-green-200'
-                      : 'bg-red-50 border-red-200'
+                      ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700'
+                      : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-700'
                   }`}
                 >
                   <div className="flex items-start space-x-2">
                     {result.success ? (
-                      <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                      <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
                     ) : (
-                      <XCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                      <XCircle className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
                     )}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
-                        <span className="font-medium">{result.type}</span>
-                        <span className="text-xs text-gray-500">
+                        <span className="font-medium text-gray-900 dark:text-gray-100">{result.type}</span>
+                        <span className="text-xs text-gray-500 dark:text-gray-400">
                           {result.timestamp.toLocaleTimeString('zh-CN')}
                         </span>
                       </div>
-                      <p className="text-sm text-gray-600 mt-1">{result.message}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">{result.message}</p>
                     </div>
                   </div>
                 </div>
@@ -300,8 +300,8 @@ const SettingsPage = () => {
         </section>
 
         {/* 危险区域 */}
-        <section className="card p-6 mt-6 border-2 border-red-200">
-          <h2 className="text-xl font-bold text-red-600 mb-4">危险操作</h2>
+        <section className="glass-card p-6 mt-6 border-2 border-red-200 dark:border-red-700 animate-slide-up">
+          <h2 className="text-xl font-bold text-red-600 dark:text-red-400 mb-4">危险操作</h2>
           <button
             onClick={() => {
               if (confirm('确定要清除所有配置吗？此操作不可恢复！')) {
@@ -310,7 +310,7 @@ const SettingsPage = () => {
                 alert('配置已清除');
               }
             }}
-            className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg"
+            className="px-4 py-2 bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 text-white rounded-xl transition-all hover:scale-105 active:scale-95 shadow-lg"
           >
             清除所有配置
           </button>

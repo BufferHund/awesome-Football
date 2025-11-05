@@ -28,11 +28,11 @@ const MatchCard = ({ match }: MatchCardProps) => {
   };
 
   return (
-    <Link to={`/matches/${match.id}`} className="card p-4 block hover:scale-[1.02] transition-transform">
+    <Link to={`/matches/${match.id}`} className="glass-card p-4 block hover-lift group">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center space-x-2">
-          <span className="text-sm font-medium text-gray-600">{match.competition}</span>
-          {match.round && <span className="text-xs text-gray-500">• {match.round}</span>}
+          <span className="text-sm font-medium text-gray-600 dark:text-gray-300">{match.competition}</span>
+          {match.round && <span className="text-xs text-gray-500 dark:text-gray-400">• {match.round}</span>}
         </div>
         {getStatusBadge(match.status)}
       </div>
@@ -41,9 +41,9 @@ const MatchCard = ({ match }: MatchCardProps) => {
         {/* 主队 */}
         <div className="flex flex-col items-end">
           <div className="flex items-center space-x-2">
-            <span className="font-semibold text-lg text-right">{match.homeTeam.shortName}</span>
+            <span className="font-semibold text-lg text-right text-gray-900 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">{match.homeTeam.shortName}</span>
             {match.homeTeam.logo && (
-              <img src={match.homeTeam.logo} alt={match.homeTeam.name} className="w-10 h-10 object-contain" />
+              <img src={match.homeTeam.logo} alt={match.homeTeam.name} className="w-10 h-10 object-contain group-hover:scale-110 transition-transform" />
             )}
           </div>
         </div>
@@ -51,12 +51,12 @@ const MatchCard = ({ match }: MatchCardProps) => {
         {/* 比分或时间 */}
         <div className="text-center px-4">
           {match.status === 'SCHEDULED' ? (
-            <div className="text-sm text-gray-600">
+            <div className="text-sm text-gray-600 dark:text-gray-300">
               <Clock className="w-4 h-4 mx-auto mb-1" />
               {formatDate(match.matchDate)}
             </div>
           ) : (
-            <div className="text-3xl font-bold text-green-600">
+            <div className="text-3xl font-bold text-primary-600 dark:text-primary-400">
               {match.homeScore ?? 0} - {match.awayScore ?? 0}
             </div>
           )}
@@ -66,15 +66,15 @@ const MatchCard = ({ match }: MatchCardProps) => {
         <div className="flex flex-col items-start">
           <div className="flex items-center space-x-2">
             {match.awayTeam.logo && (
-              <img src={match.awayTeam.logo} alt={match.awayTeam.name} className="w-10 h-10 object-contain" />
+              <img src={match.awayTeam.logo} alt={match.awayTeam.name} className="w-10 h-10 object-contain group-hover:scale-110 transition-transform" />
             )}
-            <span className="font-semibold text-lg">{match.awayTeam.shortName}</span>
+            <span className="font-semibold text-lg text-gray-900 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">{match.awayTeam.shortName}</span>
           </div>
         </div>
       </div>
 
       {match.venue && (
-        <div className="flex items-center justify-center space-x-1 text-xs text-gray-500 mt-3">
+        <div className="flex items-center justify-center space-x-1 text-xs text-gray-500 dark:text-gray-400 mt-3">
           <MapPin className="w-3 h-3" />
           <span>{match.venue}</span>
         </div>
