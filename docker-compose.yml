@@ -23,7 +23,7 @@ services:
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: football-backend
     environment:
       DATABASE_URL: postgresql://football:football123@postgres:5432/footballdb?schema=public
