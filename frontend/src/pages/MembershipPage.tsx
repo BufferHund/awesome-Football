@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useMembership } from '../hooks/useMembership';
 import {
   Crown,
   Zap,
@@ -33,6 +34,7 @@ interface Plan {
 
 const MembershipPage = () => {
   const navigate = useNavigate();
+  const { activateMembership } = useMembership();
   const [selectedPlan, setSelectedPlan] = useState<PlanType>('yearly');
   const [showPaymentModal, setShowPaymentModal] = useState(false);
 
@@ -161,8 +163,17 @@ const MembershipPage = () => {
   };
 
   const handleStartTrial = () => {
-    // 模拟开通试用
+    // 激活试用会员
+    activateMembership('trial');
     alert('恭喜！您已成功开通1个月免费试用\n\n所有会员功能已解锁，尽情享受吧！');
+    navigate('/');
+  };
+
+  const handleConfirmPayment = (plan: PlanType) => {
+    // 模拟支付成功，激活会员
+    activateMembership(plan);
+    setShowPaymentModal(false);
+    alert('支付成功！会员已开通\n\n感谢您的支持，所有会员功能已解锁！');
     navigate('/');
   };
 
@@ -418,13 +429,22 @@ const MembershipPage = () => {
             </div>
 
             <div className="space-y-3 mb-6">
-              <button className="w-full py-3 bg-blue-500 text-white rounded-xl font-semibold hover:bg-blue-600 transition-colors">
+              <button
+                onClick={() => handleConfirmPayment(selectedPlan)}
+                className="w-full py-3 bg-blue-500 text-white rounded-xl font-semibold hover:bg-blue-600 transition-colors"
+              >
                 支付宝支付
               </button>
-              <button className="w-full py-3 bg-green-500 text-white rounded-xl font-semibold hover:bg-green-600 transition-colors">
+              <button
+                onClick={() => handleConfirmPayment(selectedPlan)}
+                className="w-full py-3 bg-green-500 text-white rounded-xl font-semibold hover:bg-green-600 transition-colors"
+              >
                 微信支付
               </button>
-              <button className="w-full py-3 bg-gray-500 text-white rounded-xl font-semibold hover:bg-gray-600 transition-colors">
+              <button
+                onClick={() => handleConfirmPayment(selectedPlan)}
+                className="w-full py-3 bg-gray-500 text-white rounded-xl font-semibold hover:bg-gray-600 transition-colors"
+              >
                 银联卡支付
               </button>
             </div>

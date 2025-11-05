@@ -35,8 +35,8 @@ const SettingsPage = () => {
   const [config, setConfig] = useState(configService.getConfig());
   const [syncResults, setSyncResults] = useState<SyncResult[]>([]);
   const [loading, setLoading] = useState<string | null>(null);
-  const { isEnabled: liquidGlassEnabled, toggle: toggleLiquidGlass } = useLiquidGlass();
-  const { isEnabled: md3Enabled, toggle: toggleMD3 } = useMaterialDesign3();
+  const { isEnabled: liquidGlassEnabled, toggle: toggleLiquidGlass, isMember: isLiquidGlassMember } = useLiquidGlass();
+  const { isEnabled: md3Enabled, toggle: toggleMD3, isMember: isMD3Member } = useMaterialDesign3();
 
   const handleSave = () => {
     configService.saveConfig(config);
@@ -150,9 +150,10 @@ const SettingsPage = () => {
                   type="checkbox"
                   checked={liquidGlassEnabled}
                   onChange={toggleLiquidGlass}
+                  disabled={!isLiquidGlassMember}
                   className="sr-only peer"
                 />
-                <div className="w-11 h-6 bg-gray-200 dark:bg-zinc-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-cyan-300 dark:peer-focus:ring-cyan-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-cyan-500 peer-checked:to-blue-500"></div>
+                <div className={`w-11 h-6 ${isLiquidGlassMember ? 'bg-gray-200 dark:bg-zinc-700' : 'bg-gray-300 dark:bg-zinc-800 opacity-50 cursor-not-allowed'} peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-cyan-300 dark:peer-focus:ring-cyan-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-cyan-500 peer-checked:to-blue-500`}></div>
               </label>
             </div>
 
@@ -178,19 +179,43 @@ const SettingsPage = () => {
               </div>
             )}
 
-            <div className="bg-cyan-50 dark:bg-cyan-900/20 rounded-lg p-4 border border-cyan-200 dark:border-cyan-800">
-              <div className="flex items-start space-x-3">
-                <Sparkles className="w-5 h-5 text-cyan-600 dark:text-cyan-400 mt-0.5 flex-shrink-0" />
-                <div>
-                  <p className="text-sm font-medium text-cyan-900 dark:text-cyan-100 mb-1">
-                    会员专属特权
-                  </p>
-                  <p className="text-xs text-cyan-700 dark:text-cyan-300">
-                    LiquidGlass效果采用iOS 16技术，为导航栏、卡片提供流动玻璃质感，开通会员即可体验。
-                  </p>
+            {!isLiquidGlassMember ? (
+              <div className="bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-cyan-900/20 dark:to-blue-900/20 rounded-lg p-4 border-2 border-cyan-300 dark:border-cyan-700">
+                <div className="flex items-start justify-between space-x-3">
+                  <div className="flex items-start space-x-3 flex-1">
+                    <Sparkles className="w-5 h-5 text-cyan-600 dark:text-cyan-400 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="text-sm font-bold text-cyan-900 dark:text-cyan-100 mb-1">
+                        🔒 会员专属特权
+                      </p>
+                      <p className="text-xs text-cyan-700 dark:text-cyan-300">
+                        LiquidGlass效果采用iOS 16技术，为导航栏、卡片提供流动玻璃质感。开通会员即可解锁此功能！
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => navigate('/membership')}
+                    className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg text-sm font-semibold hover:from-cyan-600 hover:to-blue-600 transition-all hover:scale-105 whitespace-nowrap"
+                  >
+                    立即开通
+                  </button>
                 </div>
               </div>
-            </div>
+            ) : (
+              <div className="bg-cyan-50 dark:bg-cyan-900/20 rounded-lg p-4 border border-cyan-200 dark:border-cyan-800">
+                <div className="flex items-start space-x-3">
+                  <Sparkles className="w-5 h-5 text-cyan-600 dark:text-cyan-400 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <p className="text-sm font-medium text-cyan-900 dark:text-cyan-100 mb-1">
+                      ✨ 会员专属特权已解锁
+                    </p>
+                    <p className="text-xs text-cyan-700 dark:text-cyan-300">
+                      LiquidGlass效果采用iOS 16技术，为导航栏、卡片提供流动玻璃质感，感谢您的支持！
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </section>
 
@@ -223,9 +248,10 @@ const SettingsPage = () => {
                   type="checkbox"
                   checked={md3Enabled}
                   onChange={toggleMD3}
+                  disabled={!isMD3Member}
                   className="sr-only peer"
                 />
-                <div className="w-11 h-6 bg-gray-200 dark:bg-zinc-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 dark:peer-focus:ring-indigo-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-indigo-500 peer-checked:to-purple-500"></div>
+                <div className={`w-11 h-6 ${isMD3Member ? 'bg-gray-200 dark:bg-zinc-700' : 'bg-gray-300 dark:bg-zinc-800 opacity-50 cursor-not-allowed'} peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 dark:peer-focus:ring-indigo-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-indigo-500 peer-checked:to-purple-500`}></div>
               </label>
             </div>
 
@@ -252,19 +278,43 @@ const SettingsPage = () => {
               </div>
             )}
 
-            <div className="bg-indigo-50 dark:bg-indigo-900/20 rounded-lg p-4 border border-indigo-200 dark:border-indigo-800">
-              <div className="flex items-start space-x-3">
-                <Layers className="w-5 h-5 text-indigo-600 dark:text-indigo-400 mt-0.5 flex-shrink-0" />
-                <div>
-                  <p className="text-sm font-medium text-indigo-900 dark:text-indigo-100 mb-1">
-                    会员专属特权
-                  </p>
-                  <p className="text-xs text-indigo-700 dark:text-indigo-300">
-                    Material Design 3采用Google最新设计规范，提供Surface Elevation、State Layer等现代化交互效果，开通会员即可体验。
-                  </p>
+            {!isMD3Member ? (
+              <div className="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-lg p-4 border-2 border-indigo-300 dark:border-indigo-700">
+                <div className="flex items-start justify-between space-x-3">
+                  <div className="flex items-start space-x-3 flex-1">
+                    <Layers className="w-5 h-5 text-indigo-600 dark:text-indigo-400 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="text-sm font-bold text-indigo-900 dark:text-indigo-100 mb-1">
+                        🔒 会员专属特权
+                      </p>
+                      <p className="text-xs text-indigo-700 dark:text-indigo-300">
+                        Material Design 3采用Google最新设计规范，提供Surface Elevation、State Layer等现代化交互效果。开通会员即可解锁！
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => navigate('/membership')}
+                    className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-lg text-sm font-semibold hover:from-indigo-600 hover:to-purple-600 transition-all hover:scale-105 whitespace-nowrap"
+                  >
+                    立即开通
+                  </button>
                 </div>
               </div>
-            </div>
+            ) : (
+              <div className="bg-indigo-50 dark:bg-indigo-900/20 rounded-lg p-4 border border-indigo-200 dark:border-indigo-800">
+                <div className="flex items-start space-x-3">
+                  <Layers className="w-5 h-5 text-indigo-600 dark:text-indigo-400 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <p className="text-sm font-medium text-indigo-900 dark:text-indigo-100 mb-1">
+                      ✨ 会员专属特权已解锁
+                    </p>
+                    <p className="text-xs text-indigo-700 dark:text-indigo-300">
+                      Material Design 3采用Google最新设计规范，提供Surface Elevation、State Layer等现代化交互效果，感谢您的支持！
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </section>
 
