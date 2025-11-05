@@ -128,7 +128,7 @@ const Layout = () => {
       </nav>
 
       {/* 底部信息 */}
-      <footer className="bg-dark-100 dark:bg-dark-50 text-gray-400 dark:text-gray-500 py-8 mb-20 md:mb-0 relative z-10">
+      <footer className="bg-gray-100 dark:bg-zinc-900 text-gray-600 dark:text-gray-400 py-8 mb-20 md:mb-0 relative z-10">
         <div className="container mx-auto px-4">
           <div className="divider mb-6"></div>
           <div className="text-center">

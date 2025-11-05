@@ -19,7 +19,7 @@ const NewsCard = ({ news }: NewsCardProps) => {
   return (
     <Link to={`/news/${news.id}`} className="glass-card overflow-hidden block hover-lift group">
       {news.coverImage && (
-        <div className="aspect-video bg-gray-200 dark:bg-dark-200 overflow-hidden">
+        <div className="aspect-video bg-gray-200 dark:bg-zinc-700 overflow-hidden">
           <img
             src={news.coverImage}
             alt={news.title}

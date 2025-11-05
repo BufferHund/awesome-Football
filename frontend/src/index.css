@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply bg-gray-50 dark:bg-dark-50 text-gray-900 dark:text-gray-100 transition-colors duration-300;
+    @apply bg-gray-50 dark:bg-zinc-900 text-gray-900 dark:text-gray-100 transition-colors duration-300;
   }
 
   * {
@@ -15,24 +15,24 @@
 @layer components {
   /* 玻璃态卡片效果 (类似 NextUI) */
   .glass-card {
-    @apply bg-white/70 dark:bg-dark-100/70;
+    @apply bg-white/70 dark:bg-zinc-800/70;
     @apply backdrop-blur-xl backdrop-saturate-150;
-    @apply border border-gray-200/50 dark:border-gray-700/50;
+    @apply border border-gray-200/50 dark:border-zinc-700/50;
     @apply shadow-glass dark:shadow-glass-dark;
   }
 
   /* 标准卡片 */
   .card {
-    @apply bg-white dark:bg-dark-100;
+    @apply bg-white dark:bg-zinc-800;
     @apply rounded-2xl shadow-lg;
-    @apply border border-gray-100 dark:border-dark-200;
+    @apply border border-gray-100 dark:border-zinc-700;
     @apply hover:shadow-2xl hover:scale-[1.01];
     @apply transition-all duration-300;
   }
 
   /* Hero 卡片（带渐变边框） */
   .hero-card {
-    @apply relative bg-white dark:bg-dark-100;
+    @apply relative bg-white dark:bg-zinc-800;
     @apply rounded-2xl shadow-xl;
     @apply overflow-hidden;
     @apply before:absolute before:inset-0;
@@ -57,8 +57,8 @@
 
   /* 次要按钮 */
   .btn-secondary {
-    @apply bg-gray-100 dark:bg-dark-200;
-    @apply hover:bg-gray-200 dark:hover:bg-dark-300;
+    @apply bg-gray-100 dark:bg-zinc-700;
+    @apply hover:bg-gray-200 dark:hover:bg-zinc-600;
     @apply text-gray-700 dark:text-gray-200;
     @apply font-semibold py-3 px-6 rounded-xl;
     @apply transition-all duration-300;
@@ -93,13 +93,14 @@
   /* 输入框 */
   .input {
     @apply w-full px-4 py-3;
-    @apply bg-white dark:bg-dark-100;
-    @apply border-2 border-gray-200 dark:border-dark-300;
+    @apply bg-white dark:bg-zinc-800;
+    @apply border-2 border-gray-200 dark:border-zinc-600;
     @apply rounded-xl;
     @apply focus:border-primary-500 dark:focus:border-primary-400;
     @apply focus:ring-4 focus:ring-primary-500/20;
     @apply transition-all duration-300;
     @apply placeholder:text-gray-400 dark:placeholder:text-gray-500;
+    @apply text-gray-900 dark:text-gray-100;
   }
 
   /* 渐变文字 */
@@ -131,7 +132,7 @@
 
   /* 玻璃态模糊背景 */
   .glass-bg {
-    @apply bg-white/30 dark:bg-dark-100/30;
+    @apply bg-white/30 dark:bg-zinc-800/30;
     @apply backdrop-blur-2xl backdrop-saturate-150;
   }
 

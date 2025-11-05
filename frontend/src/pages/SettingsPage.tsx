@@ -60,7 +60,7 @@ const SettingsPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-dark-50 pb-20 md:pb-0">
+    <div className="min-h-screen bg-gray-50 dark:bg-zinc-900 pb-20 md:pb-0">
       {/* 头部 */}
       <div className="hero-gradient text-white shadow-xl">
         <div className="container mx-auto px-4 py-6">
@@ -132,7 +132,7 @@ const SettingsPage = () => {
                   onChange={(e) => setConfig({ ...config, enableAutoSync: e.target.checked })}
                   className="sr-only peer"
                 />
-                <div className="w-11 h-6 bg-gray-200 dark:bg-dark-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600 dark:peer-checked:bg-primary-500"></div>
+                <div className="w-11 h-6 bg-gray-200 dark:bg-zinc-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600 dark:peer-checked:bg-primary-500"></div>
               </label>
             </div>
 
@@ -219,7 +219,7 @@ const SettingsPage = () => {
             <button
               onClick={() => handleSync('Google爬虫', () => syncTriggerService.scrapeGoogle())}
               disabled={loading !== null}
-              className="flex items-center justify-center space-x-2 px-4 py-3 bg-gray-700 hover:bg-gray-800 dark:bg-dark-200 dark:hover:bg-dark-300 text-white rounded-xl transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 shadow-lg"
+              className="flex items-center justify-center space-x-2 px-4 py-3 bg-gray-700 hover:bg-gray-800 dark:bg-zinc-700 dark:hover:bg-zinc-600 text-white rounded-xl transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 shadow-lg"
             >
               {loading === 'Google爬虫' ? (
                 <Loader className="w-4 h-4 animate-spin" />
@@ -232,7 +232,7 @@ const SettingsPage = () => {
             <button
               onClick={() => handleSync('FlashScore爬虫', () => syncTriggerService.scrapeFlashScore())}
               disabled={loading !== null}
-              className="flex items-center justify-center space-x-2 px-4 py-3 bg-gray-700 hover:bg-gray-800 dark:bg-dark-200 dark:hover:bg-dark-300 text-white rounded-xl transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 shadow-lg"
+              className="flex items-center justify-center space-x-2 px-4 py-3 bg-gray-700 hover:bg-gray-800 dark:bg-zinc-700 dark:hover:bg-zinc-600 text-white rounded-xl transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 shadow-lg"
             >
               {loading === 'FlashScore爬虫' ? (
                 <Loader className="w-4 h-4 animate-spin" />
@@ -245,7 +245,7 @@ const SettingsPage = () => {
             <button
               onClick={() => handleSync('ESPN爬虫', () => syncTriggerService.scrapeESPN())}
               disabled={loading !== null}
-              className="flex items-center justify-center space-x-2 px-4 py-3 bg-gray-700 hover:bg-gray-800 dark:bg-dark-200 dark:hover:bg-dark-300 text-white rounded-xl transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 shadow-lg"
+              className="flex items-center justify-center space-x-2 px-4 py-3 bg-gray-700 hover:bg-gray-800 dark:bg-zinc-700 dark:hover:bg-zinc-600 text-white rounded-xl transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 shadow-lg"
             >
               {loading === 'ESPN爬虫' ? (
                 <Loader className="w-4 h-4 animate-spin" />
