@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { configService, syncTriggerService, DetailedSyncResult } from '../services/config';
+import BackendLogViewer from '../components/BackendLogViewer';
 import {
   Settings,
   Key,
@@ -280,7 +281,7 @@ const SettingsPage = () => {
         </section>
 
         {/* 同步日志 */}
-        <section className="glass-card p-6 animate-slide-up">
+        <section className="glass-card p-6 mb-6 animate-slide-up">
           <div className="flex items-center space-x-2 mb-4">
             <Database className="w-5 h-5 text-primary-600 dark:text-primary-400" />
             <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">同步日志</h2>
@@ -407,6 +408,9 @@ const SettingsPage = () => {
             </div>
           )}
         </section>
+
+        {/* 后端运行日志 */}
+        <BackendLogViewer />
 
         {/* 危险区域 */}
         <section className="glass-card p-6 mt-6 border-2 border-red-200 dark:border-red-700 animate-slide-up">
