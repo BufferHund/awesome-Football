@@ -165,4 +165,87 @@ router.get('/scrape/espn', async (req, res) => {
   }
 });
 
+// 使用爬虫获取ESPN积分榜
+router.get('/scrape/standings/espn/:league?', async (req, res) => {
+  const { league } = req.params;
+  const source = 'Scraper:Standings:ESPN';
+
+  // 联赛代码映射
+  const leagueMap: { [key: string]: string } = {
+    'premier-league': 'eng.1',
+    'la-liga': 'esp.1',
+    'bundesliga': 'ger.1',
+    'serie-a': 'ita.1',
+    'ligue-1': 'fra.1',
+  };
+
+  const espnLeague = league ? leagueMap[league] || 'eng.1' : 'eng.1';
+  const leagueName = league || 'premier-league';
+
+  logService.info(source, `开始爬取${leagueName}积分榜 (ESPN)`);
+  try {
+    const data = await webScraperService.scrapeESPNStandings(espnLeague);
+    logService.success(source, `ESPN积分榜爬虫执行成功，获取${data.length}条数据`);
+    res.json({ data, count: data.length, success: true, message: 'ESPN积分榜爬虫执行成功', league: leagueName });
+  } catch (error) {
+    handleError(error, res, 'ESPN积分榜爬虫执行失败', source);
+  }
+});
+
+// 使用爬虫获取BBC Sport英超积分榜
+router.get('/scrape/standings/bbc', async (req, res) => {
+  const source = 'Scraper:Standings:BBC';
+
+  logService.info(source, '开始爬取英超积分榜 (BBC Sport)');
+  try {
+    const data = await webScraperService.scrapePremierLeagueStandings();
+    logService.success(source, `BBC Sport积分榜爬虫执行成功，获取${data.length}条数据`);
+    res.json({ data, count: data.length, success: true, message: 'BBC Sport积分榜爬虫执行成功' });
+  } catch (error) {
+    handleError(error, res, 'BBC Sport积分榜爬虫执行失败', source);
+  }
+});
+
+// 使用爬虫获取BBC Sport足球新闻
+router.get('/scrape/news/bbc', async (req, res) => {
+  const source = 'Scraper:News:BBC';
+
+  logService.info(source, '开始爬取BBC Sport足球新闻');
+  try {
+    const data = await webScraperService.scrapeBBCFootballNews();
+    logService.success(source, `BBC Sport新闻爬虫执行成功，获取${data.length}条数据`);
+    res.json({ data, count: data.length, success: true, message: 'BBC Sport新闻爬虫执行成功' });
+  } catch (error) {
+    handleError(error, res, 'BBC Sport新闻爬虫执行失败', source);
+  }
+});
+
+// 使用爬虫获取ESPN足球新闻
+router.get('/scrape/news/espn', async (req, res) => {
+  const source = 'Scraper:News:ESPN';
+
+  logService.info(source, '开始爬取ESPN足球新闻');
+  try {
+    const data = await webScraperService.scrapeESPNFootballNews();
+    logService.success(source, `ESPN新闻爬虫执行成功，获取${data.length}条数据`);
+    res.json({ data, count: data.length, success: true, message: 'ESPN新闻爬虫执行成功' });
+  } catch (error) {
+    handleError(error, res, 'ESPN新闻爬虫执行失败', source);
+  }
+});
+
+// 使用爬虫获取Goal.com足球新闻
+router.get('/scrape/news/goal', async (req, res) => {
+  const source = 'Scraper:News:Goal';
+
+  logService.info(source, '开始爬取Goal.com足球新闻');
+  try {
+    const data = await webScraperService.scrapeGoalNews();
+    logService.success(source, `Goal.com新闻爬虫执行成功，获取${data.length}条数据`);
+    res.json({ data, count: data.length, success: true, message: 'Goal.com新闻爬虫执行成功' });
+  } catch (error) {
+    handleError(error, res, 'Goal.com新闻爬虫执行失败', source);
+  }
+});
+
 export default router;

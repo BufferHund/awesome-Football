@@ -112,4 +112,222 @@ export const webScraperService = {
       return [];
     }
   },
+
+  // 爬取BBC Sport英超积分榜
+  async scrapePremierLeagueStandings(): Promise<any[]> {
+    try {
+      const response = await axios.get('https://www.bbc.com/sport/football/premier-league/table', {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        },
+      });
+
+      const $ = cheerio.load(response.data);
+      const standings: any[] = [];
+
+      $('.gs-o-table__row').each((index, element) => {
+        const position = $(element).find('.gs-o-table__cell--rank').text().trim();
+        const team = $(element).find('.gs-o-table__cell--team').text().trim();
+        const played = $(element).find('.gs-o-table__cell--played').text().trim();
+        const won = $(element).find('.gs-o-table__cell--won').text().trim();
+        const drawn = $(element).find('.gs-o-table__cell--drawn').text().trim();
+        const lost = $(element).find('.gs-o-table__cell--lost').text().trim();
+        const goalsFor = $(element).find('.gs-o-table__cell--for').text().trim();
+        const goalsAgainst = $(element).find('.gs-o-table__cell--against').text().trim();
+        const goalDiff = $(element).find('.gs-o-table__cell--goal-diff').text().trim();
+        const points = $(element).find('.gs-o-table__cell--points').text().trim();
+
+        if (team && position) {
+          standings.push({
+            position: parseInt(position) || index + 1,
+            team,
+            played: parseInt(played) || 0,
+            won: parseInt(won) || 0,
+            drawn: parseInt(drawn) || 0,
+            lost: parseInt(lost) || 0,
+            goalsFor: parseInt(goalsFor) || 0,
+            goalsAgainst: parseInt(goalsAgainst) || 0,
+            goalDiff: parseInt(goalDiff) || 0,
+            points: parseInt(points) || 0,
+          });
+        }
+      });
+
+      return standings;
+    } catch (error) {
+      console.error('BBC Sport积分榜爬取失败:', error);
+      return [];
+    }
+  },
+
+  // 爬取ESPN积分榜（通用）
+  async scrapeESPNStandings(league: string = 'eng.1'): Promise<any[]> {
+    try {
+      // ESPN联赛代码: eng.1 (英超), esp.1 (西甲), ger.1 (德甲), ita.1 (意甲), fra.1 (法甲)
+      const response = await axios.get(`https://www.espn.com/soccer/standings/_/league/${league}`, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        },
+      });
+
+      const $ = cheerio.load(response.data);
+      const standings: any[] = [];
+
+      $('.Table__TR').each((index, element) => {
+        const cells = $(element).find('.Table__TD, .Table__TH');
+        if (cells.length >= 10) {
+          const team = $(cells[1]).text().trim();
+          const played = $(cells[2]).text().trim();
+          const won = $(cells[3]).text().trim();
+          const drawn = $(cells[4]).text().trim();
+          const lost = $(cells[5]).text().trim();
+          const goalsFor = $(cells[6]).text().trim();
+          const goalsAgainst = $(cells[7]).text().trim();
+          const goalDiff = $(cells[8]).text().trim();
+          const points = $(cells[9]).text().trim();
+
+          if (team && team !== 'Team') {
+            standings.push({
+              position: index,
+              team,
+              played: parseInt(played) || 0,
+              won: parseInt(won) || 0,
+              drawn: parseInt(drawn) || 0,
+              lost: parseInt(lost) || 0,
+              goalsFor: parseInt(goalsFor) || 0,
+              goalsAgainst: parseInt(goalsAgainst) || 0,
+              goalDiff: parseInt(goalDiff) || 0,
+              points: parseInt(points) || 0,
+            });
+          }
+        }
+      });
+
+      return standings;
+    } catch (error) {
+      console.error('ESPN积分榜爬取失败:', error);
+      return [];
+    }
+  },
+
+  // 爬取BBC Sport足球新闻
+  async scrapeBBCFootballNews(): Promise<any[]> {
+    try {
+      const response = await axios.get('https://www.bbc.com/sport/football', {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        },
+      });
+
+      const $ = cheerio.load(response.data);
+      const news: any[] = [];
+
+      $('.gs-c-promo').each((index, element) => {
+        const title = $(element).find('.gs-c-promo-heading__title').text().trim();
+        const summary = $(element).find('.gs-c-promo-summary').text().trim();
+        const link = $(element).find('.gs-c-promo-heading').attr('href');
+        const image = $(element).find('.gs-c-promo-image img').attr('src');
+        const time = $(element).find('.gs-c-promo-timestamp').text().trim();
+
+        if (title) {
+          news.push({
+            title,
+            summary: summary || title,
+            content: summary || title,
+            coverImage: image || null,
+            url: link ? `https://www.bbc.com${link}` : null,
+            publishDate: time || new Date().toISOString(),
+            category: '足球新闻',
+            author: 'BBC Sport',
+            views: 0,
+          });
+        }
+      });
+
+      return news.slice(0, 20); // 返回前20条
+    } catch (error) {
+      console.error('BBC Sport新闻爬取失败:', error);
+      return [];
+    }
+  },
+
+  // 爬取ESPN足球新闻
+  async scrapeESPNFootballNews(): Promise<any[]> {
+    try {
+      const response = await axios.get('https://www.espn.com/soccer/', {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        },
+      });
+
+      const $ = cheerio.load(response.data);
+      const news: any[] = [];
+
+      $('.contentItem').each((index, element) => {
+        const title = $(element).find('.contentItem__title').text().trim();
+        const summary = $(element).find('.contentItem__subhead').text().trim();
+        const link = $(element).find('.contentItem__title a').attr('href');
+        const image = $(element).find('.contentItem__image img').attr('src');
+
+        if (title) {
+          news.push({
+            title,
+            summary: summary || title,
+            content: summary || title,
+            coverImage: image || null,
+            url: link || null,
+            publishDate: new Date().toISOString(),
+            category: '足球新闻',
+            author: 'ESPN',
+            views: 0,
+          });
+        }
+      });
+
+      return news.slice(0, 20); // 返回前20条
+    } catch (error) {
+      console.error('ESPN新闻爬取失败:', error);
+      return [];
+    }
+  },
+
+  // 爬取Goal.com足球新闻
+  async scrapeGoalNews(): Promise<any[]> {
+    try {
+      const response = await axios.get('https://www.goal.com/en', {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        },
+      });
+
+      const $ = cheerio.load(response.data);
+      const news: any[] = [];
+
+      $('article').each((index, element) => {
+        const title = $(element).find('h3, h2, .article-title').text().trim();
+        const summary = $(element).find('.article-summary, p').first().text().trim();
+        const link = $(element).find('a').first().attr('href');
+        const image = $(element).find('img').first().attr('src');
+
+        if (title) {
+          news.push({
+            title,
+            summary: summary || title,
+            content: summary || title,
+            coverImage: image || null,
+            url: link ? (link.startsWith('http') ? link : `https://www.goal.com${link}`) : null,
+            publishDate: new Date().toISOString(),
+            category: '足球新闻',
+            author: 'Goal.com',
+            views: 0,
+          });
+        }
+      });
+
+      return news.slice(0, 20); // 返回前20条
+    } catch (error) {
+      console.error('Goal.com新闻爬取失败:', error);
+      return [];
+    }
+  },
 };
