@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  # PostgreSQL数据库
+  postgres:
+    image: postgres:16-alpine
+    container_name: football-postgres
+    environment:
+      POSTGRES_USER: football
+      POSTGRES_PASSWORD: football123
+      POSTGRES_DB: footballdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U football"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - football-network
+
+  # 后端API服务
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: football-backend
+    environment:
+      DATABASE_URL: postgresql://football:football123@postgres:5432/footballdb?schema=public
+      PORT: 3000
+      NODE_ENV: development
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    networks:
+      - football-network
+
+  # 前端服务
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: football-frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - football-network
+
+volumes:
+  postgres_data:
+
+networks:
+  football-network:
+    driver: bridge
