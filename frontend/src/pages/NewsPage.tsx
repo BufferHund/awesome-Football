@@ -3,7 +3,7 @@ import { News } from '../types';
 import { newsService, scraperService } from '../services/api';
 import NewsCard from '../components/NewsCard';
 
-type NewsSource = 'database' | 'bbc' | 'espn' | 'goal';
+type NewsSource = 'database' | 'espn' | 'goal';
 
 const NewsPage = () => {
   const [news, setNews] = useState<any[]>([]);
@@ -28,15 +28,12 @@ const NewsPage = () => {
     }
   };
 
-  const scrapeNews = async (source: 'bbc' | 'espn' | 'goal') => {
+  const scrapeNews = async (source: 'espn' | 'goal') => {
     setScraping(true);
     setSelectedSource(source);
     try {
       let response;
       switch (source) {
-        case 'bbc':
-          response = await scraperService.scrapeBBCNews();
-          break;
         case 'espn':
           response = await scraperService.scrapeESPNNews();
           break;
@@ -96,17 +93,6 @@ const NewsPage = () => {
               } disabled:opacity-50`}
             >
               数据库
-            </button>
-            <button
-              onClick={() => scrapeNews('bbc')}
-              disabled={loading || scraping}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                selectedSource === 'bbc'
-                  ? 'bg-green-600 text-white'
-                  : 'bg-white dark:bg-zinc-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-700'
-              } disabled:opacity-50`}
-            >
-              BBC Sport
             </button>
             <button
               onClick={() => scrapeNews('espn')}

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Standing } from '../types';
 import { standingService, scraperService } from '../services/api';
 
-type StandingsSource = 'database' | 'espn' | 'bbc';
+type StandingsSource = 'database' | 'espn';
 
 interface LeagueOption {
   name: string;
@@ -72,16 +72,11 @@ const StandingsPage = () => {
     }
   };
 
-  const scrapeStandings = async (source: 'espn' | 'bbc', league?: string) => {
+  const scrapeStandings = async (source: 'espn', league?: string) => {
     setScraping(true);
     setSelectedSource(source);
     try {
-      let response;
-      if (source === 'espn') {
-        response = await scraperService.scrapeESPNStandings(league);
-      } else if (source === 'bbc') {
-        response = await scraperService.scrapeBBCStandings();
-      }
+      const response = await scraperService.scrapeESPNStandings(league);
 
       // 后端返回格式: { data: [...], count: N, success: true }
       const standingsData = response.data.data || [];
@@ -152,18 +147,7 @@ const StandingsPage = () => {
                   : 'bg-white dark:bg-zinc-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-700'
               } disabled:opacity-50`}
             >
-              ESPN
-            </button>
-            <button
-              onClick={() => scrapeStandings('bbc')}
-              disabled={loading || scraping}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                selectedSource === 'bbc'
-                  ? 'bg-green-600 text-white'
-                  : 'bg-white dark:bg-zinc-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-700'
-              } disabled:opacity-50`}
-            >
-              BBC Sport
+              ESPN 爬虫
             </button>
           </div>
         </div>
@@ -314,8 +298,22 @@ const StandingsPage = () => {
         </div>
       ) : (
         <div className="card p-12 text-center">
-          <p className="text-gray-500 text-lg">暂无积分榜数据</p>
-          <p className="text-gray-400 text-sm mt-2">请尝试从其他数据源获取积分榜</p>
+          <div className="text-gray-400 mb-4">
+            <svg className="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </div>
+          <p className="text-gray-500 dark:text-gray-400 text-lg font-medium mb-2">暂无积分榜数据</p>
+          <p className="text-gray-400 dark:text-gray-500 text-sm mb-4">
+            {selectedSource === 'espn'
+              ? '爬虫暂时无法获取积分榜数据，网站结构可能已更新'
+              : '数据库中暂无积分榜数据，请尝试使用爬虫获取'}
+          </p>
+          {selectedSource === 'espn' && (
+            <p className="text-xs text-gray-400 dark:text-gray-500">
+              提示：积分榜爬虫功能正在维护中
+            </p>
+          )}
         </div>
       )}
     </div>

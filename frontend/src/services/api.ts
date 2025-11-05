@@ -54,9 +54,6 @@ export const newsService = {
 
 export const scraperService = {
   // 新闻爬虫
-  scrapeBBCNews: () =>
-    api.get<any[]>('/sync/scrape/news/bbc'),
-
   scrapeESPNNews: () =>
     api.get<any[]>('/sync/scrape/news/espn'),
 
@@ -66,7 +63,4 @@ export const scraperService = {
   // 积分榜爬虫
   scrapeESPNStandings: (league?: string) =>
     api.get<any[]>(`/sync/scrape/standings/espn${league ? `/${league}` : ''}`),
-
-  scrapeBBCStandings: () =>
-    api.get<any[]>('/sync/scrape/standings/bbc'),
 };

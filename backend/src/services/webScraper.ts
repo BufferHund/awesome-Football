@@ -289,33 +289,63 @@ export const webScraperService = {
       const $ = cheerio.load(response.data);
       const news: any[] = [];
 
-      $('.contentItem').each((index, element) => {
-        const title = $(element).find('.contentItem__title').text().trim();
-        const summary = $(element).find('.contentItem__subhead').text().trim();
-        const link = $(element).find('.contentItem__title a').attr('href');
-        const image = $(element).find('.contentItem__image img').attr('src');
+      // 尝试多种选择器以适应ESPN的结构变化
+      const selectors = [
+        '.contentItem',
+        'article',
+        '[class*="contentItem"]',
+        '.Card'
+      ];
 
-        if (title) {
-          // 处理相对URL，确保返回完整URL
-          let fullUrl = null;
-          if (link) {
-            fullUrl = link.startsWith('http') ? link : `https://www.espn.com${link}`;
+      for (const selector of selectors) {
+        if (news.length > 0) break;
+
+        $(selector).each((index, element) => {
+          if (index >= 20) return false;
+
+          const $el = $(element);
+          const title = $el.find('.contentItem__title, h2, h3, [class*="headline"]').first().text().trim();
+          const summary = $el.find('.contentItem__subhead, p, [class*="description"]').first().text().trim();
+
+          // 尝试多种方式获取链接
+          let link = $el.find('.contentItem__title a, a[href*="/story/"], a[href*="/news/"]').first().attr('href');
+          if (!link) {
+            link = $el.find('a').first().attr('href');
           }
 
-          news.push({
-            title,
-            summary: summary || title,
-            content: summary || title,
-            coverImage: image || null,
-            url: fullUrl,
-            publishDate: new Date().toISOString(),
-            category: '足球新闻',
-            author: 'ESPN',
-            views: 0,
-          });
-        }
-      });
+          const image = $el.find('.contentItem__image img, img').first().attr('src');
 
+          if (title && title.length > 10) {
+            // 处理相对URL，确保返回完整URL
+            let fullUrl = null;
+            if (link) {
+              if (link.startsWith('http')) {
+                fullUrl = link;
+              } else if (link.startsWith('/')) {
+                fullUrl = `https://www.espn.com${link}`;
+              } else {
+                fullUrl = `https://www.espn.com/${link}`;
+              }
+            }
+
+            console.log(`ESPN新闻: ${title.substring(0, 50)}... | URL: ${fullUrl}`);
+
+            news.push({
+              title,
+              summary: summary || title,
+              content: summary || title,
+              coverImage: image || null,
+              url: fullUrl,
+              publishDate: new Date().toISOString(),
+              category: '足球新闻',
+              author: 'ESPN',
+              views: 0,
+            });
+          }
+        });
+      }
+
+      console.log(`ESPN爬虫完成，共获取 ${news.length} 条新闻`);
       return news.slice(0, 20); // 返回前20条
     } catch (error) {
       console.error('ESPN新闻爬取失败:', error);
