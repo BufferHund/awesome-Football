@@ -49,7 +49,10 @@ class FootballMatch {
 
     setTeams() {
         if (this.isRunning) {
-            alert('Cannot change teams during a match!');
+            this.matchStatusEl.textContent = '⚠️ Cannot change teams during a match!';
+            setTimeout(() => {
+                this.matchStatusEl.textContent = 'Match in Progress';
+            }, 3000);
             return;
         }
         
@@ -57,7 +60,10 @@ class FootballMatch {
         this.awayTeam = this.awayTeamInput.value;
         
         if (this.homeTeam === this.awayTeam) {
-            alert('Home and Away teams must be different!');
+            this.matchStatusEl.textContent = '⚠️ Home and Away teams must be different!';
+            setTimeout(() => {
+                this.matchStatusEl.textContent = 'Ready to Start';
+            }, 3000);
             return;
         }
         
