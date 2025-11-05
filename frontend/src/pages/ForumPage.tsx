@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ForumPost } from '../types';
 import { forumService } from '../services/api';
 import { MessageCircle, ThumbsUp, Eye, TrendingUp, Clock, Pin, PenSquare, Hash } from 'lucide-react';
+import CreatePostModal from '../components/CreatePostModal';
 
 type Category = 'all' | '综合讨论' | '战术分析' | '球员评价' | '赛事预测' | '转会爆料';
 type SortBy = 'latest' | 'hot' | 'views';
@@ -40,6 +41,27 @@ const ForumPage = () => {
       console.error('加载帖子失败:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleCreatePost = async (data: {
+    title: string;
+    content: string;
+    category: string;
+    tags: string[];
+    images: string[];
+  }) => {
+    try {
+      await forumService.createPost({
+        ...data,
+        author: '球迷用户',
+      });
+      // 重新加载帖子列表
+      await loadPosts();
+      setShowCreateModal(false);
+    } catch (error) {
+      console.error('创建帖子失败:', error);
+      throw error;
     }
   };
 
@@ -250,6 +272,13 @@ const ForumPage = () => {
           ))
         )}
       </div>
+
+      {/* 创建帖子模态框 */}
+      <CreatePostModal
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        onSubmit={handleCreatePost}
+      />
     </div>
   );
 };
