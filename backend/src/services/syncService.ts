@@ -151,6 +151,11 @@ export const syncService = {
       // 保存比赛事件
       if (apiMatch.events) {
         for (const event of apiMatch.events) {
+          // 跳过没有球员信息的事件（如半场结束等系统事件）
+          if (!event.player || !event.player.name) {
+            continue;
+          }
+
           // 检查是否已存在相同的事件
           const existingEvent = await prisma.matchEvent.findFirst({
             where: {
