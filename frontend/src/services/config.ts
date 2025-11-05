@@ -87,6 +87,23 @@ async function handleApiRequest(url: string, options?: RequestInit): Promise<Det
       try {
         errorDetails = await response.json();
         errorMessage = errorDetails.message || errorDetails.error || errorMessage;
+
+        // 如果后端返回了API错误详情
+        if (errorDetails.apiError) {
+          const apiError = errorDetails.apiError;
+          errorMessage = `Football API错误: ${apiError.status} ${apiError.statusText}`;
+
+          // 如果有具体的API错误信息
+          if (errorDetails.apiErrors) {
+            const apiErrors = errorDetails.apiErrors;
+            if (typeof apiErrors === 'object') {
+              const errorKeys = Object.keys(apiErrors);
+              if (errorKeys.length > 0) {
+                errorMessage += ` - ${errorKeys.join(', ')}: ${JSON.stringify(Object.values(apiErrors))}`;
+              }
+            }
+          }
+        }
       } catch {
         // 如果无法解析JSON，使用默认错误消息
       }
@@ -95,11 +112,11 @@ async function handleApiRequest(url: string, options?: RequestInit): Promise<Det
         success: false,
         message: errorMessage,
         statusCode: response.status,
-        apiKey: apiKey ? `${apiKey.substring(0, 8)}...` : '未设置',
-        endpoint: url,
+        apiKey: errorDetails?.apiError?.apiKey || (apiKey ? `${apiKey.substring(0, 8)}...` : '未设置'),
+        endpoint: errorDetails?.apiError?.endpoint || url,
         requestTime,
         responseTime,
-        errorDetails
+        errorDetails: errorDetails || { rawStatus: response.status, rawStatusText: response.statusText }
       };
     }
 
