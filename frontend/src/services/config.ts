@@ -56,41 +56,119 @@ export const configService = {
   },
 };
 
+// 同步结果接口
+export interface DetailedSyncResult {
+  success: boolean;
+  message: string;
+  statusCode?: number;
+  apiKey?: string;
+  endpoint?: string;
+  requestTime?: string;
+  responseTime?: string;
+  errorDetails?: any;
+  rawResponse?: any;
+}
+
 // 通用API请求处理函数
-async function handleApiRequest(url: string, options?: RequestInit) {
+async function handleApiRequest(url: string, options?: RequestInit): Promise<DetailedSyncResult> {
+  const requestTime = new Date().toISOString();
+  const apiKey = configService.getApiKey();
+
   try {
     const response = await fetch(url, options);
+    const responseTime = new Date().toISOString();
 
     // 检查响应状态
     if (!response.ok) {
       // 尝试获取错误消息
-      let errorMessage = `HTTP错误: ${response.status}`;
+      let errorMessage = `HTTP错误: ${response.status} ${response.statusText}`;
+      let errorDetails = null;
+
       try {
-        const errorData = await response.json();
-        errorMessage = errorData.message || errorData.error || errorMessage;
+        errorDetails = await response.json();
+        errorMessage = errorDetails.message || errorDetails.error || errorMessage;
       } catch {
         // 如果无法解析JSON，使用默认错误消息
       }
-      throw new Error(errorMessage);
+
+      return {
+        success: false,
+        message: errorMessage,
+        statusCode: response.status,
+        apiKey: apiKey ? `${apiKey.substring(0, 8)}...` : '未设置',
+        endpoint: url,
+        requestTime,
+        responseTime,
+        errorDetails
+      };
     }
 
     // 检查响应是否为空
     const contentType = response.headers.get('content-type');
     if (!contentType || !contentType.includes('application/json')) {
-      throw new Error('后端服务未正常响应。请确保后端服务已启动 (端口3000)');
+      return {
+        success: false,
+        message: '后端服务未正常响应。请确保后端服务已启动 (端口3000)',
+        statusCode: response.status,
+        endpoint: url,
+        requestTime,
+        responseTime,
+        errorDetails: { contentType }
+      };
     }
 
     const text = await response.text();
     if (!text) {
-      throw new Error('后端返回空响应。请检查后端服务是否正常运行');
+      return {
+        success: false,
+        message: '后端返回空响应。请检查后端服务是否正常运行',
+        statusCode: response.status,
+        endpoint: url,
+        requestTime,
+        responseTime
+      };
     }
 
-    return JSON.parse(text);
+    const data = JSON.parse(text);
+    return {
+      success: data.success !== false,
+      message: data.message || '操作成功',
+      statusCode: response.status,
+      endpoint: url,
+      requestTime,
+      responseTime,
+      rawResponse: data
+    };
   } catch (error) {
+    const responseTime = new Date().toISOString();
+
     if (error instanceof TypeError && error.message.includes('fetch')) {
-      throw new Error('无法连接到后端服务。请确保后端服务已启动 (localhost:3000)');
+      return {
+        success: false,
+        message: '无法连接到后端服务。请确保后端服务已启动 (localhost:3000)',
+        endpoint: url,
+        requestTime,
+        responseTime,
+        errorDetails: {
+          errorType: 'NetworkError',
+          errorMessage: error.message,
+          stack: error.stack
+        }
+      };
     }
-    throw error;
+
+    return {
+      success: false,
+      message: (error as Error).message || '未知错误',
+      endpoint: url,
+      requestTime,
+      responseTime,
+      errorDetails: {
+        errorType: error?.constructor?.name || 'Error',
+        errorMessage: (error as Error).message,
+        stack: (error as Error).stack
+      }
+    };
   }
 }
 

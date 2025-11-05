@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { configService, syncTriggerService } from '../services/config';
+import { configService, syncTriggerService, DetailedSyncResult } from '../services/config';
 import {
   Settings,
   Key,
@@ -11,14 +11,17 @@ import {
   XCircle,
   Loader,
   ArrowLeft,
-  Download
+  Download,
+  ChevronDown,
+  ChevronUp,
+  Clock,
+  AlertCircle
 } from 'lucide-react';
 
-interface SyncResult {
+interface SyncResult extends DetailedSyncResult {
   type: string;
-  success: boolean;
-  message: string;
   timestamp: Date;
+  expanded?: boolean;
 }
 
 const SettingsPage = () => {
@@ -32,23 +35,42 @@ const SettingsPage = () => {
     alert('配置已保存！');
   };
 
-  const addResult = (type: string, success: boolean, message: string) => {
+  const addResult = (type: string, result: DetailedSyncResult) => {
     setSyncResults(prev => [
-      { type, success, message, timestamp: new Date() },
-      ...prev.slice(0, 9) // 只保留最近10条
+      {
+        type,
+        ...result,
+        timestamp: new Date(),
+        expanded: false
+      },
+      ...prev.slice(0, 19) // 保留最近20条
     ]);
   };
 
-  const handleSync = async (type: string, syncFn: () => Promise<any>) => {
+  const handleSync = async (type: string, syncFn: () => Promise<DetailedSyncResult>) => {
     setLoading(type);
     try {
       const result = await syncFn();
-      addResult(type, result.success !== false, result.message || '同步成功');
+      addResult(type, result);
     } catch (error) {
-      addResult(type, false, (error as Error).message || '同步失败');
+      addResult(type, {
+        success: false,
+        message: (error as Error).message || '同步失败',
+        errorDetails: {
+          errorType: 'UnexpectedError',
+          errorMessage: (error as Error).message,
+          stack: (error as Error).stack
+        }
+      });
     } finally {
       setLoading(null);
     }
+  };
+
+  const toggleExpanded = (index: number) => {
+    setSyncResults(prev => prev.map((result, i) =>
+      i === index ? { ...result, expanded: !result.expanded } : result
+    ));
   };
 
   const leagues = [
@@ -267,32 +289,119 @@ const SettingsPage = () => {
           {syncResults.length === 0 ? (
             <p className="text-gray-500 dark:text-gray-400 text-center py-8">暂无同步记录</p>
           ) : (
-            <div className="space-y-2 max-h-96 overflow-y-auto scrollbar-thin">
+            <div className="space-y-3 max-h-[600px] overflow-y-auto scrollbar-thin">
               {syncResults.map((result, index) => (
                 <div
                   key={index}
-                  className={`p-3 rounded-xl border ${
+                  className={`rounded-xl border ${
                     result.success
                       ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700'
                       : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-700'
                   }`}
                 >
-                  <div className="flex items-start space-x-2">
-                    {result.success ? (
-                      <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
-                    ) : (
-                      <XCircle className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between">
-                        <span className="font-medium text-gray-900 dark:text-gray-100">{result.type}</span>
-                        <span className="text-xs text-gray-500 dark:text-gray-400">
-                          {result.timestamp.toLocaleTimeString('zh-CN')}
-                        </span>
+                  {/* 主要信息 */}
+                  <div className="p-3">
+                    <div className="flex items-start space-x-2">
+                      {result.success ? (
+                        <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
+                      ) : (
+                        <XCircle className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between mb-1">
+                          <div className="flex items-center space-x-2">
+                            <span className="font-medium text-gray-900 dark:text-gray-100">{result.type}</span>
+                            {result.statusCode && (
+                              <span className={`text-xs px-2 py-0.5 rounded-full ${
+                                result.statusCode >= 200 && result.statusCode < 300
+                                  ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300'
+                                  : result.statusCode >= 400 && result.statusCode < 500
+                                  ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300'
+                                  : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300'
+                              }`}>
+                                {result.statusCode}
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center">
+                              <Clock className="w-3 h-3 mr-1" />
+                              {result.timestamp.toLocaleTimeString('zh-CN')}
+                            </span>
+                            {(result.errorDetails || result.rawResponse || result.endpoint) && (
+                              <button
+                                onClick={() => toggleExpanded(index)}
+                                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 transition-colors"
+                              >
+                                {result.expanded ? (
+                                  <ChevronUp className="w-4 h-4" />
+                                ) : (
+                                  <ChevronDown className="w-4 h-4" />
+                                )}
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                        <p className="text-sm text-gray-600 dark:text-gray-300">{result.message}</p>
                       </div>
-                      <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">{result.message}</p>
                     </div>
                   </div>
+
+                  {/* 详细信息（可展开） */}
+                  {result.expanded && (
+                    <div className="px-3 pb-3 border-t border-gray-200 dark:border-gray-700/50 pt-3 mt-2">
+                      <div className="space-y-2 text-xs">
+                        {/* 基本信息 */}
+                        {result.endpoint && (
+                          <div className="flex">
+                            <span className="font-semibold text-gray-700 dark:text-gray-300 w-24">接口:</span>
+                            <code className="flex-1 text-gray-600 dark:text-gray-400 bg-white dark:bg-zinc-800 px-2 py-1 rounded">{result.endpoint}</code>
+                          </div>
+                        )}
+                        {result.apiKey && (
+                          <div className="flex">
+                            <span className="font-semibold text-gray-700 dark:text-gray-300 w-24">API Key:</span>
+                            <code className="flex-1 text-gray-600 dark:text-gray-400 bg-white dark:bg-zinc-800 px-2 py-1 rounded">{result.apiKey}</code>
+                          </div>
+                        )}
+                        {result.requestTime && (
+                          <div className="flex">
+                            <span className="font-semibold text-gray-700 dark:text-gray-300 w-24">请求时间:</span>
+                            <code className="flex-1 text-gray-600 dark:text-gray-400 bg-white dark:bg-zinc-800 px-2 py-1 rounded">{new Date(result.requestTime).toLocaleString('zh-CN')}</code>
+                          </div>
+                        )}
+                        {result.responseTime && (
+                          <div className="flex">
+                            <span className="font-semibold text-gray-700 dark:text-gray-300 w-24">响应时间:</span>
+                            <code className="flex-1 text-gray-600 dark:text-gray-400 bg-white dark:bg-zinc-800 px-2 py-1 rounded">{new Date(result.responseTime).toLocaleString('zh-CN')}</code>
+                          </div>
+                        )}
+
+                        {/* 错误详情 */}
+                        {result.errorDetails && (
+                          <div className="mt-3">
+                            <div className="flex items-center space-x-1 mb-2">
+                              <AlertCircle className="w-4 h-4 text-red-500 dark:text-red-400" />
+                              <span className="font-semibold text-gray-700 dark:text-gray-300">错误详情:</span>
+                            </div>
+                            <pre className="bg-white dark:bg-zinc-800 p-3 rounded text-gray-600 dark:text-gray-400 overflow-x-auto scrollbar-thin max-h-48">
+{JSON.stringify(result.errorDetails, null, 2)}
+                            </pre>
+                          </div>
+                        )}
+
+                        {/* 响应数据 */}
+                        {result.rawResponse && (
+                          <div className="mt-3">
+                            <span className="font-semibold text-gray-700 dark:text-gray-300 block mb-2">响应数据:</span>
+                            <pre className="bg-white dark:bg-zinc-800 p-3 rounded text-gray-600 dark:text-gray-400 overflow-x-auto scrollbar-thin max-h-48">
+{JSON.stringify(result.rawResponse, null, 2)}
+                            </pre>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
