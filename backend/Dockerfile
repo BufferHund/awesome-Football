@@ -22,10 +22,17 @@ COPY prisma ./prisma
 RUN npx prisma generate
 
 # 复制源代码
-COPY . .
+COPY src ./src
 
-# 构建TypeScript
-RUN npm run build
+# 构建TypeScript - 添加详细日志
+RUN echo "Building TypeScript..." && \
+    npm run build && \
+    echo "Build complete. Checking output..." && \
+    ls -la dist/ && \
+    test -f dist/index.js && echo "✓ dist/index.js exists" || (echo "✗ dist/index.js not found!" && exit 1)
+
+# 复制其他必要文件
+COPY .env* ./
 
 # 暴露端口
 EXPOSE 3000
