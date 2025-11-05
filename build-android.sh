@@ -26,9 +26,13 @@ echo "✅ 环境检查通过"
 # 进入前端目录
 cd frontend
 
-# 安装依赖（如果需要）
-if [ ! -d "node_modules" ]; then
-    echo "📦 安装依赖..."
+# 安装Capacitor依赖
+echo "📦 安装 Capacitor 依赖..."
+npm run android:install
+
+# 安装其他依赖（如果需要）
+if [ ! -d "node_modules/react" ]; then
+    echo "📦 安装项目依赖..."
     npm install
 fi
 
