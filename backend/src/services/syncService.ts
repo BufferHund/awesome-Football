@@ -151,19 +151,28 @@ export const syncService = {
       // 保存比赛事件
       if (apiMatch.events) {
         for (const event of apiMatch.events) {
-          await prisma.matchEvent.upsert({
+          // 检查是否已存在相同的事件
+          const existingEvent = await prisma.matchEvent.findFirst({
             where: {
-              id: `${match.id}-${event.time.elapsed}-${event.player.name}`,
-            },
-            update: {},
-            create: {
               matchId: match.id,
-              type: this.convertEventType(event.type),
               player: event.player.name,
               minute: event.time.elapsed,
-              detail: event.detail,
-            } as any,
+              type: this.convertEventType(event.type),
+            },
           });
+
+          // 只有不存在时才创建
+          if (!existingEvent) {
+            await prisma.matchEvent.create({
+              data: {
+                matchId: match.id,
+                type: this.convertEventType(event.type),
+                player: event.player.name,
+                minute: event.time.elapsed,
+                detail: event.detail,
+              },
+            });
+          }
         }
       }
     } catch (error) {
