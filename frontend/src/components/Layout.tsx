@@ -1,11 +1,36 @@
-import { Outlet, Link, useLocation } from 'react-router-dom';
+import { useState, useRef } from 'react';
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { Home, Trophy, Users, Newspaper, TrendingUp } from 'lucide-react';
 
 const Layout = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const [clickCount, setClickCount] = useState(0);
+  const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const isActive = (path: string) => {
     return location.pathname === path || location.pathname.startsWith(path + '/');
+  };
+
+  // 隐藏的彩蛋：点击 logo 7 次进入设置页面
+  const handleLogoClick = () => {
+    setClickCount(prev => prev + 1);
+
+    // 清除之前的定时器
+    if (clickTimeoutRef.current) {
+      clearTimeout(clickTimeoutRef.current);
+    }
+
+    // 2秒后重置计数
+    clickTimeoutRef.current = setTimeout(() => {
+      setClickCount(0);
+    }, 2000);
+
+    // 点击7次触发
+    if (clickCount + 1 === 7) {
+      setClickCount(0);
+      navigate('/secret-settings-panel');
+    }
   };
 
   const navItems = [
@@ -22,10 +47,18 @@ const Layout = () => {
       <header className="bg-gradient-to-r from-green-600 to-green-700 text-white shadow-lg sticky top-0 z-50">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
-            <Link to="/" className="flex items-center space-x-2">
+            <div
+              onClick={handleLogoClick}
+              className="flex items-center space-x-2 cursor-pointer select-none"
+            >
               <Trophy className="w-8 h-8" />
               <span className="text-2xl font-bold">足球世界</span>
-            </Link>
+              {clickCount > 0 && clickCount < 7 && (
+                <span className="text-xs bg-white/20 px-2 py-1 rounded-full animate-pulse">
+                  {clickCount}/7
+                </span>
+              )}
+            </div>
 
             <nav className="hidden md:flex space-x-1">
               {navItems.map(({ path, label, icon: Icon }) => (

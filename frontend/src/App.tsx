@@ -8,6 +8,7 @@ import TeamsPage from './pages/TeamsPage';
 import TeamDetailPage from './pages/TeamDetailPage';
 import NewsPage from './pages/NewsPage';
 import NewsDetailPage from './pages/NewsDetailPage';
+import SettingsPage from './pages/SettingsPage';
 
 function App() {
   return (
@@ -23,6 +24,8 @@ function App() {
           <Route path="news" element={<NewsPage />} />
           <Route path="news/:id" element={<NewsDetailPage />} />
         </Route>
+        {/* 隐藏的设置页面 - 独立路由 */}
+        <Route path="/secret-settings-panel" element={<SettingsPage />} />
       </Routes>
     </Router>
   );
