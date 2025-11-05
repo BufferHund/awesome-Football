@@ -75,6 +75,14 @@ const MembershipPage = () => {
 
   const features = [
     {
+      icon: Sparkles,
+      title: 'iOS 16 LiquidGlass效果',
+      description: '独家视觉特效，流动玻璃态UI，极致奢华体验',
+      color: 'text-cyan-500',
+      bgColor: 'bg-gradient-to-br from-cyan-100 to-blue-100 dark:from-cyan-900/20 dark:to-blue-900/20',
+      isNew: true,
+    },
+    {
       icon: XIcon,
       title: '去除广告',
       description: '畅享纯净观赛体验，无任何广告打扰',
@@ -280,12 +288,22 @@ const MembershipPage = () => {
             {features.map((feature, index) => (
               <div
                 key={index}
-                className="bg-white dark:bg-gray-800 rounded-xl p-6 hover:shadow-xl transition-all hover:-translate-y-1"
+                className={`bg-white dark:bg-gray-800 rounded-xl p-6 hover:shadow-xl transition-all hover:-translate-y-1 relative ${
+                  (feature as any).isNew ? 'ring-2 ring-cyan-500 ring-opacity-50' : ''
+                }`}
               >
+                {/* NEW标签 */}
+                {(feature as any).isNew && (
+                  <div className="absolute -top-2 -right-2">
+                    <div className="liquid-badge text-white bg-gradient-to-r from-cyan-500 to-blue-500 shadow-lg animate-pulse-soft">
+                      ✨ NEW
+                    </div>
+                  </div>
+                )}
                 <div className={`inline-flex items-center justify-center w-14 h-14 ${feature.bgColor} rounded-xl mb-4`}>
                   <feature.icon className={`w-7 h-7 ${feature.color}`} />
                 </div>
-                <h3 className="text-xl font-bold mb-2 text-gray-800 dark:text-gray-100">
+                <h3 className="text-xl font-bold mb-2 text-gray-800 dark:text-gray-100 flex items-center gap-2">
                   {feature.title}
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400">

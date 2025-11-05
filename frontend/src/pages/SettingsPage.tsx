@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { configService, syncTriggerService, DetailedSyncResult } from '../services/config';
 import BackendLogViewer from '../components/BackendLogViewer';
+import { useLiquidGlass } from '../hooks/useLiquidGlass';
 import {
   Settings,
   Key,
@@ -17,7 +18,8 @@ import {
   ChevronUp,
   Clock,
   AlertCircle,
-  BookOpen
+  BookOpen,
+  Sparkles
 } from 'lucide-react';
 
 interface SyncResult extends DetailedSyncResult {
@@ -31,6 +33,7 @@ const SettingsPage = () => {
   const [config, setConfig] = useState(configService.getConfig());
   const [syncResults, setSyncResults] = useState<SyncResult[]>([]);
   const [loading, setLoading] = useState<string | null>(null);
+  const { isEnabled: liquidGlassEnabled, toggle: toggleLiquidGlass } = useLiquidGlass();
 
   const handleSave = () => {
     configService.saveConfig(config);
@@ -115,6 +118,79 @@ const SettingsPage = () => {
       </div>
 
       <div className="container mx-auto px-4 py-6 max-w-4xl">
+        {/* LiquidGlass效果设置 - 会员专属 */}
+        <section className="glass-card p-6 mb-6 animate-slide-up border-2 border-cyan-500/30">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center space-x-2">
+              <Sparkles className="w-5 h-5 text-cyan-500" />
+              <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+                iOS 16 LiquidGlass效果
+              </h2>
+              <span className="liquid-badge text-white bg-gradient-to-r from-cyan-500 to-blue-500">
+                ✨ 会员专属
+              </span>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  启用LiquidGlass效果
+                </label>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  iOS 16风格流动玻璃态UI，极致奢华视觉体验
+                </p>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={liquidGlassEnabled}
+                  onChange={toggleLiquidGlass}
+                  className="sr-only peer"
+                />
+                <div className="w-11 h-6 bg-gray-200 dark:bg-zinc-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-cyan-300 dark:peer-focus:ring-cyan-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-cyan-500 peer-checked:to-blue-500"></div>
+              </label>
+            </div>
+
+            {/* LiquidGlass效果预览 */}
+            {liquidGlassEnabled && (
+              <div className="animate-fade-in">
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">效果预览：</p>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <div className="liquid-card p-4 text-center">
+                    <Sparkles className="w-8 h-8 mx-auto mb-2 text-cyan-500" />
+                    <p className="text-sm font-medium">卡片效果</p>
+                  </div>
+                  <div className="liquid-card p-4 text-center">
+                    <div className="liquid-badge mx-auto mb-2">
+                      徽章效果
+                    </div>
+                    <p className="text-sm font-medium">徽章效果</p>
+                  </div>
+                  <div className="liquid-card p-4 text-center">
+                    <button className="liquid-btn">按钮效果</button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="bg-cyan-50 dark:bg-cyan-900/20 rounded-lg p-4 border border-cyan-200 dark:border-cyan-800">
+              <div className="flex items-start space-x-3">
+                <Sparkles className="w-5 h-5 text-cyan-600 dark:text-cyan-400 mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-sm font-medium text-cyan-900 dark:text-cyan-100 mb-1">
+                    会员专属特权
+                  </p>
+                  <p className="text-xs text-cyan-700 dark:text-cyan-300">
+                    LiquidGlass效果采用iOS 16技术，为导航栏、卡片提供流动玻璃质感，开通会员即可体验。
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* API 配置 */}
         <section className="glass-card p-6 mb-6 animate-slide-up">
           <div className="flex items-center space-x-2 mb-4">

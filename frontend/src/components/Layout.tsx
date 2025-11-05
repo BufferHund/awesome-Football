@@ -3,12 +3,14 @@ import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { Home, Trophy, Users, Newspaper, ShoppingBag, Crown, MessageSquare } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import { themeService } from '../services/theme';
+import { useLiquidGlass } from '../hooks/useLiquidGlass';
 
 const Layout = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [clickCount, setClickCount] = useState(0);
   const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const { isEnabled: liquidGlassEnabled } = useLiquidGlass();
 
   useEffect(() => {
     themeService.initTheme();
@@ -54,7 +56,11 @@ const Layout = () => {
       <div className="fixed inset-0 grid-bg opacity-50 pointer-events-none"></div>
 
       {/* 顶部导航栏 - 扁平化设计 */}
-      <header className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border-b border-gray-200/80 dark:border-zinc-800/80 sticky top-0 z-50">
+      <header className={`${
+        liquidGlassEnabled
+          ? 'liquid-nav'
+          : 'bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border-b border-gray-200/80 dark:border-zinc-800/80'
+      } sticky top-0 z-50`}>
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             <div
@@ -113,7 +119,11 @@ const Layout = () => {
       </main>
 
       {/* 底部导航（移动端）- 扁平化设计 */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl border-t border-gray-200 dark:border-zinc-800 z-50 safe-area-bottom">
+      <nav className={`md:hidden fixed bottom-0 left-0 right-0 ${
+        liquidGlassEnabled
+          ? 'liquid-nav'
+          : 'bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl border-t border-gray-200 dark:border-zinc-800'
+      } z-50 safe-area-bottom`}>
         <div className="flex justify-around px-2 py-1">
           {navItems.map(({ path, label, icon: Icon }) => (
             <Link
