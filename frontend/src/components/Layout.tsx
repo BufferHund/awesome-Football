@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { Home, Trophy, Users, Newspaper, TrendingUp } from 'lucide-react';
+import { Home, Trophy, Users, Newspaper, TrendingUp, ShoppingBag } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import { themeService } from '../services/theme';
 
@@ -45,6 +45,7 @@ const Layout = () => {
     { path: '/standings', label: '积分榜', icon: TrendingUp },
     { path: '/teams', label: '球队', icon: Users },
     { path: '/news', label: '新闻', icon: Newspaper },
+    { path: '/shop', label: '商城', icon: ShoppingBag },
   ];
 
   return (

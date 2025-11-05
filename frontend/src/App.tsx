@@ -12,6 +12,7 @@ import NewsDetailPage from './pages/NewsDetailPage';
 import SettingsPage from './pages/SettingsPage';
 import ApiDocsPage from './pages/ApiDocsPage';
 import MembershipPage from './pages/MembershipPage';
+import ShopPage from './pages/ShopPage';
 import SplashAd from './components/SplashAd';
 
 function App() {
@@ -56,6 +57,7 @@ function App() {
             <Route path="teams/:id" element={<TeamDetailPage />} />
             <Route path="news" element={<NewsPage />} />
             <Route path="news/:id" element={<NewsDetailPage />} />
+            <Route path="shop" element={<ShopPage />} />
           </Route>
           {/* 隐藏的设置页面 - 独立路由 */}
           <Route path="/secret-settings-panel" element={<SettingsPage />} />
