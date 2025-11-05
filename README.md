@@ -16,6 +16,9 @@
 - 📰 **新闻资讯** - 最新足球新闻、转会消息、赛事报道
 - 🎨 **现代化UI** - 响应式设计，支持移动端和桌面端
 - 🚀 **高性能** - 基于Vite构建，快速加载
+- 🔄 **真实数据** - 集成免费足球API，自动同步最新数据
+- 🕷️ **数据爬虫** - 支持从Google/FlashScore/ESPN爬取数据
+- 📱 **Android支持** - 可编译为原生Android APK
 
 ## 🛠️ 技术栈
 
@@ -26,6 +29,7 @@
 - **路由**: React Router v6
 - **HTTP客户端**: Axios
 - **图标**: Lucide React
+- **移动端**: Capacitor (支持Android/iOS)
 
 ### 后端
 - **运行时**: Node.js 20
@@ -33,10 +37,13 @@
 - **ORM**: Prisma
 - **数据库**: PostgreSQL 16
 - **安全**: Helmet, CORS
+- **数据源**: API-Football (免费版)
+- **爬虫**: Cheerio + Axios
 
 ### 部署
 - **容器化**: Docker + Docker Compose
 - **反向代理**: Vite Dev Proxy
+- **移动端**: Android APK (可上架Google Play)
 
 ## 📦 快速开始
 
@@ -124,6 +131,100 @@ npm install
 npm run dev
 ```
 
+## 🔑 配置真实足球数据API
+
+### 方式一：使用免费API-Football (推荐)
+
+1. **注册获取API Key**
+   - 访问 https://www.api-football.com/
+   - 注册并获取免费API Key (每天100次请求)
+
+2. **配置API Key**
+   ```bash
+   cd backend
+   cp .env.example .env
+   # 编辑 .env 文件，添加你的API Key
+   FOOTBALL_API_KEY=your-api-key-here
+   ENABLE_AUTO_SYNC=true
+   ```
+
+3. **自动数据同步**
+   - ✅ 每5分钟更新直播比赛
+   - ✅ 每小时更新今日比赛
+   - ✅ 每天凌晨2点更新积分榜
+
+4. **手动触发同步**
+   ```bash
+   # 同步今日比赛
+   curl -X POST http://localhost:3000/api/sync/matches/today
+
+   # 同步英超积分榜
+   curl -X POST http://localhost:3000/api/sync/standings/premier-league
+   ```
+
+### 方式二：使用网页爬虫 (备选)
+
+当API配额用完时，可以使用爬虫：
+
+```bash
+# Google比分
+curl http://localhost:3000/api/sync/scrape/google
+
+# FlashScore
+curl http://localhost:3000/api/sync/scrape/flashscore
+
+# ESPN
+curl http://localhost:3000/api/sync/scrape/espn
+```
+
+**详细说明**: 查看 [API_GUIDE.md](./API_GUIDE.md)
+
+## 📱 构建 Android APK
+
+### 快速构建
+
+```bash
+# 使用自动化脚本
+./build-android.sh
+```
+
+### 手动构建步骤
+
+1. **安装前置要求**
+   - Node.js 20+
+   - Java JDK 17+
+   - Android Studio (包含Android SDK)
+
+2. **初始化Android项目**
+   ```bash
+   cd frontend
+   npm install
+   npm run cap:add  # 首次运行
+   ```
+
+3. **构建Web应用**
+   ```bash
+   npm run build
+   ```
+
+4. **同步到Android**
+   ```bash
+   npm run cap:sync
+   ```
+
+5. **在Android Studio中构建**
+   ```bash
+   npm run android:open
+   ```
+   在Android Studio中点击 `Build -> Build APK`
+
+6. **APK位置**
+   ```
+   frontend/android/app/build/outputs/apk/debug/app-debug.apk
+   ```
+
+**详细指南**: 查看 [frontend/android.md](./frontend/android.md)
+
 ## 📁 项目结构
 
 ```
@@ -183,6 +284,14 @@ awesome-Football/
 ### 新闻 (News)
 - `GET /api/news` - 获取新闻列表
 - `GET /api/news/:id` - 获取新闻详情
+
+### 数据同步 (Sync)
+- `POST /api/sync/matches/today` - 同步今日比赛
+- `POST /api/sync/matches/live` - 同步直播比赛
+- `POST /api/sync/standings/:league` - 同步积分榜 (premier-league, la-liga等)
+- `GET /api/sync/scrape/google?q=query` - Google爬虫
+- `GET /api/sync/scrape/flashscore` - FlashScore爬虫
+- `GET /api/sync/scrape/espn` - ESPN爬虫
 
 ## 📊 数据库模型
 

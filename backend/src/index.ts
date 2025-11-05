@@ -10,6 +10,9 @@ import teamRoutes from './routes/teams';
 import playerRoutes from './routes/players';
 import standingRoutes from './routes/standings';
 import newsRoutes from './routes/news';
+import syncRoutes from './routes/sync';
+
+import { startSyncScheduler } from './services/syncService';
 
 dotenv.config();
 
@@ -31,6 +34,7 @@ app.use('/api/teams', teamRoutes);
 app.use('/api/players', playerRoutes);
 app.use('/api/standings', standingRoutes);
 app.use('/api/news', newsRoutes);
+app.use('/api/sync', syncRoutes);
 
 // 健康检查
 app.get('/health', (req, res) => {
@@ -62,6 +66,12 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
 app.listen(port, () => {
   console.log(`🚀 Server running on port ${port}`);
   console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
+
+  // 启动自动数据同步
+  if (process.env.ENABLE_AUTO_SYNC === 'true') {
+    console.log('🔄 Starting auto sync scheduler...');
+    startSyncScheduler();
+  }
 });
 
 // 优雅关闭
