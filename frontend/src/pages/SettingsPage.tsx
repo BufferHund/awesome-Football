@@ -16,7 +16,8 @@ import {
   ChevronDown,
   ChevronUp,
   Clock,
-  AlertCircle
+  AlertCircle,
+  BookOpen
 } from 'lucide-react';
 
 interface SyncResult extends DetailedSyncResult {
@@ -87,13 +88,22 @@ const SettingsPage = () => {
       {/* 头部 */}
       <div className="hero-gradient text-white shadow-xl">
         <div className="container mx-auto px-4 py-6">
-          <button
-            onClick={() => navigate('/')}
-            className="flex items-center space-x-2 text-white/80 hover:text-white mb-4 transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            <span>返回首页</span>
-          </button>
+          <div className="flex items-center justify-between mb-4">
+            <button
+              onClick={() => navigate('/')}
+              className="flex items-center space-x-2 text-white/80 hover:text-white transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              <span>返回首页</span>
+            </button>
+            <button
+              onClick={() => navigate('/api-docs')}
+              className="flex items-center space-x-2 px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg transition-all hover:scale-105 active:scale-95"
+            >
+              <BookOpen className="w-4 h-4" />
+              <span className="text-sm font-medium">API文档</span>
+            </button>
+          </div>
           <div className="flex items-center space-x-3">
             <Settings className="w-8 h-8" />
             <div>

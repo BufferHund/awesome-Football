@@ -9,6 +9,7 @@ import TeamDetailPage from './pages/TeamDetailPage';
 import NewsPage from './pages/NewsPage';
 import NewsDetailPage from './pages/NewsDetailPage';
 import SettingsPage from './pages/SettingsPage';
+import ApiDocsPage from './pages/ApiDocsPage';
 
 function App() {
   return (
@@ -26,6 +27,8 @@ function App() {
         </Route>
         {/* 隐藏的设置页面 - 独立路由 */}
         <Route path="/secret-settings-panel" element={<SettingsPage />} />
+        {/* API文档和调试页面 */}
+        <Route path="/api-docs" element={<ApiDocsPage />} />
       </Routes>
     </Router>
   );
