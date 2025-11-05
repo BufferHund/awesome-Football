@@ -1,0 +1,32 @@
+FROM node:20-slim
+
+# 安装OpenSSL和其他必要的系统依赖
+RUN apt-get update && apt-get install -y \
+    openssl \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# 复制package文件
+COPY package*.json ./
+
+# 安装所有依赖（包括devDependencies）
+RUN npm install
+
+# 复制Prisma schema
+COPY prisma ./prisma
+
+# 生成Prisma客户端
+RUN npx prisma generate
+
+# 复制源代码和配置
+COPY src ./src
+COPY tsconfig.json ./
+COPY .env* ./
+
+# 暴露端口
+EXPOSE 3000
+
+# 使用ts-node直接运行（开发模式，无需编译）
+CMD ["sh", "-c", "npx prisma migrate deploy && npx ts-node src/index.ts"]
