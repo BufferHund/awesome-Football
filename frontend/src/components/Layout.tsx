@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { Home, Trophy, Users, Newspaper, TrendingUp, ShoppingBag } from 'lucide-react';
+import { Home, Trophy, Users, Newspaper, ShoppingBag, Crown } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import { themeService } from '../services/theme';
 
@@ -42,7 +42,6 @@ const Layout = () => {
   const navItems = [
     { path: '/', label: '首页', icon: Home },
     { path: '/matches', label: '比赛', icon: Trophy },
-    { path: '/standings', label: '积分榜', icon: TrendingUp },
     { path: '/teams', label: '球队', icon: Users },
     { path: '/news', label: '新闻', icon: Newspaper },
     { path: '/shop', label: '商城', icon: ShoppingBag },
@@ -93,6 +92,14 @@ const Layout = () => {
                   </Link>
                 ))}
               </nav>
+
+              <Link
+                to="/membership"
+                className="flex items-center space-x-1 px-4 py-2 rounded-xl bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-medium shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
+              >
+                <Crown className="w-4 h-4" />
+                <span className="hidden lg:inline">会员</span>
+              </Link>
 
               <ThemeToggle />
             </div>
