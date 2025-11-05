@@ -56,59 +56,91 @@ export const configService = {
   },
 };
 
+// 通用API请求处理函数
+async function handleApiRequest(url: string, options?: RequestInit) {
+  try {
+    const response = await fetch(url, options);
+
+    // 检查响应状态
+    if (!response.ok) {
+      // 尝试获取错误消息
+      let errorMessage = `HTTP错误: ${response.status}`;
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.message || errorData.error || errorMessage;
+      } catch {
+        // 如果无法解析JSON，使用默认错误消息
+      }
+      throw new Error(errorMessage);
+    }
+
+    // 检查响应是否为空
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      throw new Error('后端服务未正常响应。请确保后端服务已启动 (端口3000)');
+    }
+
+    const text = await response.text();
+    if (!text) {
+      throw new Error('后端返回空响应。请检查后端服务是否正常运行');
+    }
+
+    return JSON.parse(text);
+  } catch (error) {
+    if (error instanceof TypeError && error.message.includes('fetch')) {
+      throw new Error('无法连接到后端服务。请确保后端服务已启动 (localhost:3000)');
+    }
+    throw error;
+  }
+}
+
 // 手动同步服务
 export const syncTriggerService = {
   // 同步今日比赛
   async syncTodayMatches() {
-    const response = await fetch('/api/sync/matches/today', {
+    return handleApiRequest('/api/sync/matches/today', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'X-API-Key': configService.getApiKey(),
       },
     });
-    return response.json();
   },
 
   // 同步直播比赛
   async syncLiveMatches() {
-    const response = await fetch('/api/sync/matches/live', {
+    return handleApiRequest('/api/sync/matches/live', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'X-API-Key': configService.getApiKey(),
       },
     });
-    return response.json();
   },
 
   // 同步积分榜
   async syncStandings(league: string) {
-    const response = await fetch(`/api/sync/standings/${league}`, {
+    return handleApiRequest(`/api/sync/standings/${league}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'X-API-Key': configService.getApiKey(),
       },
     });
-    return response.json();
   },
 
   // Google 爬虫
   async scrapeGoogle(query: string = 'football scores today') {
-    const response = await fetch(`/api/sync/scrape/google?q=${encodeURIComponent(query)}`);
-    return response.json();
+    return handleApiRequest(`/api/sync/scrape/google?q=${encodeURIComponent(query)}`);
   },
 
   // FlashScore 爬虫
   async scrapeFlashScore() {
-    const response = await fetch('/api/sync/scrape/flashscore');
-    return response.json();
+    return handleApiRequest('/api/sync/scrape/flashscore');
   },
 
   // ESPN 爬虫
   async scrapeESPN() {
-    const response = await fetch('/api/sync/scrape/espn');
-    return response.json();
+    return handleApiRequest('/api/sync/scrape/espn');
   },
 };
