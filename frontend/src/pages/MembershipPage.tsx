@@ -80,18 +80,18 @@ const MembershipPage = () => {
     {
       icon: Sparkles,
       title: 'iOS 16 LiquidGlass效果',
-      description: '独家视觉特效，流动玻璃态UI，极致奢华体验',
+      description: '严格遵循Apple官方设计规范，使用Framer Motion动画库',
       color: 'text-cyan-500',
       bgColor: 'bg-gradient-to-br from-cyan-100 to-blue-100 dark:from-cyan-900/20 dark:to-blue-900/20',
-      isNew: true,
+      isFree: true,
     },
     {
       icon: Layers,
       title: 'Material Design 3效果',
-      description: 'Google官方设计语言，现代化Material You风格UI',
+      description: '严格遵循Google官方规范，使用MUI v5组件库',
       color: 'text-indigo-500',
       bgColor: 'bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900/20 dark:to-purple-900/20',
-      isNew: true,
+      isFree: true,
     },
     {
       icon: XIcon,
@@ -309,14 +309,14 @@ const MembershipPage = () => {
               <div
                 key={index}
                 className={`bg-white dark:bg-gray-800 rounded-xl p-6 hover:shadow-xl transition-all hover:-translate-y-1 relative ${
-                  (feature as any).isNew ? 'ring-2 ring-cyan-500 ring-opacity-50' : ''
+                  (feature as any).isFree ? 'ring-2 ring-orange-500 ring-opacity-50' : ''
                 }`}
               >
-                {/* NEW标签 */}
-                {(feature as any).isNew && (
+                {/* 限免标签 */}
+                {(feature as any).isFree && (
                   <div className="absolute -top-2 -right-2">
-                    <div className="liquid-badge text-white bg-gradient-to-r from-cyan-500 to-blue-500 shadow-lg animate-pulse-soft">
-                      ✨ NEW
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-red-500 to-orange-500 shadow-lg animate-pulse-soft">
+                      🎉 限时免费
                     </div>
                   </div>
                 )}
