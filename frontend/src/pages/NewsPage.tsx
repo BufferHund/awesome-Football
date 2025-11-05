@@ -45,8 +45,11 @@ const NewsPage = () => {
           break;
       }
 
+      // 后端返回格式: { data: [...], count: N, success: true }
+      const newsData = response.data.data || [];
+
       // 转换爬虫数据格式为统一格式
-      const scrapedNews = response.data.map((item: any, index: number) => ({
+      const scrapedNews = newsData.map((item: any, index: number) => ({
         id: `scraped-${source}-${index}`,
         title: item.title,
         summary: item.description || item.summary || '',

@@ -75,8 +75,11 @@ const StandingsPage = () => {
         response = await scraperService.scrapeBBCStandings();
       }
 
+      // 后端返回格式: { data: [...], count: N, success: true }
+      const standingsData = response.data.data || [];
+
       // 转换爬虫数据格式为统一格式
-      const scrapedStandings = response.data.map((item: any, index: number) => ({
+      const scrapedStandings = standingsData.map((item: any, index: number) => ({
         id: `scraped-${source}-${index}`,
         position: item.position || index + 1,
         team: {
