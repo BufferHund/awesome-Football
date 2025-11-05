@@ -1,19 +1,37 @@
 import { useEffect, useState } from 'react';
 import { Standing } from '../types';
-import { standingService } from '../services/api';
+import { standingService, scraperService } from '../services/api';
+
+type StandingsSource = 'database' | 'espn' | 'bbc';
+
+interface LeagueOption {
+  name: string;
+  code: string;
+}
+
+const LEAGUES: LeagueOption[] = [
+  { name: '英超', code: 'eng.1' },
+  { name: '西甲', code: 'esp.1' },
+  { name: '德甲', code: 'ger.1' },
+  { name: '意甲', code: 'ita.1' },
+  { name: '法甲', code: 'fra.1' },
+];
 
 const StandingsPage = () => {
-  const [standings, setStandings] = useState<Standing[]>([]);
+  const [standings, setStandings] = useState<any[]>([]);
   const [competitions, setCompetitions] = useState<string[]>([]);
   const [selectedCompetition, setSelectedCompetition] = useState<string>('');
   const [loading, setLoading] = useState(true);
+  const [selectedSource, setSelectedSource] = useState<StandingsSource>('database');
+  const [scraping, setScraping] = useState(false);
+  const [selectedLeague, setSelectedLeague] = useState<string>(LEAGUES[0].code);
 
   useEffect(() => {
     loadCompetitions();
   }, []);
 
   useEffect(() => {
-    if (selectedCompetition) {
+    if (selectedCompetition && selectedSource === 'database') {
       loadStandings(selectedCompetition);
     }
   }, [selectedCompetition]);
@@ -28,6 +46,8 @@ const StandingsPage = () => {
       }
     } catch (error) {
       console.error('加载联赛列表失败:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -38,36 +58,165 @@ const StandingsPage = () => {
       setStandings(response.data);
     } catch (error) {
       console.error('加载积分榜失败:', error);
+      setStandings([]);
     } finally {
       setLoading(false);
     }
   };
 
+  const scrapeStandings = async (source: 'espn' | 'bbc', league?: string) => {
+    setScraping(true);
+    setSelectedSource(source);
+    try {
+      let response;
+      if (source === 'espn') {
+        response = await scraperService.scrapeESPNStandings(league);
+      } else if (source === 'bbc') {
+        response = await scraperService.scrapeBBCStandings();
+      }
+
+      // 转换爬虫数据格式为统一格式
+      const scrapedStandings = response.data.map((item: any, index: number) => ({
+        id: `scraped-${source}-${index}`,
+        position: item.position || index + 1,
+        team: {
+          id: `team-${index}`,
+          name: item.team,
+          shortName: item.team,
+          logo: null,
+          country: '',
+        },
+        competition: league || 'Premier League',
+        played: item.played || 0,
+        won: item.won || 0,
+        drawn: item.drawn || 0,
+        lost: item.lost || 0,
+        goalsFor: item.goalsFor || 0,
+        goalsAgainst: item.goalsAgainst || 0,
+        goalDiff: item.goalDiff || 0,
+        points: item.points || 0,
+        form: item.form || null,
+      }));
+
+      setStandings(scrapedStandings);
+    } catch (error) {
+      console.error(`从${source.toUpperCase()}爬取积分榜失败:`, error);
+      setStandings([]);
+    } finally {
+      setScraping(false);
+    }
+  };
+
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-6">积分榜</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-3xl font-bold">积分榜</h1>
 
-      {/* 联赛选择器 */}
-      <div className="flex flex-wrap gap-2 mb-6">
-        {competitions.map((comp) => (
-          <button
-            key={comp}
-            onClick={() => setSelectedCompetition(comp)}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-              selectedCompetition === comp
-                ? 'bg-green-600 text-white'
-                : 'bg-white text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            {comp}
-          </button>
-        ))}
+        {/* 数据源选择 */}
+        <div className="flex items-center gap-4">
+          <span className="text-sm text-gray-600 dark:text-gray-400">数据源:</span>
+          <div className="flex gap-2">
+            <button
+              onClick={() => {
+                setSelectedSource('database');
+                if (selectedCompetition) {
+                  loadStandings(selectedCompetition);
+                }
+              }}
+              disabled={loading || scraping}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                selectedSource === 'database'
+                  ? 'bg-green-600 text-white'
+                  : 'bg-white dark:bg-zinc-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-700'
+              } disabled:opacity-50`}
+            >
+              数据库
+            </button>
+            <button
+              onClick={() => scrapeStandings('espn', selectedLeague)}
+              disabled={loading || scraping}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                selectedSource === 'espn'
+                  ? 'bg-green-600 text-white'
+                  : 'bg-white dark:bg-zinc-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-700'
+              } disabled:opacity-50`}
+            >
+              ESPN
+            </button>
+            <button
+              onClick={() => scrapeStandings('bbc')}
+              disabled={loading || scraping}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                selectedSource === 'bbc'
+                  ? 'bg-green-600 text-white'
+                  : 'bg-white dark:bg-zinc-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-700'
+              } disabled:opacity-50`}
+            >
+              BBC Sport
+            </button>
+          </div>
+        </div>
       </div>
 
+      {/* 联赛选择器 - 仅在使用爬虫时显示 */}
+      {selectedSource !== 'database' && (
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            选择联赛:
+          </label>
+          <div className="flex flex-wrap gap-2">
+            {LEAGUES.map((league) => (
+              <button
+                key={league.code}
+                onClick={() => {
+                  setSelectedLeague(league.code);
+                  if (selectedSource === 'espn') {
+                    scrapeStandings('espn', league.code);
+                  }
+                }}
+                disabled={scraping}
+                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                  selectedLeague === league.code
+                    ? 'bg-green-600 text-white'
+                    : 'bg-white dark:bg-zinc-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-700'
+                } disabled:opacity-50`}
+              >
+                {league.name}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* 数据库模式的联赛选择器 */}
+      {selectedSource === 'database' && competitions.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-6">
+          {competitions.map((comp) => (
+            <button
+              key={comp}
+              onClick={() => setSelectedCompetition(comp)}
+              disabled={loading}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                selectedCompetition === comp
+                  ? 'bg-green-600 text-white'
+                  : 'bg-white dark:bg-zinc-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-700'
+              } disabled:opacity-50`}
+            >
+              {comp}
+            </button>
+          ))}
+        </div>
+      )}
+
       {/* 积分榜表格 */}
-      {loading ? (
+      {(loading || scraping) ? (
         <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
+            <p className="text-gray-600 dark:text-gray-400">
+              {scraping ? `正在从 ${selectedSource.toUpperCase()} 获取积分榜...` : '加载中...'}
+            </p>
+          </div>
         </div>
       ) : standings.length > 0 ? (
         <div className="card overflow-x-auto">
@@ -155,6 +304,7 @@ const StandingsPage = () => {
       ) : (
         <div className="card p-12 text-center">
           <p className="text-gray-500 text-lg">暂无积分榜数据</p>
+          <p className="text-gray-400 text-sm mt-2">请尝试从其他数据源获取积分榜</p>
         </div>
       )}
     </div>

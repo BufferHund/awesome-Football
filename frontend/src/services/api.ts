@@ -51,3 +51,22 @@ export const newsService = {
   getById: (id: number) =>
     api.get<News>(`/news/${id}`),
 };
+
+export const scraperService = {
+  // 新闻爬虫
+  scrapeBBCNews: () =>
+    api.get<any[]>('/sync/scrape/news/bbc'),
+
+  scrapeESPNNews: () =>
+    api.get<any[]>('/sync/scrape/news/espn'),
+
+  scrapeGoalNews: () =>
+    api.get<any[]>('/sync/scrape/news/goal'),
+
+  // 积分榜爬虫
+  scrapeESPNStandings: (league?: string) =>
+    api.get<any[]>(`/sync/scrape/standings/espn${league ? `/${league}` : ''}`),
+
+  scrapeBBCStandings: () =>
+    api.get<any[]>('/sync/scrape/standings/bbc'),
+};
