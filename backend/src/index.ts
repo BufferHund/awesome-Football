@@ -11,8 +11,10 @@ import playerRoutes from './routes/players';
 import standingRoutes from './routes/standings';
 import newsRoutes from './routes/news';
 import syncRoutes from './routes/sync';
+import logRoutes from './routes/logs';
 
 import { startSyncScheduler } from './services/syncService';
+import { logService } from './services/logService';
 
 dotenv.config();
 
@@ -35,6 +37,7 @@ app.use('/api/players', playerRoutes);
 app.use('/api/standings', standingRoutes);
 app.use('/api/news', newsRoutes);
 app.use('/api/sync', syncRoutes);
+app.use('/api/logs', logRoutes);
 
 // 健康检查
 app.get('/health', (req, res) => {
@@ -67,10 +70,17 @@ app.listen(port, () => {
   console.log(`🚀 Server running on port ${port}`);
   console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
 
+  // 记录启动日志
+  logService.success('Server', `服务器启动成功，端口: ${port}`);
+  logService.info('Server', `运行环境: ${process.env.NODE_ENV || 'development'}`);
+
   // 启动自动数据同步
   if (process.env.ENABLE_AUTO_SYNC === 'true') {
     console.log('🔄 Starting auto sync scheduler...');
+    logService.info('Scheduler', '自动同步调度器已启动');
     startSyncScheduler();
+  } else {
+    logService.info('Scheduler', '自动同步已禁用，使用手动同步');
   }
 });
 

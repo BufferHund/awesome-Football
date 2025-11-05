@@ -2,11 +2,12 @@ import express from 'express';
 import { syncService } from '../services/syncService';
 import { webScraperService } from '../services/webScraper';
 import { LEAGUES } from '../services/footballApi';
+import { logService } from '../services/logService';
 
 const router = express.Router();
 
 // 统一错误处理函数
-function handleError(error: any, res: express.Response, defaultMessage: string) {
+function handleError(error: any, res: express.Response, defaultMessage: string, source: string) {
   console.error('Sync route error:', error);
 
   const isAxiosError = error.code === 'ERR_BAD_REQUEST' || error.response;
@@ -38,6 +39,20 @@ function handleError(error: any, res: express.Response, defaultMessage: string) 
     if (error.response.data?.errors) {
       errorResponse.apiErrors = error.response.data.errors;
     }
+
+    // 记录API错误日志
+    logService.error(source, errorResponse.message, {
+      status: error.response.status,
+      endpoint: errorResponse.apiError.endpoint,
+      apiKey: errorResponse.apiError.apiKey,
+      errors: errorResponse.apiErrors,
+    });
+  } else {
+    // 记录普通错误日志
+    logService.error(source, error.message || defaultMessage, {
+      errorType: errorResponse.errorType,
+      stack: error.stack?.split('\n').slice(0, 3).join('\n'),
+    });
   }
 
   // 添加堆栈信息（仅开发环境）
@@ -50,28 +65,36 @@ function handleError(error: any, res: express.Response, defaultMessage: string) 
 
 // 手动触发今日比赛同步
 router.post('/matches/today', async (req, res) => {
+  const source = 'Sync:TodayMatches';
+  logService.info(source, '开始同步今日比赛');
   try {
     await syncService.syncTodayMatches();
+    logService.success(source, '今日比赛同步完成');
     res.json({ message: '今日比赛同步完成', success: true });
   } catch (error) {
-    handleError(error, res, '今日比赛同步失败');
+    handleError(error, res, '今日比赛同步失败', source);
   }
 });
 
 // 手动触发直播比赛同步
 router.post('/matches/live', async (req, res) => {
+  const source = 'Sync:LiveMatches';
+  logService.info(source, '开始同步直播比赛');
   try {
     await syncService.syncLiveMatches();
+    logService.success(source, '直播比赛同步完成');
     res.json({ message: '直播比赛同步完成', success: true });
   } catch (error) {
-    handleError(error, res, '直播比赛同步失败');
+    handleError(error, res, '直播比赛同步失败', source);
   }
 });
 
 // 手动触发积分榜同步
 router.post('/standings/:league', async (req, res) => {
+  const { league } = req.params;
+  const source = `Sync:Standings:${league}`;
+
   try {
-    const { league } = req.params;
     const leagueMap: { [key: string]: { id: number; name: string } } = {
       'premier-league': { id: LEAGUES.PREMIER_LEAGUE, name: '英超' },
       'la-liga': { id: LEAGUES.LA_LIGA, name: '西甲' },
@@ -82,6 +105,7 @@ router.post('/standings/:league', async (req, res) => {
 
     const leagueData = leagueMap[league];
     if (!leagueData) {
+      logService.warn(source, `不支持的联赛: ${league}`);
       return res.status(400).json({
         success: false,
         message: '不支持的联赛',
@@ -89,41 +113,55 @@ router.post('/standings/:league', async (req, res) => {
       });
     }
 
+    logService.info(source, `开始同步${leagueData.name}积分榜`);
     await syncService.syncStandings(leagueData.id, leagueData.name);
+    logService.success(source, `${leagueData.name}积分榜同步完成`);
     res.json({ message: `${leagueData.name}积分榜同步完成`, success: true });
   } catch (error) {
-    handleError(error, res, '积分榜同步失败');
+    handleError(error, res, '积分榜同步失败', source);
   }
 });
 
 // 使用爬虫获取Google比分
 router.get('/scrape/google', async (req, res) => {
+  const query = req.query.q as string || 'football scores today';
+  const source = 'Scraper:Google';
+
+  logService.info(source, `开始爬取Google比分，查询: ${query}`);
   try {
-    const query = req.query.q as string || 'football scores today';
     const data = await webScraperService.scrapeGoogleScores(query);
+    logService.success(source, `Google爬虫执行成功，获取${data.length}条数据`);
     res.json({ data, count: data.length, success: true, message: 'Google爬虫执行成功' });
   } catch (error) {
-    handleError(error, res, 'Google爬虫执行失败');
+    handleError(error, res, 'Google爬虫执行失败', source);
   }
 });
 
 // 使用爬虫获取FlashScore比分
 router.get('/scrape/flashscore', async (req, res) => {
+  const source = 'Scraper:FlashScore';
+
+  logService.info(source, '开始爬取FlashScore比分');
   try {
     const data = await webScraperService.scrapeFlashScore();
+    logService.success(source, `FlashScore爬虫执行成功，获取${data.length}条数据`);
     res.json({ data, count: data.length, success: true, message: 'FlashScore爬虫执行成功' });
   } catch (error) {
-    handleError(error, res, 'FlashScore爬虫执行失败');
+    handleError(error, res, 'FlashScore爬虫执行失败', source);
   }
 });
 
 // 使用爬虫获取ESPN比分
 router.get('/scrape/espn', async (req, res) => {
+  const source = 'Scraper:ESPN';
+
+  logService.info(source, '开始爬取ESPN比分');
   try {
     const data = await webScraperService.scrapeESPN();
+    logService.success(source, `ESPN爬虫执行成功，获取${data.length}条数据`);
     res.json({ data, count: data.length, success: true, message: 'ESPN爬虫执行成功' });
   } catch (error) {
-    handleError(error, res, 'ESPN爬虫执行失败');
+    handleError(error, res, 'ESPN爬虫执行失败', source);
   }
 });
 
