@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { Home, Trophy, Users, Newspaper, ShoppingBag, Crown } from 'lucide-react';
+import { Home, Trophy, Users, Newspaper, ShoppingBag, Crown, MessageSquare } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import { themeService } from '../services/theme';
 
@@ -44,6 +44,7 @@ const Layout = () => {
     { path: '/matches', label: '比赛', icon: Trophy },
     { path: '/teams', label: '球队', icon: Users },
     { path: '/news', label: '新闻', icon: Newspaper },
+    { path: '/forum', label: '论坛', icon: MessageSquare },
     { path: '/shop', label: '商城', icon: ShoppingBag },
   ];
 

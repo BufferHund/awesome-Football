@@ -76,3 +76,38 @@ export interface News {
   createdAt?: string;
   updatedAt?: string;
 }
+
+export interface ForumPost {
+  id: number;
+  title: string;
+  content: string;
+  images: string[];
+  author: string;
+  authorAvatar: string | null;
+  category: string;
+  tags: string[];
+  views: number;
+  likes: number;
+  commentsCount: number;
+  isHot: boolean;
+  isPinned: boolean;
+  createdAt: string;
+  updatedAt: string;
+  comments?: ForumComment[];
+  _count?: {
+    comments: number;
+  };
+}
+
+export interface ForumComment {
+  id: number;
+  postId: number;
+  content: string;
+  author: string;
+  authorAvatar: string | null;
+  likes: number;
+  parentId: number | null;
+  createdAt: string;
+  updatedAt: string;
+  replies?: ForumComment[];
+}

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Match, Team, Player, Standing, News } from '../types';
+import { Match, Team, Player, Standing, News, ForumPost, ForumComment } from '../types';
 
 const api = axios.create({
   baseURL: '/api',
@@ -63,4 +63,55 @@ export const scraperService = {
   // 积分榜爬虫
   scrapeESPNStandings: (league?: string) =>
     api.get<any[]>(`/sync/scrape/standings/espn${league ? `/${league}` : ''}`),
+};
+
+export const forumService = {
+  // 获取帖子列表
+  getPosts: (params?: { page?: number; limit?: number; category?: string; sortBy?: string }) =>
+    api.get<{ data: ForumPost[]; pagination: any }>('/forum/posts', { params }),
+
+  // 获取帖子详情
+  getPostById: (id: number) =>
+    api.get<ForumPost>(`/forum/posts/${id}`),
+
+  // 创建帖子
+  createPost: (data: {
+    title: string;
+    content: string;
+    category: string;
+    tags?: string[];
+    images?: string[];
+    author?: string;
+    authorAvatar?: string;
+  }) =>
+    api.post<ForumPost>('/forum/posts', data),
+
+  // 点赞帖子
+  likePost: (id: number) =>
+    api.post<ForumPost>(`/forum/posts/${id}/like`),
+
+  // 获取帖子评论
+  getComments: (postId: number, params?: { page?: number; limit?: number }) =>
+    api.get<{ data: ForumComment[]; pagination: any }>(`/forum/posts/${postId}/comments`, { params }),
+
+  // 创建评论
+  createComment: (postId: number, data: {
+    content: string;
+    author?: string;
+    authorAvatar?: string;
+    parentId?: number;
+  }) =>
+    api.post<ForumComment>(`/forum/posts/${postId}/comments`, data),
+
+  // 点赞评论
+  likeComment: (id: number) =>
+    api.post<ForumComment>(`/forum/comments/${id}/like`),
+
+  // 删除帖子
+  deletePost: (id: number) =>
+    api.delete(`/forum/posts/${id}`),
+
+  // 删除评论
+  deleteComment: (id: number) =>
+    api.delete(`/forum/comments/${id}`),
 };

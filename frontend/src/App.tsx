@@ -9,6 +9,8 @@ import TeamsPage from './pages/TeamsPage';
 import TeamDetailPage from './pages/TeamDetailPage';
 import NewsPage from './pages/NewsPage';
 import NewsDetailPage from './pages/NewsDetailPage';
+import ForumPage from './pages/ForumPage';
+import ForumPostPage from './pages/ForumPostPage';
 import SettingsPage from './pages/SettingsPage';
 import ApiDocsPage from './pages/ApiDocsPage';
 import MembershipPage from './pages/MembershipPage';
@@ -57,6 +59,8 @@ function App() {
             <Route path="teams/:id" element={<TeamDetailPage />} />
             <Route path="news" element={<NewsPage />} />
             <Route path="news/:id" element={<NewsDetailPage />} />
+            <Route path="forum" element={<ForumPage />} />
+            <Route path="forum/:id" element={<ForumPostPage />} />
             <Route path="shop" element={<ShopPage />} />
           </Route>
           {/* 隐藏的设置页面 - 独立路由 */}

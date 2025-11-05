@@ -12,6 +12,7 @@ import standingRoutes from './routes/standings';
 import newsRoutes from './routes/news';
 import syncRoutes from './routes/sync';
 import logRoutes from './routes/logs';
+import forumRoutes from './routes/forum.routes';
 
 import { startSyncScheduler } from './services/syncService';
 import { logService } from './services/logService';
@@ -47,6 +48,7 @@ app.use('/api/standings', standingRoutes);
 app.use('/api/news', newsRoutes);
 app.use('/api/sync', syncRoutes);
 app.use('/api/logs', logRoutes);
+app.use('/api/forum', forumRoutes);
 
 // 根路径
 app.get('/', (req, res) => {
@@ -58,7 +60,8 @@ app.get('/', (req, res) => {
       teams: '/api/teams',
       players: '/api/players',
       standings: '/api/standings',
-      news: '/api/news'
+      news: '/api/news',
+      forum: '/api/forum'
     }
   });
 });

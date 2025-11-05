@@ -106,3 +106,39 @@ model News {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
+model ForumPost {
+  id            Int      @id @default(autoincrement())
+  title         String
+  content       String
+  images        String[] // 帖子图片数组
+  author        String   @default("球迷用户")
+  authorAvatar  String?
+  category      String   // 话题分类：综合讨论、战术分析、球员评价等
+  tags          String[] // 标签数组
+  views         Int      @default(0)
+  likes         Int      @default(0)
+  commentsCount Int      @default(0)
+  isHot         Boolean  @default(false)
+  isPinned      Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  comments      ForumComment[]
+}
+
+model ForumComment {
+  id            Int      @id @default(autoincrement())
+  postId        Int
+  content       String
+  author        String   @default("球迷用户")
+  authorAvatar  String?
+  likes         Int      @default(0)
+  parentId      Int?     // 父评论ID（用于回复评论）
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  post          ForumPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  parent        ForumComment? @relation("CommentReplies", fields: [parentId], references: [id])
+  replies       ForumComment[] @relation("CommentReplies")
+}
