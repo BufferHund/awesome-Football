@@ -1,12 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { Home, Trophy, Users, Newspaper, ShoppingBag, Crown, MessageSquare } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import ThemeToggle from './ThemeToggle';
 import { themeService } from '../services/theme';
 import { useLiquidGlass } from '../hooks/useLiquidGlass';
 import { useMaterialDesign3 } from '../hooks/useMaterialDesign3';
 
 const Layout = () => {
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   const [clickCount, setClickCount] = useState(0);
@@ -44,12 +46,12 @@ const Layout = () => {
   };
 
   const navItems = [
-    { path: '/', label: '首页', icon: Home },
-    { path: '/matches', label: '比赛', icon: Trophy },
-    { path: '/teams', label: '球队', icon: Users },
-    { path: '/news', label: '新闻', icon: Newspaper },
-    { path: '/forum', label: '论坛', icon: MessageSquare },
-    { path: '/shop', label: '商城', icon: ShoppingBag },
+    { path: '/', label: t('nav.home'), icon: Home },
+    { path: '/matches', label: t('nav.matches'), icon: Trophy },
+    { path: '/teams', label: t('nav.teams'), icon: Users },
+    { path: '/news', label: t('nav.news'), icon: Newspaper },
+    { path: '/forum', label: t('nav.forum'), icon: MessageSquare },
+    { path: '/shop', label: t('nav.shop'), icon: ShoppingBag },
   ];
 
   return (
@@ -74,7 +76,7 @@ const Layout = () => {
               <div className="relative w-9 h-9 flex items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 shadow-sm group-hover:shadow-md transition-all">
                 <Trophy className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-bold text-gray-900 dark:text-white tracking-tight">足球世界</span>
+              <span className="text-xl font-bold text-gray-900 dark:text-white tracking-tight">{t('home.title')}</span>
               {clickCount > 0 && clickCount < 7 && (
                 <span className="text-xs badge badge-live">
                   {clickCount}/7
@@ -111,7 +113,7 @@ const Layout = () => {
                 className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 text-white text-sm font-medium shadow-sm hover:shadow-md transition-all duration-200"
               >
                 <Crown className="w-4 h-4" />
-                <span className="hidden lg:inline">会员</span>
+                <span className="hidden lg:inline">{t('nav.membership')}</span>
               </Link>
 
               <ThemeToggle />
@@ -161,7 +163,7 @@ const Layout = () => {
       <footer className="bg-white dark:bg-zinc-900 border-t border-gray-200 dark:border-zinc-800 py-8 mb-16 md:mb-0 relative z-10">
         <div className="container mx-auto px-4">
           <div className="text-center">
-            <p className="text-sm text-gray-600 dark:text-gray-400">&copy; 2025 足球世界. 专业的足球资讯平台</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">&copy; 2025 {t('home.title')}</p>
             <p className="text-xs mt-2 text-gray-400 dark:text-gray-600">Powered by Modern React</p>
           </div>
         </div>

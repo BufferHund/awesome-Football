@@ -1,0 +1,61 @@
+{
+  "common": {
+    "home": "Home",
+    "matches": "Matches",
+    "teams": "Teams",
+    "news": "News",
+    "forum": "Forum",
+    "search": "Search",
+    "loading": "Loading...",
+    "loadMore": "Load More",
+    "noData": "No Data",
+    "error": "Error",
+    "retry": "Retry",
+    "language": "Language"
+  },
+  "home": {
+    "liveMatches": "Live Matches",
+    "latestNews": "Latest News",
+    "viewAll": "View All",
+    "noLiveMatches": "No live matches"
+  },
+  "match": {
+    "live": "Live",
+    "scheduled": "Scheduled",
+    "finished": "Finished",
+    "vs": "VS",
+    "venue": "Venue",
+    "time": "Time",
+    "todayMatches": "Today's Matches",
+    "noMatches": "No matches today"
+  },
+  "team": {
+    "teams": "Teams",
+    "coach": "Coach",
+    "stadium": "Stadium",
+    "founded": "Founded",
+    "searchPlaceholder": "Search teams or stadium...",
+    "noTeams": "No teams found"
+  },
+  "news": {
+    "latestNews": "Latest News",
+    "source": "Source",
+    "minutesAgo": "{{count}} minutes ago",
+    "hoursAgo": "{{count}} hours ago",
+    "daysAgo": "{{count}} days ago",
+    "noNews": "No news available"
+  },
+  "forum": {
+    "forum": "Forum",
+    "createPost": "Create Post",
+    "views": "Views",
+    "comments": "Comments",
+    "likes": "Likes",
+    "noPosts": "No posts yet",
+    "beFirstToPost": "Be the first to post!"
+  },
+  "languages": {
+    "zh-CN": "简体中文",
+    "en": "English"
+  }
+}

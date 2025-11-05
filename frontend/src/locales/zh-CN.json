@@ -1,0 +1,138 @@
+{
+  "common": {
+    "home": "首页",
+    "matches": "比赛",
+    "teams": "球队",
+    "news": "新闻",
+    "forum": "论坛",
+    "standings": "积分榜",
+    "shop": "商城",
+    "membership": "会员",
+    "settings": "设置",
+    "search": "搜索",
+    "loading": "加载中...",
+    "loadMore": "加载更多",
+    "noData": "暂无数据",
+    "error": "出错了",
+    "retry": "重试",
+    "confirm": "确认",
+    "cancel": "取消",
+    "save": "保存",
+    "delete": "删除",
+    "edit": "编辑",
+    "back": "返回",
+    "language": "语言"
+  },
+  "nav": {
+    "home": "首页",
+    "matches": "比赛",
+    "teams": "球队",
+    "news": "新闻",
+    "forum": "论坛",
+    "standings": "积分榜",
+    "shop": "商城",
+    "membership": "会员",
+    "settings": "设置"
+  },
+  "home": {
+    "title": "足球应用",
+    "liveMatches": "直播中",
+    "upcomingMatches": "即将开始",
+    "latestNews": "最新资讯",
+    "hotTopics": "热门话题",
+    "viewAll": "查看全部"
+  },
+  "match": {
+    "live": "直播中",
+    "scheduled": "未开始",
+    "finished": "已结束",
+    "vs": "VS",
+    "venue": "场馆",
+    "time": "时间",
+    "league": "联赛",
+    "matchDay": "第{{day}}轮",
+    "todayMatches": "今日比赛",
+    "noMatches": "今日暂无比赛"
+  },
+  "team": {
+    "teams": "球队",
+    "squad": "阵容",
+    "coach": "主教练",
+    "stadium": "主场",
+    "founded": "成立",
+    "searchPlaceholder": "搜索球队或球场..."
+  },
+  "news": {
+    "latestNews": "最新新闻",
+    "source": "来源",
+    "publishedAt": "发布于",
+    "minutesAgo": "{{count}}分钟前",
+    "hoursAgo": "{{count}}小时前",
+    "daysAgo": "{{count}}天前",
+    "noNews": "暂无新闻"
+  },
+  "forum": {
+    "forum": "论坛",
+    "createPost": "发布新帖",
+    "posts": "帖子",
+    "replies": "回复",
+    "views": "浏览",
+    "likes": "点赞",
+    "author": "作者",
+    "createdAt": "发布于",
+    "noPosts": "暂无帖子",
+    "beFirstToPost": "快来发表第一个帖子吧！"
+  },
+  "standings": {
+    "standings": "积分榜",
+    "rank": "排名",
+    "team": "球队",
+    "played": "场次",
+    "won": "胜",
+    "drawn": "平",
+    "lost": "负",
+    "goalsFor": "进球",
+    "goalsAgainst": "失球",
+    "goalDifference": "净胜球",
+    "points": "积分"
+  },
+  "shop": {
+    "shop": "商城",
+    "products": "商品",
+    "addToCart": "加入购物车",
+    "buyNow": "立即购买",
+    "cart": "购物车",
+    "checkout": "结算",
+    "price": "价格",
+    "inStock": "有货",
+    "outOfStock": "缺货"
+  },
+  "membership": {
+    "membership": "会员中心",
+    "freeTrial": "🎉 限时免费",
+    "features": "会员特权",
+    "liquidGlass": "iOS 16 LiquidGlass 效果",
+    "materialDesign3": "Material Design 3 效果",
+    "officialDocs": "官方文档",
+    "libraries": "组件库",
+    "framerMotion": "Framer Motion - 专业动画库",
+    "muiLibrary": "Material-UI v5 - 官方 MD3 组件"
+  },
+  "settings": {
+    "settings": "设置",
+    "appearance": "外观设置",
+    "uiEffects": "界面效果",
+    "liquidGlass": "LiquidGlass 效果",
+    "materialDesign3": "Material Design 3",
+    "enable": "启用",
+    "disable": "禁用",
+    "language": "语言设置",
+    "selectLanguage": "选择语言",
+    "about": "关于",
+    "version": "版本"
+  },
+  "languages": {
+    "zh-CN": "简体中文",
+    "en": "English"
+  }
+}

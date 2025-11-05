@@ -4,6 +4,7 @@ import { configService, syncTriggerService, DetailedSyncResult } from '../servic
 import BackendLogViewer from '../components/BackendLogViewer';
 import { useLiquidGlass } from '../hooks/useLiquidGlass';
 import { useMaterialDesign3 } from '../hooks/useMaterialDesign3';
+import LanguageSwitcher from '../components/LanguageSwitcher';
 import {
   Settings,
   Key,
@@ -266,6 +267,15 @@ const SettingsPage = () => {
               </div>
             </div>
           </div>
+        </section>
+
+        {/* 语言设置 */}
+        <section className="glass-card p-6 mb-6 animate-slide-up">
+          <div className="flex items-center space-x-2 mb-4">
+            <Globe className="w-5 h-5 text-primary-600 dark:text-primary-400" />
+            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">语言设置</h2>
+          </div>
+          <LanguageSwitcher />
         </section>
 
         {/* API 配置 */}

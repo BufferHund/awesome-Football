@@ -2,6 +2,7 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import { Platform } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import HomeScreen from '../screens/HomeScreen';
 import MatchesScreen from '../screens/MatchesScreen';
@@ -20,6 +21,8 @@ export type RootTabParamList = {
 const Tab = createBottomTabNavigator<RootTabParamList>();
 
 const BottomTabNavigator = () => {
+  const { t } = useTranslation();
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -71,27 +74,27 @@ const BottomTabNavigator = () => {
       <Tab.Screen
         name="Home"
         component={HomeScreen}
-        options={{ title: '首页' }}
+        options={{ title: t('common.home') }}
       />
       <Tab.Screen
         name="Matches"
         component={MatchesScreen}
-        options={{ title: '比赛' }}
+        options={{ title: t('common.matches') }}
       />
       <Tab.Screen
         name="Teams"
         component={TeamsScreen}
-        options={{ title: '球队' }}
+        options={{ title: t('common.teams') }}
       />
       <Tab.Screen
         name="News"
         component={NewsScreen}
-        options={{ title: '新闻' }}
+        options={{ title: t('common.news') }}
       />
       <Tab.Screen
         name="Forum"
         component={ForumScreen}
-        options={{ title: '论坛' }}
+        options={{ title: t('common.forum') }}
       />
     </Tab.Navigator>
   );

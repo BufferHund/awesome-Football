@@ -1,0 +1,138 @@
+{
+  "common": {
+    "home": "Home",
+    "matches": "Matches",
+    "teams": "Teams",
+    "news": "News",
+    "forum": "Forum",
+    "standings": "Standings",
+    "shop": "Shop",
+    "membership": "Membership",
+    "settings": "Settings",
+    "search": "Search",
+    "loading": "Loading...",
+    "loadMore": "Load More",
+    "noData": "No Data",
+    "error": "Error",
+    "retry": "Retry",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "language": "Language"
+  },
+  "nav": {
+    "home": "Home",
+    "matches": "Matches",
+    "teams": "Teams",
+    "news": "News",
+    "forum": "Forum",
+    "standings": "Standings",
+    "shop": "Shop",
+    "membership": "Membership",
+    "settings": "Settings"
+  },
+  "home": {
+    "title": "Football App",
+    "liveMatches": "Live Matches",
+    "upcomingMatches": "Upcoming",
+    "latestNews": "Latest News",
+    "hotTopics": "Hot Topics",
+    "viewAll": "View All"
+  },
+  "match": {
+    "live": "Live",
+    "scheduled": "Scheduled",
+    "finished": "Finished",
+    "vs": "VS",
+    "venue": "Venue",
+    "time": "Time",
+    "league": "League",
+    "matchDay": "Matchday {{day}}",
+    "todayMatches": "Today's Matches",
+    "noMatches": "No matches today"
+  },
+  "team": {
+    "teams": "Teams",
+    "squad": "Squad",
+    "coach": "Coach",
+    "stadium": "Stadium",
+    "founded": "Founded",
+    "searchPlaceholder": "Search teams or stadium..."
+  },
+  "news": {
+    "latestNews": "Latest News",
+    "source": "Source",
+    "publishedAt": "Published at",
+    "minutesAgo": "{{count}} minutes ago",
+    "hoursAgo": "{{count}} hours ago",
+    "daysAgo": "{{count}} days ago",
+    "noNews": "No news available"
+  },
+  "forum": {
+    "forum": "Forum",
+    "createPost": "Create Post",
+    "posts": "Posts",
+    "replies": "Replies",
+    "views": "Views",
+    "likes": "Likes",
+    "author": "Author",
+    "createdAt": "Created at",
+    "noPosts": "No posts yet",
+    "beFirstToPost": "Be the first to post!"
+  },
+  "standings": {
+    "standings": "Standings",
+    "rank": "Rank",
+    "team": "Team",
+    "played": "Played",
+    "won": "Won",
+    "drawn": "Drawn",
+    "lost": "Lost",
+    "goalsFor": "GF",
+    "goalsAgainst": "GA",
+    "goalDifference": "GD",
+    "points": "Points"
+  },
+  "shop": {
+    "shop": "Shop",
+    "products": "Products",
+    "addToCart": "Add to Cart",
+    "buyNow": "Buy Now",
+    "cart": "Cart",
+    "checkout": "Checkout",
+    "price": "Price",
+    "inStock": "In Stock",
+    "outOfStock": "Out of Stock"
+  },
+  "membership": {
+    "membership": "Membership",
+    "freeTrial": "🎉 Limited Time Free",
+    "features": "Member Features",
+    "liquidGlass": "iOS 16 LiquidGlass Effect",
+    "materialDesign3": "Material Design 3 Effect",
+    "officialDocs": "Official Documentation",
+    "libraries": "Component Libraries",
+    "framerMotion": "Framer Motion - Professional Animation Library",
+    "muiLibrary": "Material-UI v5 - Official MD3 Components"
+  },
+  "settings": {
+    "settings": "Settings",
+    "appearance": "Appearance",
+    "uiEffects": "UI Effects",
+    "liquidGlass": "LiquidGlass Effect",
+    "materialDesign3": "Material Design 3",
+    "enable": "Enable",
+    "disable": "Disable",
+    "language": "Language",
+    "selectLanguage": "Select Language",
+    "about": "About",
+    "version": "Version"
+  },
+  "languages": {
+    "zh-CN": "简体中文",
+    "en": "English"
+  }
+}

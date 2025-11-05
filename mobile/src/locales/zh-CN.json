@@ -1,0 +1,61 @@
+{
+  "common": {
+    "home": "首页",
+    "matches": "比赛",
+    "teams": "球队",
+    "news": "新闻",
+    "forum": "论坛",
+    "search": "搜索",
+    "loading": "加载中...",
+    "loadMore": "加载更多",
+    "noData": "暂无数据",
+    "error": "出错了",
+    "retry": "重试",
+    "language": "语言"
+  },
+  "home": {
+    "liveMatches": "直播中",
+    "latestNews": "最新资讯",
+    "viewAll": "查看全部",
+    "noLiveMatches": "暂无直播比赛"
+  },
+  "match": {
+    "live": "直播中",
+    "scheduled": "未开始",
+    "finished": "已结束",
+    "vs": "VS",
+    "venue": "场馆",
+    "time": "时间",
+    "todayMatches": "今日比赛",
+    "noMatches": "今日暂无比赛"
+  },
+  "team": {
+    "teams": "球队",
+    "coach": "主教练",
+    "stadium": "主场",
+    "founded": "成立于",
+    "searchPlaceholder": "搜索球队或球场...",
+    "noTeams": "未找到相关球队"
+  },
+  "news": {
+    "latestNews": "最新新闻",
+    "source": "来源",
+    "minutesAgo": "{{count}}分钟前",
+    "hoursAgo": "{{count}}小时前",
+    "daysAgo": "{{count}}天前",
+    "noNews": "暂无新闻"
+  },
+  "forum": {
+    "forum": "论坛",
+    "createPost": "发布新帖",
+    "views": "浏览",
+    "comments": "评论",
+    "likes": "点赞",
+    "noPosts": "暂无帖子",
+    "beFirstToPost": "快来发表第一个帖子吧！"
+  },
+  "languages": {
+    "zh-CN": "简体中文",
+    "en": "English"
+  }
+}
