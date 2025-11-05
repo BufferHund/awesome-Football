@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import ErrorBoundary from './components/ErrorBoundary';
 import Layout from './components/Layout';
 import HomePage from './pages/HomePage';
 import MatchesPage from './pages/MatchesPage';
@@ -15,39 +15,10 @@ import SettingsPage from './pages/SettingsPage';
 import ApiDocsPage from './pages/ApiDocsPage';
 import MembershipPage from './pages/MembershipPage';
 import ShopPage from './pages/ShopPage';
-import SplashAd from './components/SplashAd';
 
 function App() {
-  const [showSplashAd, setShowSplashAd] = useState(false);
-
-  useEffect(() => {
-    // 检查是否需要显示开屏广告
-    const checkSplashAd = () => {
-      const lastShown = localStorage.getItem('splashAdLastShown');
-      const today = new Date().toDateString();
-
-      // 如果今天还没显示过，或者是首次访问，则显示广告
-      if (!lastShown || lastShown !== today) {
-        setShowSplashAd(true);
-      }
-    };
-
-    checkSplashAd();
-  }, []);
-
-  const handleCloseSplashAd = () => {
-    // 记录广告已显示
-    const today = new Date().toDateString();
-    localStorage.setItem('splashAdLastShown', today);
-    setShowSplashAd(false);
-  };
-
   return (
-    <>
-      {/* 开屏广告 */}
-      {showSplashAd && <SplashAd onClose={handleCloseSplashAd} />}
-
-      {/* 主应用内容 */}
+    <ErrorBoundary>
       <Router>
         <Routes>
           <Route path="/" element={<Layout />}>
@@ -71,7 +42,7 @@ function App() {
           <Route path="/membership" element={<MembershipPage />} />
         </Routes>
       </Router>
-    </>
+    </ErrorBoundary>
   );
 }
 
