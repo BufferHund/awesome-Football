@@ -43,9 +43,17 @@ const StandingsPage = () => {
       setCompetitions(comps);
       if (comps.length > 0) {
         setSelectedCompetition(comps[0]);
+      } else {
+        // 如果数据库没有数据，自动切换到爬虫模式
+        console.log('数据库没有积分榜数据，切换到爬虫模式');
+        setSelectedSource('espn');
+        scrapeStandings('espn', selectedLeague);
       }
     } catch (error) {
       console.error('加载联赛列表失败:', error);
+      // 发生错误时也切换到爬虫模式
+      setSelectedSource('espn');
+      scrapeStandings('espn', selectedLeague);
     } finally {
       setLoading(false);
     }

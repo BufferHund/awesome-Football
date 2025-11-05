@@ -54,13 +54,15 @@ const NewsPage = () => {
         title: item.title,
         summary: item.description || item.summary || '',
         content: item.description || item.summary || '',
-        coverImage: item.image || item.imageUrl || null,
+        coverImage: item.image || item.imageUrl || item.coverImage || null,
         category: source.toUpperCase(),
         author: item.author || source.toUpperCase(),
         publishDate: item.publishDate || item.date || new Date().toISOString(),
         views: 0,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
+        // 保留外部URL以便打开原网站
+        externalUrl: item.url || null,
       }));
 
       setNews(scrapedNews);

@@ -63,7 +63,7 @@ export interface Standing {
 }
 
 export interface News {
-  id: number;
+  id: number | string; // 支持数据库ID（number）和爬虫ID（string）
   title: string;
   summary: string | null;
   content: string;
@@ -72,4 +72,7 @@ export interface News {
   author: string | null;
   publishDate: string;
   views: number;
+  externalUrl?: string | null; // 爬虫新闻的外部链接
+  createdAt?: string;
+  updatedAt?: string;
 }

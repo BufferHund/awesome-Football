@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { News } from '../types';
-import { Eye, Calendar } from 'lucide-react';
+import { Eye, Calendar, ExternalLink } from 'lucide-react';
 
 interface NewsCardProps {
   news: News;
@@ -16,8 +16,15 @@ const NewsCard = ({ news }: NewsCardProps) => {
     });
   };
 
+  // 判断是否为外部新闻（爬虫新闻）
+  const isExternalNews = !!news.externalUrl;
+  const CardWrapper = isExternalNews ? 'a' : Link;
+  const cardProps = isExternalNews
+    ? { href: news.externalUrl, target: '_blank', rel: 'noopener noreferrer' }
+    : { to: `/news/${news.id}` };
+
   return (
-    <Link to={`/news/${news.id}`} className="glass-card overflow-hidden block hover-lift group">
+    <CardWrapper {...cardProps} className="glass-card overflow-hidden block hover-lift group">
       {news.coverImage && (
         <div className="aspect-video bg-gray-200 dark:bg-zinc-700 overflow-hidden">
           <img
@@ -31,6 +38,11 @@ const NewsCard = ({ news }: NewsCardProps) => {
         <div className="flex items-center space-x-2 mb-2">
           <span className="badge bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-300">{news.category}</span>
           {news.author && <span className="text-xs text-gray-500 dark:text-gray-400">• {news.author}</span>}
+          {isExternalNews && (
+            <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
+              • <ExternalLink className="w-3 h-3" />
+            </span>
+          )}
         </div>
         <h3 className="font-bold text-lg mb-2 line-clamp-2 text-gray-900 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">{news.title}</h3>
         {news.summary && (
@@ -47,7 +59,7 @@ const NewsCard = ({ news }: NewsCardProps) => {
           </div>
         </div>
       </div>
-    </Link>
+    </CardWrapper>
   );
 };
 

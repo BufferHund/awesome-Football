@@ -39,7 +39,9 @@ router.get('/competitions/list', async (req, res) => {
 
     res.json(competitions.map(c => c.competition));
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch competitions' });
+    console.error('获取联赛列表失败:', error);
+    // 返回空数组而不是500错误，让前端可以使用爬虫
+    res.json([]);
   }
 });
 
