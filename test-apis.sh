@@ -41,6 +41,30 @@ echo "9. 测试ESPN爬虫"
 curl -s http://localhost:3000/api/sync/scrape/espn
 echo ""
 
+echo "10. 测试ESPN积分榜爬虫（英超）"
+curl -s http://localhost:3000/api/sync/scrape/standings/espn/premier-league | jq '.count'
+echo ""
+
+echo "11. 测试ESPN积分榜爬虫（西甲）"
+curl -s http://localhost:3000/api/sync/scrape/standings/espn/la-liga | jq '.count'
+echo ""
+
+echo "12. 测试BBC Sport积分榜爬虫"
+curl -s http://localhost:3000/api/sync/scrape/standings/bbc | jq '.count'
+echo ""
+
+echo "13. 测试BBC Sport新闻爬虫"
+curl -s http://localhost:3000/api/sync/scrape/news/bbc | jq '.count'
+echo ""
+
+echo "14. 测试ESPN新闻爬虫"
+curl -s http://localhost:3000/api/sync/scrape/news/espn | jq '.count'
+echo ""
+
+echo "15. 测试Goal.com新闻爬虫"
+curl -s http://localhost:3000/api/sync/scrape/news/goal | jq '.count'
+echo ""
+
 echo "================================="
 echo "测试完成"
 echo "================================="
