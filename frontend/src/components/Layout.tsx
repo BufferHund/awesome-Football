@@ -53,19 +53,18 @@ const Layout = () => {
       {/* 装饰性背景 */}
       <div className="fixed inset-0 grid-bg opacity-50 pointer-events-none"></div>
 
-      {/* 顶部导航栏 - 玻璃态效果 */}
-      <header className="glass-bg border-b border-gray-200/50 dark:border-gray-700/50 shadow-xl sticky top-0 z-50 backdrop-blur-xl">
+      {/* 顶部导航栏 - 扁平化设计 */}
+      <header className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border-b border-gray-200/80 dark:border-zinc-800/80 sticky top-0 z-50">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             <div
               onClick={handleLogoClick}
-              className="flex items-center space-x-2 cursor-pointer select-none group"
+              className="flex items-center gap-3 cursor-pointer select-none group"
             >
-              <div className="relative">
-                <Trophy className="w-8 h-8 text-primary-600 dark:text-primary-400 group-hover:scale-110 transition-transform" />
-                <div className="absolute inset-0 bg-primary-500/20 blur-xl group-hover:bg-primary-500/40 transition-all"></div>
+              <div className="relative w-9 h-9 flex items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 shadow-sm group-hover:shadow-md transition-all">
+                <Trophy className="w-5 h-5 text-white" />
               </div>
-              <span className="text-2xl font-bold gradient-text">足球世界</span>
+              <span className="text-xl font-bold text-gray-900 dark:text-white tracking-tight">足球世界</span>
               {clickCount > 0 && clickCount < 7 && (
                 <span className="text-xs badge badge-live">
                   {clickCount}/7
@@ -73,18 +72,18 @@ const Layout = () => {
               )}
             </div>
 
-            <div className="flex items-center space-x-4">
-              <nav className="hidden md:flex space-x-2">
+            <div className="flex items-center gap-2">
+              <nav className="hidden md:flex items-center gap-1">
                 {navItems.map(({ path, label, icon: Icon }) => (
                     <Link
                     key={path}
                     to={path}
                     className={`
-                      flex items-center space-x-2 px-4 py-2 rounded-xl
-                      font-medium transition-all duration-300
+                      flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium
+                      transition-all duration-200
                       ${isActive(path)
-                        ? 'bg-primary-500/20 text-primary-700 dark:text-primary-300 shadow-lg scale-105'
-                        : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-dark-200/50'
+                        ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400'
+                        : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-zinc-800/50'
                       }
                     `}
                   >
@@ -96,7 +95,7 @@ const Layout = () => {
 
               <Link
                 to="/membership"
-                className="flex items-center space-x-1 px-4 py-2 rounded-xl bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-medium shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 text-white text-sm font-medium shadow-sm hover:shadow-md transition-all duration-200"
               >
                 <Crown className="w-4 h-4" />
                 <span className="hidden lg:inline">会员</span>
@@ -113,36 +112,35 @@ const Layout = () => {
         <Outlet />
       </main>
 
-      {/* 底部导航（移动端）- 玻璃态效果 */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 glass-bg border-t border-gray-200/50 dark:border-gray-700/50 shadow-2xl backdrop-blur-2xl z-50">
-        <div className="flex justify-around p-2">
+      {/* 底部导航（移动端）- 扁平化设计 */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl border-t border-gray-200 dark:border-zinc-800 z-50 safe-area-bottom">
+        <div className="flex justify-around px-2 py-1">
           {navItems.map(({ path, label, icon: Icon }) => (
             <Link
               key={path}
               to={path}
               className={`
-                flex flex-col items-center py-2 px-3 flex-1 rounded-xl
-                transition-all duration-300
+                flex flex-col items-center py-2 px-3 flex-1 rounded-lg text-xs font-medium
+                transition-all duration-200
                 ${isActive(path)
-                  ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20 scale-105'
-                  : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100/50 dark:hover:bg-dark-200/50'
+                  ? 'text-primary-600 dark:text-primary-400'
+                  : 'text-gray-600 dark:text-gray-400'
                 }
               `}
             >
-              <Icon className="w-6 h-6" />
-              <span className="text-xs mt-1 font-medium">{label}</span>
+              <Icon className={`w-5 h-5 mb-1 ${isActive(path) ? 'stroke-[2.5]' : 'stroke-2'}`} />
+              <span>{label}</span>
             </Link>
           ))}
         </div>
       </nav>
 
       {/* 底部信息 */}
-      <footer className="bg-gray-100 dark:bg-zinc-900 text-gray-600 dark:text-gray-400 py-8 mb-20 md:mb-0 relative z-10">
+      <footer className="bg-white dark:bg-zinc-900 border-t border-gray-200 dark:border-zinc-800 py-8 mb-16 md:mb-0 relative z-10">
         <div className="container mx-auto px-4">
-          <div className="divider mb-6"></div>
           <div className="text-center">
-            <p className="text-sm">&copy; 2025 足球世界. 专业的足球资讯平台</p>
-            <p className="text-xs mt-2 opacity-60">Powered by NextUI inspired design</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">&copy; 2025 足球世界. 专业的足球资讯平台</p>
+            <p className="text-xs mt-2 text-gray-400 dark:text-gray-600">Powered by Modern React</p>
           </div>
         </div>
       </footer>
