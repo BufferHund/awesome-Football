@@ -14,6 +14,7 @@ import {
   Bot,
   BarChart3,
   X as XIcon,
+  Layers,
 } from 'lucide-react';
 
 type PlanType = 'trial' | 'monthly' | 'quarterly' | 'yearly';
@@ -83,6 +84,14 @@ const MembershipPage = () => {
       isNew: true,
     },
     {
+      icon: Layers,
+      title: 'Material Design 3效果',
+      description: 'Google官方设计语言，现代化Material You风格UI',
+      color: 'text-indigo-500',
+      bgColor: 'bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900/20 dark:to-purple-900/20',
+      isNew: true,
+    },
+    {
       icon: XIcon,
       title: '去除广告',
       description: '畅享纯净观赛体验，无任何广告打扰',
@@ -128,8 +137,8 @@ const MembershipPage = () => {
       icon: Users,
       title: '会员专属社区',
       description: '加入高端球迷圈，与大神交流心得',
-      color: 'text-indigo-500',
-      bgColor: 'bg-indigo-100 dark:bg-indigo-900/20',
+      color: 'text-teal-500',
+      bgColor: 'bg-teal-100 dark:bg-teal-900/20',
     },
     {
       icon: Shield,

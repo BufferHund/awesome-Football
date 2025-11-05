@@ -4,6 +4,7 @@ import { Home, Trophy, Users, Newspaper, ShoppingBag, Crown, MessageSquare } fro
 import ThemeToggle from './ThemeToggle';
 import { themeService } from '../services/theme';
 import { useLiquidGlass } from '../hooks/useLiquidGlass';
+import { useMaterialDesign3 } from '../hooks/useMaterialDesign3';
 
 const Layout = () => {
   const location = useLocation();
@@ -11,6 +12,7 @@ const Layout = () => {
   const [clickCount, setClickCount] = useState(0);
   const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { isEnabled: liquidGlassEnabled } = useLiquidGlass();
+  const { isEnabled: md3Enabled } = useMaterialDesign3();
 
   useEffect(() => {
     themeService.initTheme();
@@ -59,6 +61,8 @@ const Layout = () => {
       <header className={`${
         liquidGlassEnabled
           ? 'liquid-nav'
+          : md3Enabled
+          ? 'md3-nav'
           : 'bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border-b border-gray-200/80 dark:border-zinc-800/80'
       } sticky top-0 z-50`}>
         <div className="container mx-auto px-4">
@@ -85,11 +89,14 @@ const Layout = () => {
                     key={path}
                     to={path}
                     className={`
-                      flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium
+                      flex items-center gap-2 px-3 py-2 text-sm font-medium
                       transition-all duration-200
-                      ${isActive(path)
-                        ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400'
-                        : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-zinc-800/50'
+                      ${md3Enabled
+                        ? `md3-nav-item ${isActive(path) ? 'md3-nav-item-active' : ''}`
+                        : `rounded-lg ${isActive(path)
+                          ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400'
+                          : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-zinc-800/50'
+                        }`
                       }
                     `}
                   >
@@ -122,6 +129,8 @@ const Layout = () => {
       <nav className={`md:hidden fixed bottom-0 left-0 right-0 ${
         liquidGlassEnabled
           ? 'liquid-nav'
+          : md3Enabled
+          ? 'md3-bottom-nav'
           : 'bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl border-t border-gray-200 dark:border-zinc-800'
       } z-50 safe-area-bottom`}>
         <div className="flex justify-around px-2 py-1">
@@ -130,11 +139,14 @@ const Layout = () => {
               key={path}
               to={path}
               className={`
-                flex flex-col items-center py-2 px-3 flex-1 rounded-lg text-xs font-medium
+                flex flex-col items-center py-2 px-3 flex-1 text-xs font-medium
                 transition-all duration-200
-                ${isActive(path)
-                  ? 'text-primary-600 dark:text-primary-400'
-                  : 'text-gray-600 dark:text-gray-400'
+                ${md3Enabled
+                  ? `md3-bottom-nav-item ${isActive(path) ? 'md3-bottom-nav-item-active' : ''}`
+                  : `rounded-lg ${isActive(path)
+                    ? 'text-primary-600 dark:text-primary-400'
+                    : 'text-gray-600 dark:text-gray-400'
+                  }`
                 }
               `}
             >

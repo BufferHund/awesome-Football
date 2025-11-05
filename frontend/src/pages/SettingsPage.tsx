@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { configService, syncTriggerService, DetailedSyncResult } from '../services/config';
 import BackendLogViewer from '../components/BackendLogViewer';
 import { useLiquidGlass } from '../hooks/useLiquidGlass';
+import { useMaterialDesign3 } from '../hooks/useMaterialDesign3';
 import {
   Settings,
   Key,
@@ -19,7 +20,8 @@ import {
   Clock,
   AlertCircle,
   BookOpen,
-  Sparkles
+  Sparkles,
+  Layers
 } from 'lucide-react';
 
 interface SyncResult extends DetailedSyncResult {
@@ -34,6 +36,7 @@ const SettingsPage = () => {
   const [syncResults, setSyncResults] = useState<SyncResult[]>([]);
   const [loading, setLoading] = useState<string | null>(null);
   const { isEnabled: liquidGlassEnabled, toggle: toggleLiquidGlass } = useLiquidGlass();
+  const { isEnabled: md3Enabled, toggle: toggleMD3 } = useMaterialDesign3();
 
   const handleSave = () => {
     configService.saveConfig(config);
@@ -184,6 +187,80 @@ const SettingsPage = () => {
                   </p>
                   <p className="text-xs text-cyan-700 dark:text-cyan-300">
                     LiquidGlass效果采用iOS 16技术，为导航栏、卡片提供流动玻璃质感，开通会员即可体验。
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Material Design 3效果设置 - 会员专属 */}
+        <section className="glass-card p-6 mb-6 animate-slide-up border-2 border-indigo-500/30">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center space-x-2">
+              <Layers className="w-5 h-5 text-indigo-500" />
+              <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+                Material Design 3效果
+              </h2>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-indigo-500 to-purple-500">
+                ✨ 会员专属
+              </span>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  启用Material Design 3效果
+                </label>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  Google官方设计语言，现代化Material You风格UI
+                </p>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={md3Enabled}
+                  onChange={toggleMD3}
+                  className="sr-only peer"
+                />
+                <div className="w-11 h-6 bg-gray-200 dark:bg-zinc-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 dark:peer-focus:ring-indigo-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-indigo-500 peer-checked:to-purple-500"></div>
+              </label>
+            </div>
+
+            {/* Material Design 3效果预览 */}
+            {md3Enabled && (
+              <div className="animate-fade-in">
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">效果预览：</p>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <div className="md3-card text-center">
+                    <Layers className="w-8 h-8 mx-auto mb-2 text-indigo-500" />
+                    <p className="text-sm font-medium">Elevated卡片</p>
+                  </div>
+                  <div className="md3-card-filled text-center">
+                    <div className="md3-chip-filled mx-auto mb-2">
+                      Filled芯片
+                    </div>
+                    <p className="text-sm font-medium">Filled变体</p>
+                  </div>
+                  <div className="text-center">
+                    <button className="md3-btn-filled">Filled按钮</button>
+                    <button className="md3-btn-tonal mt-2">Tonal按钮</button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="bg-indigo-50 dark:bg-indigo-900/20 rounded-lg p-4 border border-indigo-200 dark:border-indigo-800">
+              <div className="flex items-start space-x-3">
+                <Layers className="w-5 h-5 text-indigo-600 dark:text-indigo-400 mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-sm font-medium text-indigo-900 dark:text-indigo-100 mb-1">
+                    会员专属特权
+                  </p>
+                  <p className="text-xs text-indigo-700 dark:text-indigo-300">
+                    Material Design 3采用Google最新设计规范，提供Surface Elevation、State Layer等现代化交互效果，开通会员即可体验。
                   </p>
                 </div>
               </div>
