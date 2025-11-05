@@ -30,6 +30,15 @@ app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// 健康检查（放在路由之前，避免被其他中间件影响）
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 // 路由
 app.use('/api/matches', matchRoutes);
 app.use('/api/teams', teamRoutes);
@@ -38,11 +47,6 @@ app.use('/api/standings', standingRoutes);
 app.use('/api/news', newsRoutes);
 app.use('/api/sync', syncRoutes);
 app.use('/api/logs', logRoutes);
-
-// 健康检查
-app.get('/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
-});
 
 // 根路径
 app.get('/', (req, res) => {
