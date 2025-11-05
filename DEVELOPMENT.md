@@ -32,7 +32,7 @@ docker run -d \
   --name football-postgres \
   -e POSTGRES_USER=football \
   -e POSTGRES_PASSWORD=football123 \
-  -e POSTGRES_DB=football \
+  -e POSTGRES_DB=footballdb \
   -p 5432:5432 \
   postgres:16-alpine
 ```
@@ -101,7 +101,7 @@ npm run dev
 ### 后端 (.env)
 
 ```env
-DATABASE_URL="postgresql://football:football123@localhost:5432/football"
+DATABASE_URL="postgresql://football:football123@localhost:5432/footballdb?schema=public"
 PORT=3000
 NODE_ENV=development
 FOOTBALL_API_KEY=your_api_key_here
