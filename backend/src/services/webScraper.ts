@@ -222,27 +222,53 @@ export const webScraperService = {
       const $ = cheerio.load(response.data);
       const news: any[] = [];
 
-      $('.gs-c-promo').each((index, element) => {
-        const title = $(element).find('.gs-c-promo-heading__title').text().trim();
-        const summary = $(element).find('.gs-c-promo-summary').text().trim();
-        const link = $(element).find('.gs-c-promo-heading').attr('href');
-        const image = $(element).find('.gs-c-promo-image img').attr('src');
-        const time = $(element).find('.gs-c-promo-timestamp').text().trim();
+      // 尝试多种选择器，BBC网站结构经常变化
+      const selectors = [
+        '.gs-c-promo',
+        'article[class*="promo"]',
+        '[data-testid*="card"]',
+        '.ssrcss-1f3bvyz-Stack',
+        'article'
+      ];
 
-        if (title) {
-          news.push({
-            title,
-            summary: summary || title,
-            content: summary || title,
-            coverImage: image || null,
-            url: link ? `https://www.bbc.com${link}` : null,
-            publishDate: time || new Date().toISOString(),
-            category: '足球新闻',
-            author: 'BBC Sport',
-            views: 0,
-          });
-        }
-      });
+      for (const selector of selectors) {
+        if (news.length > 0) break; // 如果已经找到新闻，跳出循环
+
+        $(selector).each((index, element) => {
+          if (index >= 20) return false; // 最多20条
+
+          // 尝试多种方式提取标题
+          const title = $(element).find('.gs-c-promo-heading__title, h2, h3, [class*="heading"], [class*="title"]').first().text().trim();
+          const summary = $(element).find('.gs-c-promo-summary, p, [class*="summary"], [class*="description"]').first().text().trim();
+
+          // 提取链接
+          const linkElement = $(element).find('a').first();
+          const link = linkElement.attr('href');
+
+          // 提取图片
+          const image = $(element).find('img').first().attr('src');
+          const time = $(element).find('[class*="timestamp"], time').first().text().trim();
+
+          if (title && title.length > 10) { // 确保标题有意义
+            let fullUrl = null;
+            if (link) {
+              fullUrl = link.startsWith('http') ? link : `https://www.bbc.com${link}`;
+            }
+
+            news.push({
+              title,
+              summary: summary || title,
+              content: summary || title,
+              coverImage: image || null,
+              url: fullUrl,
+              publishDate: time || new Date().toISOString(),
+              category: '足球新闻',
+              author: 'BBC Sport',
+              views: 0,
+            });
+          }
+        });
+      }
 
       return news.slice(0, 20); // 返回前20条
     } catch (error) {
@@ -270,12 +296,18 @@ export const webScraperService = {
         const image = $(element).find('.contentItem__image img').attr('src');
 
         if (title) {
+          // 处理相对URL，确保返回完整URL
+          let fullUrl = null;
+          if (link) {
+            fullUrl = link.startsWith('http') ? link : `https://www.espn.com${link}`;
+          }
+
           news.push({
             title,
             summary: summary || title,
             content: summary || title,
             coverImage: image || null,
-            url: link || null,
+            url: fullUrl,
             publishDate: new Date().toISOString(),
             category: '足球新闻',
             author: 'ESPN',

@@ -18,13 +18,53 @@ const NewsCard = ({ news }: NewsCardProps) => {
 
   // 判断是否为外部新闻（爬虫新闻）
   const isExternalNews = !!news.externalUrl;
-  const CardWrapper = isExternalNews ? 'a' : Link;
-  const cardProps = isExternalNews
-    ? { href: news.externalUrl, target: '_blank', rel: 'noopener noreferrer' }
-    : { to: `/news/${news.id}` };
+  const isScrapedNews = typeof news.id === 'string' && news.id.startsWith('scraped-');
 
+  // 如果是爬虫新闻但没有外部链接，或者没有有效ID，则不可点击
+  const isClickable = isExternalNews || (typeof news.id === 'number');
+
+  // 渲染可点击的卡片
+  if (isExternalNews) {
+    return (
+      <a
+        href={news.externalUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="glass-card overflow-hidden block hover-lift group"
+      >
+        <NewsCardContent news={news} isExternalNews={true} formatDate={formatDate} />
+      </a>
+    );
+  }
+
+  // 渲染内部链接卡片
+  if (isClickable && typeof news.id === 'number') {
+    return (
+      <Link to={`/news/${news.id}`} className="glass-card overflow-hidden block hover-lift group">
+        <NewsCardContent news={news} isExternalNews={false} formatDate={formatDate} />
+      </Link>
+    );
+  }
+
+  // 不可点击的卡片（爬虫新闻但没有URL）
   return (
-    <CardWrapper {...cardProps} className="glass-card overflow-hidden block hover-lift group">
+    <div className="glass-card overflow-hidden block opacity-75 cursor-not-allowed">
+      <NewsCardContent news={news} isExternalNews={false} formatDate={formatDate} />
+    </div>
+  );
+};
+
+// 提取卡片内容组件以避免重复
+const NewsCardContent = ({
+  news,
+  isExternalNews,
+  formatDate
+}: {
+  news: News;
+  isExternalNews: boolean;
+  formatDate: (dateString: string) => string;
+}) => (
+  <>
       {news.coverImage && (
         <div className="aspect-video bg-gray-200 dark:bg-zinc-700 overflow-hidden">
           <img
@@ -59,8 +99,7 @@ const NewsCard = ({ news }: NewsCardProps) => {
           </div>
         </div>
       </div>
-    </CardWrapper>
-  );
-};
+  </>
+);
 
 export default NewsCard;
