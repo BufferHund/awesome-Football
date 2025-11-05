@@ -11,6 +11,7 @@ import NewsPage from './pages/NewsPage';
 import NewsDetailPage from './pages/NewsDetailPage';
 import SettingsPage from './pages/SettingsPage';
 import ApiDocsPage from './pages/ApiDocsPage';
+import MembershipPage from './pages/MembershipPage';
 import SplashAd from './components/SplashAd';
 
 function App() {
@@ -60,6 +61,8 @@ function App() {
           <Route path="/secret-settings-panel" element={<SettingsPage />} />
           {/* API文档和调试页面 */}
           <Route path="/api-docs" element={<ApiDocsPage />} />
+          {/* 会员购买页面 */}
+          <Route path="/membership" element={<MembershipPage />} />
         </Routes>
       </Router>
     </>

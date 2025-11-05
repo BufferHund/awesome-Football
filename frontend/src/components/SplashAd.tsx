@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { X, Crown, Zap, Star } from 'lucide-react';
 
 interface SplashAdProps {
@@ -6,6 +7,7 @@ interface SplashAdProps {
 }
 
 const SplashAd = ({ onClose }: SplashAdProps) => {
+  const navigate = useNavigate();
   const [countdown, setCountdown] = useState(3);
   const [canSkip, setCanSkip] = useState(false);
   const [showVideo, setShowVideo] = useState(true);
@@ -181,7 +183,10 @@ const SplashAd = ({ onClose }: SplashAdProps) => {
             {/* CTA按钮 */}
             <div className="flex items-center justify-center gap-4 animate-slide-up animation-delay-400">
               <button
-                onClick={onClose}
+                onClick={() => {
+                  onClose();
+                  navigate('/membership');
+                }}
                 className="px-8 py-4 bg-white text-green-700 rounded-full font-bold text-lg hover:bg-gray-100 transition-all hover:scale-105 shadow-2xl"
               >
                 立即开通会员
