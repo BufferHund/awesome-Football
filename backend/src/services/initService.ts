@@ -31,16 +31,29 @@ export class InitService {
   }
 
   /**
-   * 测试数据库连接
+   * 测试数据库连接（带重试）
    */
   private async testConnection(): Promise<void> {
     logService.info('InitService', '测试数据库连接...');
-    try {
-      await prisma.$connect();
-      logService.success('InitService', '数据库连接成功');
-    } catch (error) {
-      logService.error('InitService', '数据库连接失败', error);
-      throw new Error('无法连接到数据库');
+
+    const maxRetries = 10;
+    const retryDelay = 2000; // 2秒
+
+    for (let i = 0; i < maxRetries; i++) {
+      try {
+        await prisma.$connect();
+        await prisma.$queryRaw`SELECT 1`; // 简单查询测试
+        logService.success('InitService', '数据库连接成功');
+        return;
+      } catch (error) {
+        if (i < maxRetries - 1) {
+          logService.warn('InitService', `数据库连接失败，${retryDelay/1000}秒后重试... (${i + 1}/${maxRetries})`);
+          await new Promise(resolve => setTimeout(resolve, retryDelay));
+        } else {
+          logService.error('InitService', '数据库连接失败，已达到最大重试次数', error);
+          throw new Error('无法连接到数据库');
+        }
+      }
     }
   }
 
