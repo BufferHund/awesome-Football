@@ -1,9 +1,7 @@
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../prisma';
 import { footballApiService, ApiMatch, LEAGUES } from './footballApi';
 import { webScraperService } from './webScraper';
 import { logService } from './logService';
-
-const prisma = new PrismaClient();
 
 // 数据同步服务 - 从API同步到数据库
 export const syncService = {

@@ -3,7 +3,6 @@ import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
 import dotenv from 'dotenv';
-import { PrismaClient } from '@prisma/client';
 
 import matchRoutes from './routes/matches';
 import teamRoutes from './routes/teams';
@@ -18,13 +17,12 @@ import authRoutes from './routes/auth.routes';
 import { startSyncScheduler } from './services/syncService';
 import { logService } from './services/logService';
 import { initService } from './services/initService';
+import { prisma } from './prisma';
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
-
-export const prisma = new PrismaClient();
 
 // 中间件
 app.use(helmet());

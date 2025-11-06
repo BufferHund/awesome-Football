@@ -1,7 +1,5 @@
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../prisma';
 import { logService } from './logService';
-
-const prisma = new PrismaClient();
 
 /**
  * 数据库初始化服务
