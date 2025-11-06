@@ -63,29 +63,34 @@ export class InitService {
   private async ensureSeedData(): Promise<void> {
     logService.info('InitService', '检查种子数据...');
 
-    // 检查各表的数据
-    const [teamCount, matchCount, newsCount] = await Promise.all([
-      prisma.team.count(),
-      prisma.match.count(),
-      prisma.news.count(),
-    ]);
+    try {
+      // 检查各表的数据
+      const [teamCount, matchCount, newsCount] = await Promise.all([
+        prisma.team.count(),
+        prisma.match.count(),
+        prisma.news.count(),
+      ]);
 
-    logService.info('InitService', `当前数据量 - Teams: ${teamCount}, Matches: ${matchCount}, News: ${newsCount}`);
+      logService.info('InitService', `当前数据量 - Teams: ${teamCount}, Matches: ${matchCount}, News: ${newsCount}`);
 
-    // 如果数据为空，填充种子数据
-    if (teamCount === 0) {
-      await this.seedTeams();
+      // 如果数据为空，填充种子数据
+      if (teamCount === 0) {
+        await this.seedTeams();
+      }
+
+      if (matchCount === 0) {
+        await this.seedMatches();
+      }
+
+      if (newsCount === 0) {
+        await this.seedNews();
+      }
+
+      logService.success('InitService', '种子数据检查完成');
+    } catch (error) {
+      logService.error('InitService', '检查或填充种子数据时出错', error);
+      throw error;
     }
-
-    if (matchCount === 0) {
-      await this.seedMatches();
-    }
-
-    if (newsCount === 0) {
-      await this.seedNews();
-    }
-
-    logService.success('InitService', '种子数据检查完成');
   }
 
   /**

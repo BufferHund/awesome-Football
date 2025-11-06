@@ -180,6 +180,8 @@ docker-compose down -v
 ## 🆘 获取帮助
 
 如果遇到问题：
-1. 查看 `docker logs football-backend` 获取详细错误
-2. 检查 `docker-compose ps` 确认所有容器都在运行
-3. 运行 `./restart.sh` 完全重启应用
+1. 运行 `./diagnose.sh` 查看诊断信息
+2. 查看 `docker logs football-backend` 获取详细错误
+3. 检查 `docker-compose ps` 确认所有容器都在运行
+4. 运行 `./restart.sh` 完全重启应用
+5. 查看 [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) 获取详细故障排查指南

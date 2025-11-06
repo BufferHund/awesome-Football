@@ -25,8 +25,12 @@ COPY src ./src
 COPY tsconfig.json ./
 COPY .env* ./
 
+# 复制启动脚本
+COPY start.sh ./
+RUN chmod +x start.sh
+
 # 暴露端口
 EXPOSE 3000
 
-# 使用ts-node直接运行（开发模式，无需编译）
-CMD ["sh", "-c", "npx prisma migrate deploy && npx ts-node src/index.ts"]
+# 使用改进的启动脚本（包含数据库连接重试和更好的错误处理）
+CMD ["./start.sh"]
