@@ -107,12 +107,33 @@ model News {
   updatedAt   DateTime @updatedAt
 }
 
+model User {
+  id                    Int       @id @default(autoincrement())
+  username              String    @unique
+  email                 String    @unique
+  password              String    // 密码哈希
+  emailVerified         Boolean   @default(false)
+  verificationToken     String?   // 邮箱验证令牌
+  verificationExpires   DateTime? // 验证令牌过期时间
+  resetPasswordToken    String?   // 重置密码令牌
+  resetPasswordExpires  DateTime? // 重置令牌过期时间
+  membershipTier        String    @default("FREE") // FREE, BASIC, PRO, ULTIMATE
+  membershipExpiresAt   DateTime? // 会员过期时间
+  avatar                String?   // 用户头像URL
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  posts                 ForumPost[]
+  comments              ForumComment[]
+}
+
 model ForumPost {
   id            Int      @id @default(autoincrement())
   title         String
   content       String
   images        String[] // 帖子图片数组
-  author        String   @default("球迷用户")
+  userId        Int?     // 关联用户ID
+  author        String   @default("球迷用户") // 保留兼容性
   authorAvatar  String?
   category      String   // 话题分类：综合讨论、战术分析、球员评价等
   tags          String[] // 标签数组
@@ -124,6 +145,7 @@ model ForumPost {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
+  user          User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
   comments      ForumComment[]
 }
 
@@ -131,13 +153,15 @@ model ForumComment {
   id            Int      @id @default(autoincrement())
   postId        Int
   content       String
-  author        String   @default("球迷用户")
+  userId        Int?     // 关联用户ID
+  author        String   @default("球迷用户") // 保留兼容性
   authorAvatar  String?
   likes         Int      @default(0)
   parentId      Int?     // 父评论ID（用于回复评论）
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
+  user          User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
   post          ForumPost @relation(fields: [postId], references: [id], onDelete: Cascade)
   parent        ForumComment? @relation("CommentReplies", fields: [parentId], references: [id])
   replies       ForumComment[] @relation("CommentReplies")

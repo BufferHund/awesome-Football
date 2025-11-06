@@ -50,10 +50,10 @@ const TeamsPage = () => {
             <Link
               key={team.id}
               to={`/teams/${team.id}`}
-              className="group border border-gray-200 dark:border-gray-800 p-6 hover:border-gray-900 dark:hover:border-white transition-colors"
+              className="group border border-gray-200 dark:border-gray-800 p-6 hover:border-gray-900 dark:hover:border-white transition-colors rounded-2xl"
             >
               <div className="flex items-start gap-4 mb-4">
-                <div className="flex-shrink-0 w-16 h-16 bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-2">
+                <div className="flex-shrink-0 w-16 h-16 bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-2 rounded-xl">
                   {team.logo ? (
                     <img src={team.logo} alt={team.name} className="w-full h-full object-contain" />
                   ) : (
@@ -93,7 +93,7 @@ const TeamsPage = () => {
           ))}
         </div>
       ) : (
-        <div className="py-20 text-center border border-gray-200 dark:border-gray-800">
+        <div className="py-20 text-center border border-gray-200 dark:border-gray-800 rounded-2xl">
           <Shield className="w-12 h-12 text-gray-400 mx-auto mb-4" />
           <p className="text-gray-600 dark:text-gray-400 mb-2">暂无球队数据</p>
           <p className="text-sm text-gray-500 dark:text-gray-500">请稍后再试</p>

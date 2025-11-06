@@ -102,7 +102,7 @@ const NewsPage = () => {
             }}
             disabled={loading || scraping}
             className={`
-              px-4 py-2 text-sm font-medium transition-colors
+              px-4 py-2 text-sm font-medium transition-colors rounded-lg
               ${selectedSource === value
                 ? 'bg-gray-900 dark:bg-white text-white dark:text-black'
                 : 'border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white hover:border-gray-900 dark:hover:border-white'
@@ -145,7 +145,7 @@ const NewsPage = () => {
               </div>
             </div>
           ) : (
-            <div className="py-20 text-center border border-gray-200 dark:border-gray-800">
+            <div className="py-20 text-center border border-gray-200 dark:border-gray-800 rounded-2xl">
               <Newspaper className="w-12 h-12 text-gray-400 mx-auto mb-4" />
               <p className="text-gray-600 dark:text-gray-400 mb-2">暂无新闻</p>
               <p className="text-sm text-gray-500 dark:text-gray-500">请尝试从其他数据源获取新闻</p>

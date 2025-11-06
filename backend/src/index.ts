@@ -13,6 +13,7 @@ import newsRoutes from './routes/news';
 import syncRoutes from './routes/sync';
 import logRoutes from './routes/logs';
 import forumRoutes from './routes/forum.routes';
+import authRoutes from './routes/auth.routes';
 
 import { startSyncScheduler } from './services/syncService';
 import { logService } from './services/logService';
@@ -41,6 +42,7 @@ app.get('/api/health', (req, res) => {
 });
 
 // 路由
+app.use('/api/auth', authRoutes);
 app.use('/api/matches', matchRoutes);
 app.use('/api/teams', teamRoutes);
 app.use('/api/players', playerRoutes);
@@ -56,6 +58,7 @@ app.get('/', (req, res) => {
     message: 'Football App API',
     version: '1.0.0',
     endpoints: {
+      auth: '/api/auth',
       matches: '/api/matches',
       teams: '/api/teams',
       players: '/api/players',

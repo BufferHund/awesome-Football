@@ -1,14 +1,16 @@
 import { useState, useRef, useEffect } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { Home, Trophy, Users, Newspaper, ShoppingBag, Crown, MessageSquare } from 'lucide-react';
+import { Home, Trophy, Users, Newspaper, ShoppingBag, Crown, MessageSquare, User as UserIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import ThemeToggle from './ThemeToggle';
 import { themeService } from '../services/theme';
+import { useAuth } from '../contexts/AuthContext';
 
 const Layout = () => {
   const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
+  const { user, isAuthenticated } = useAuth();
   const [clickCount, setClickCount] = useState(0);
   const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -90,12 +92,38 @@ const Layout = () => {
 
               <Link
                 to="/membership"
-                className="px-3 py-1.5 text-sm font-medium bg-gray-900 dark:bg-white text-white dark:text-black hover:bg-gray-700 dark:hover:bg-gray-200 transition-colors"
+                className="px-3 py-1.5 text-sm font-medium bg-gray-900 dark:bg-white text-white dark:text-black hover:bg-gray-700 dark:hover:bg-gray-200 transition-colors rounded-full"
               >
                 {t('nav.membership')}
               </Link>
 
               <ThemeToggle />
+
+              {/* 用户认证按钮 */}
+              {isAuthenticated && user ? (
+                <Link
+                  to="/profile"
+                  className="flex items-center justify-center w-9 h-9 bg-gray-100 dark:bg-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors rounded-full overflow-hidden"
+                  title={user.username}
+                >
+                  {user.avatar ? (
+                    <img
+                      src={user.avatar}
+                      alt={user.username}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <UserIcon className="w-5 h-5 text-gray-900 dark:text-white" />
+                  )}
+                </Link>
+              ) : (
+                <Link
+                  to="/login"
+                  className="px-3 py-1.5 text-sm font-medium border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white hover:border-gray-900 dark:hover:border-white transition-colors rounded-full"
+                >
+                  登录
+                </Link>
+              )}
             </div>
           </div>
         </div>

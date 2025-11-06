@@ -1,14 +1,17 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ForumPost } from '../types';
 import { forumService } from '../services/api';
 import { MessageCircle, ThumbsUp, Eye, TrendingUp, Clock, Flame, Zap, Users, Target, Trophy } from 'lucide-react';
 import CreatePostModal from '../components/CreatePostModal';
+import { useAuth } from '../contexts/AuthContext';
 
 type Category = 'all' | '综合讨论' | '战术分析' | '球员评价' | '赛事预测' | '转会爆料';
 type SortBy = 'latest' | 'hot' | 'views';
 
 const ForumPage = () => {
+  const { user, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   const [posts, setPosts] = useState<ForumPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<Category>('all');
@@ -44,6 +47,24 @@ const ForumPage = () => {
     }
   };
 
+  const handlePostButtonClick = () => {
+    // 检查是否已登录
+    if (!isAuthenticated) {
+      alert('请先登录才能发帖');
+      navigate('/login');
+      return;
+    }
+
+    // 检查邮箱是否已验证
+    if (!user?.emailVerified) {
+      alert('请先验证邮箱才能发帖。您可以在个人中心验证邮箱。');
+      navigate('/profile');
+      return;
+    }
+
+    setShowCreateModal(true);
+  };
+
   const handleCreatePost = async (data: {
     title: string;
     content: string;
@@ -54,7 +75,7 @@ const ForumPage = () => {
     try {
       await forumService.createPost({
         ...data,
-        author: '球迷用户',
+        author: user?.username || '球迷用户',
       });
       await loadPosts();
       setShowCreateModal(false);
@@ -108,8 +129,8 @@ const ForumPage = () => {
           懂球圈
         </h1>
         <button
-          onClick={() => setShowCreateModal(true)}
-          className="px-4 py-2 text-sm font-medium bg-gray-900 dark:bg-white text-white dark:text-black hover:bg-gray-700 dark:hover:bg-gray-200 transition-colors"
+          onClick={handlePostButtonClick}
+          className="px-4 py-2 text-sm font-medium bg-gray-900 dark:bg-white text-white dark:text-black hover:bg-gray-700 dark:hover:bg-gray-200 transition-colors rounded-lg"
         >
           发表观点
         </button>
@@ -124,7 +145,7 @@ const ForumPage = () => {
               key={cat.value}
               onClick={() => setSelectedCategory(cat.value)}
               className={`
-                px-4 py-2 text-sm font-medium transition-colors
+                px-4 py-2 text-sm font-medium transition-colors rounded-lg
                 ${selectedCategory === cat.value
                   ? 'bg-gray-900 dark:bg-white text-white dark:text-black'
                   : 'border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white hover:border-gray-900 dark:hover:border-white'
@@ -170,13 +191,13 @@ const ForumPage = () => {
       {/* 帖子列表 */}
       <div className="space-y-4">
         {posts.length === 0 ? (
-          <div className="py-20 text-center border border-gray-200 dark:border-gray-800">
+          <div className="py-20 text-center border border-gray-200 dark:border-gray-800 rounded-2xl">
             <MessageCircle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
             <p className="text-gray-600 dark:text-gray-400 mb-2">暂无动态</p>
             <p className="text-sm text-gray-500 dark:text-gray-500 mb-6">快来发表你的足球观点吧</p>
             <button
-              onClick={() => setShowCreateModal(true)}
-              className="px-6 py-2 bg-gray-900 dark:bg-white text-white dark:text-black text-sm font-medium hover:bg-gray-700 dark:hover:bg-gray-200 transition-colors"
+              onClick={handlePostButtonClick}
+              className="px-6 py-2 bg-gray-900 dark:bg-white text-white dark:text-black text-sm font-medium hover:bg-gray-700 dark:hover:bg-gray-200 transition-colors rounded-lg"
             >
               发表观点
             </button>
@@ -188,7 +209,7 @@ const ForumPage = () => {
               to={`/forum/${post.id}`}
               className="block group"
             >
-              <div className="border border-gray-200 dark:border-gray-800 p-5 hover:border-gray-900 dark:hover:border-white transition-colors">
+              <div className="border border-gray-200 dark:border-gray-800 p-5 hover:border-gray-900 dark:hover:border-white transition-colors rounded-2xl">
                 <div className="flex items-start gap-4">
                   {/* 作者头像 */}
                   <div className="flex-shrink-0">
@@ -196,10 +217,10 @@ const ForumPage = () => {
                       <img
                         src={post.authorAvatar}
                         alt={post.author}
-                        className="w-12 h-12 bg-gray-100 dark:bg-gray-900 object-cover"
+                        className="w-12 h-12 bg-gray-100 dark:bg-gray-900 object-cover rounded-full"
                       />
                     ) : (
-                      <div className="w-12 h-12 bg-gray-900 dark:bg-white flex items-center justify-center text-white dark:text-black text-sm font-bold">
+                      <div className="w-12 h-12 bg-gray-900 dark:bg-white flex items-center justify-center text-white dark:text-black text-sm font-bold rounded-full">
                         {post.author.charAt(0)}
                       </div>
                     )}
@@ -260,10 +281,10 @@ const ForumPage = () => {
                             <img
                               src={img}
                               alt={`图片${index + 1}`}
-                              className="w-20 h-20 object-cover bg-gray-100 dark:bg-gray-900"
+                              className="w-20 h-20 object-cover bg-gray-100 dark:bg-gray-900 rounded-lg"
                             />
                             {index === 2 && post.images.length > 3 && (
-                              <div className="absolute inset-0 bg-black/50 flex items-center justify-center text-white text-sm font-medium">
+                              <div className="absolute inset-0 bg-black/50 flex items-center justify-center text-white text-sm font-medium rounded-lg">
                                 +{post.images.length - 3}
                               </div>
                             )}

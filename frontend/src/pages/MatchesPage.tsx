@@ -57,7 +57,7 @@ const MatchesPage = () => {
             key={value}
             onClick={() => setFilter(value)}
             className={`
-              px-4 py-2 text-sm font-medium transition-colors
+              px-4 py-2 text-sm font-medium transition-colors rounded-lg
               ${filter === value
                 ? 'bg-gray-900 dark:bg-white text-white dark:text-black'
                 : 'border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white hover:border-gray-900 dark:hover:border-white'
@@ -84,7 +84,7 @@ const MatchesPage = () => {
           ))}
         </div>
       ) : (
-        <div className="py-20 text-center border border-gray-200 dark:border-gray-800">
+        <div className="py-20 text-center border border-gray-200 dark:border-gray-800 rounded-2xl">
           <Trophy className="w-12 h-12 text-gray-400 mx-auto mb-4" />
           <p className="text-gray-600 dark:text-gray-400 mb-2">暂无比赛数据</p>
           <p className="text-sm text-gray-500 dark:text-gray-500">请稍后再试或选择其他筛选条件</p>

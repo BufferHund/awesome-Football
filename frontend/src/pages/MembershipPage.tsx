@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMembership } from '../hooks/useMembership';
+import { useAuth } from '../contexts/AuthContext';
 import {
   Crown,
   Zap,
@@ -34,6 +35,7 @@ interface Plan {
 
 const MembershipPage = () => {
   const navigate = useNavigate();
+  const { user, isAuthenticated } = useAuth();
   const { activateMembership } = useMembership();
   const [selectedPlan, setSelectedPlan] = useState<PlanType>('yearly');
   const [showPaymentModal, setShowPaymentModal] = useState(false);
@@ -143,10 +145,38 @@ const MembershipPage = () => {
   ];
 
   const handlePurchase = () => {
+    // 检查是否已登录
+    if (!isAuthenticated) {
+      alert('请先登录才能购买会员');
+      navigate('/login');
+      return;
+    }
+
+    // 检查邮箱是否已验证
+    if (!user?.emailVerified) {
+      alert('请先验证邮箱才能购买会员。您可以在个人中心验证邮箱。');
+      navigate('/profile');
+      return;
+    }
+
     setShowPaymentModal(true);
   };
 
   const handleStartTrial = () => {
+    // 检查是否已登录
+    if (!isAuthenticated) {
+      alert('请先登录才能开通试用');
+      navigate('/login');
+      return;
+    }
+
+    // 检查邮箱是否已验证
+    if (!user?.emailVerified) {
+      alert('请先验证邮箱才能开通试用。您可以在个人中心验证邮箱。');
+      navigate('/profile');
+      return;
+    }
+
     // 激活试用会员
     activateMembership('trial');
     alert('恭喜！您已成功开通1个月免费试用\n\n所有会员功能已解锁，尽情享受吧！');
@@ -166,7 +196,7 @@ const MembershipPage = () => {
       <div className="max-w-7xl mx-auto">
         {/* 页面标题 */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-900 dark:bg-white mb-6">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-900 dark:bg-white mb-6 rounded-2xl">
             <Crown className="w-8 h-8 text-white dark:text-black" />
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900 dark:text-white">
@@ -179,7 +209,7 @@ const MembershipPage = () => {
 
         {/* 试用横幅 */}
         <div className="mb-12">
-          <div className="bg-gray-900 dark:bg-white p-8 border border-gray-900 dark:border-white">
+          <div className="bg-gray-900 dark:bg-white p-8 border border-gray-900 dark:border-white rounded-2xl">
             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
               <div className="text-white dark:text-black">
                 <div className="flex items-center gap-2 mb-2">
@@ -195,7 +225,7 @@ const MembershipPage = () => {
               </div>
               <button
                 onClick={handleStartTrial}
-                className="px-6 py-3 bg-white dark:bg-black text-black dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors whitespace-nowrap"
+                className="px-6 py-3 bg-white dark:bg-black text-black dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors whitespace-nowrap rounded-lg"
               >
                 立即试用
               </button>
@@ -213,7 +243,7 @@ const MembershipPage = () => {
               <div
                 key={plan.id}
                 onClick={() => setSelectedPlan(plan.id)}
-                className={`cursor-pointer border p-6 transition-colors ${
+                className={`cursor-pointer border p-6 transition-colors rounded-2xl ${
                   selectedPlan === plan.id
                     ? 'bg-gray-900 dark:bg-white text-white dark:text-black border-gray-900 dark:border-white'
                     : 'border-gray-200 dark:border-gray-800 hover:border-gray-900 dark:hover:border-white'
@@ -286,9 +316,9 @@ const MembershipPage = () => {
             {features.map((feature, index) => (
               <div
                 key={index}
-                className="border border-gray-200 dark:border-gray-800 p-6 hover:border-gray-900 dark:hover:border-white transition-colors"
+                className="border border-gray-200 dark:border-gray-800 p-6 hover:border-gray-900 dark:hover:border-white transition-colors rounded-2xl"
               >
-                <div className={`inline-flex items-center justify-center w-12 h-12 ${feature.bgColor} mb-4`}>
+                <div className={`inline-flex items-center justify-center w-12 h-12 ${feature.bgColor} mb-4 rounded-xl`}>
                   <feature.icon className={`w-6 h-6 ${feature.color}`} />
                 </div>
                 <h3 className="text-lg font-bold mb-2 text-gray-900 dark:text-white">
@@ -307,7 +337,7 @@ const MembershipPage = () => {
           <button
             onClick={handlePurchase}
             disabled={selectedPlan === 'trial'}
-            className={`px-8 py-3 font-medium transition-colors ${
+            className={`px-8 py-3 font-medium transition-colors rounded-lg ${
               selectedPlan === 'trial'
                 ? 'bg-gray-200 dark:bg-gray-800 text-gray-400 cursor-not-allowed'
                 : 'bg-gray-900 dark:bg-white text-white dark:text-black hover:bg-gray-700 dark:hover:bg-gray-200'
@@ -340,7 +370,7 @@ const MembershipPage = () => {
                 comment: '去广告后体验提升，95折购物实惠',
               },
             ].map((review, index) => (
-              <div key={index} className="border border-gray-200 dark:border-gray-800 p-6">
+              <div key={index} className="border border-gray-200 dark:border-gray-800 p-6 rounded-2xl">
                 <div className="font-medium text-gray-900 dark:text-white mb-2">{review.name}</div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">{review.comment}</p>
               </div>
@@ -352,9 +382,9 @@ const MembershipPage = () => {
       {/* 支付弹窗 */}
       {showPaymentModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="bg-white dark:bg-black border border-gray-900 dark:border-white p-8 max-w-md w-full">
+          <div className="bg-white dark:bg-black border border-gray-900 dark:border-white p-8 max-w-md w-full rounded-2xl">
             <div className="text-center mb-6">
-              <div className="inline-flex items-center justify-center w-12 h-12 bg-gray-900 dark:bg-white mb-4">
+              <div className="inline-flex items-center justify-center w-12 h-12 bg-gray-900 dark:bg-white mb-4 rounded-xl">
                 <Crown className="w-6 h-6 text-white dark:text-black" />
               </div>
               <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">
@@ -365,7 +395,7 @@ const MembershipPage = () => {
               </p>
             </div>
 
-            <div className="border border-gray-200 dark:border-gray-800 p-4 mb-6">
+            <div className="border border-gray-200 dark:border-gray-800 p-4 mb-6 rounded-xl">
               <div className="flex justify-between mb-2 text-sm">
                 <span className="text-gray-600 dark:text-gray-400">套餐价格</span>
                 <span className="font-medium text-gray-900 dark:text-white">
@@ -383,19 +413,19 @@ const MembershipPage = () => {
             <div className="space-y-2 mb-6">
               <button
                 onClick={() => handleConfirmPayment(selectedPlan)}
-                className="w-full py-3 bg-gray-900 dark:bg-white text-white dark:text-black font-medium hover:bg-gray-700 dark:hover:bg-gray-200 transition-colors"
+                className="w-full py-3 bg-gray-900 dark:bg-white text-white dark:text-black font-medium hover:bg-gray-700 dark:hover:bg-gray-200 transition-colors rounded-lg"
               >
                 支付宝支付
               </button>
               <button
                 onClick={() => handleConfirmPayment(selectedPlan)}
-                className="w-full py-3 bg-gray-900 dark:bg-white text-white dark:text-black font-medium hover:bg-gray-700 dark:hover:bg-gray-200 transition-colors"
+                className="w-full py-3 bg-gray-900 dark:bg-white text-white dark:text-black font-medium hover:bg-gray-700 dark:hover:bg-gray-200 transition-colors rounded-lg"
               >
                 微信支付
               </button>
               <button
                 onClick={() => handleConfirmPayment(selectedPlan)}
-                className="w-full py-3 bg-gray-900 dark:bg-white text-white dark:text-black font-medium hover:bg-gray-700 dark:hover:bg-gray-200 transition-colors"
+                className="w-full py-3 bg-gray-900 dark:bg-white text-white dark:text-black font-medium hover:bg-gray-700 dark:hover:bg-gray-200 transition-colors rounded-lg"
               >
                 银联卡支付
               </button>
@@ -403,7 +433,7 @@ const MembershipPage = () => {
 
             <button
               onClick={() => setShowPaymentModal(false)}
-              className="w-full py-3 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-medium hover:border-gray-900 dark:hover:border-white transition-colors"
+              className="w-full py-3 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-medium hover:border-gray-900 dark:hover:border-white transition-colors rounded-lg"
             >
               取消
             </button>
