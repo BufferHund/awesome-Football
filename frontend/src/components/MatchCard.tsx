@@ -4,9 +4,10 @@ import { Clock, MapPin } from 'lucide-react';
 
 interface MatchCardProps {
   match: Match;
+  compact?: boolean;
 }
 
-const MatchCard = ({ match }: MatchCardProps) => {
+const MatchCard = ({ match, compact = false }: MatchCardProps) => {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleString('zh-CN', {
@@ -19,20 +20,20 @@ const MatchCard = ({ match }: MatchCardProps) => {
 
   const getStatusBadge = (status: string) => {
     const badges = {
-      LIVE: <span className="badge badge-live">直播中</span>,
-      SCHEDULED: <span className="badge badge-scheduled">未开始</span>,
-      FINISHED: <span className="badge badge-finished">已结束</span>,
-      POSTPONED: <span className="badge bg-yellow-100 text-yellow-800">延期</span>,
+      LIVE: <span className="badge badge-live rounded-full">直播中</span>,
+      SCHEDULED: <span className="badge badge-scheduled rounded-full">未开始</span>,
+      FINISHED: <span className="badge badge-finished rounded-full">已结束</span>,
+      POSTPONED: <span className="badge bg-yellow-100 text-yellow-800 rounded-full">延期</span>,
     };
     return badges[status as keyof typeof badges] || null;
   };
 
   return (
-    <Link to={`/matches/${match.id}`} className="glass-card p-4 block hover-lift group">
+    <Link to={`/matches/${match.id}`} className="border border-gray-200 dark:border-gray-800 rounded-2xl p-4 block hover:border-gray-900 dark:hover:border-white transition-colors group">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center space-x-2">
           <span className="text-sm font-medium text-gray-600 dark:text-gray-300">{match.competition}</span>
-          {match.round && <span className="text-xs text-gray-500 dark:text-gray-400">• {match.round}</span>}
+          {!compact && match.round && <span className="text-xs text-gray-500 dark:text-gray-400">• {match.round}</span>}
         </div>
         {getStatusBadge(match.status)}
       </div>
@@ -41,9 +42,9 @@ const MatchCard = ({ match }: MatchCardProps) => {
         {/* 主队 */}
         <div className="flex flex-col items-end">
           <div className="flex items-center space-x-2">
-            <span className="font-semibold text-lg text-right text-gray-900 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">{match.homeTeam.shortName}</span>
+            <span className="font-semibold text-lg text-right text-gray-900 dark:text-gray-100 group-hover:text-gray-600 dark:group-hover:text-gray-400 transition-colors">{match.homeTeam.shortName}</span>
             {match.homeTeam.logo && (
-              <img src={match.homeTeam.logo} alt={match.homeTeam.name} className="w-10 h-10 object-contain group-hover:scale-110 transition-transform" />
+              <img src={match.homeTeam.logo} alt={match.homeTeam.name} className="w-10 h-10 object-contain rounded-full group-hover:scale-110 transition-transform" />
             )}
           </div>
         </div>
@@ -66,14 +67,14 @@ const MatchCard = ({ match }: MatchCardProps) => {
         <div className="flex flex-col items-start">
           <div className="flex items-center space-x-2">
             {match.awayTeam.logo && (
-              <img src={match.awayTeam.logo} alt={match.awayTeam.name} className="w-10 h-10 object-contain group-hover:scale-110 transition-transform" />
+              <img src={match.awayTeam.logo} alt={match.awayTeam.name} className="w-10 h-10 object-contain rounded-full group-hover:scale-110 transition-transform" />
             )}
             <span className="font-semibold text-lg text-gray-900 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">{match.awayTeam.shortName}</span>
           </div>
         </div>
       </div>
 
-      {match.venue && (
+      {!compact && match.venue && (
         <div className="flex items-center justify-center space-x-1 text-xs text-gray-500 dark:text-gray-400 mt-3">
           <MapPin className="w-3 h-3" />
           <span>{match.venue}</span>

@@ -239,6 +239,13 @@ export const syncService = {
     try {
       logService.info('NewsSync', '开始同步新闻...');
 
+      // 检查数据库是否已有新闻
+      const existingCount = await prisma.news.count();
+      if (existingCount === 0) {
+        logService.info('NewsSync', '数据库无新闻，先添加种子数据');
+        await this.seedNewsData();
+      }
+
       // 从多个来源抓取新闻
       const sources = [
         { name: 'BBC Sport', fn: () => webScraperService.scrapeBBCFootballNews() },
@@ -251,32 +258,34 @@ export const syncService = {
       for (const source of sources) {
         try {
           const newsItems = await source.fn();
-          logService.info('NewsSync', `从 ${source.name} 获取到 ${newsItems.length} 条新闻`);
+          if (newsItems && newsItems.length > 0) {
+            logService.info('NewsSync', `从 ${source.name} 获取到 ${newsItems.length} 条新闻`);
 
-          for (const newsItem of newsItems) {
-            try {
-              // 检查是否已存在相同标题的新闻（去重）
-              const existing = await prisma.news.findFirst({
-                where: { title: newsItem.title },
-              });
-
-              if (!existing) {
-                await prisma.news.create({
-                  data: {
-                    title: newsItem.title,
-                    summary: newsItem.summary,
-                    content: newsItem.content,
-                    coverImage: newsItem.coverImage,
-                    category: newsItem.category,
-                    author: newsItem.author,
-                    publishDate: new Date(newsItem.publishDate),
-                    views: 0,
-                  },
+            for (const newsItem of newsItems) {
+              try {
+                // 检查是否已存在相同标题的新闻（去重）
+                const existing = await prisma.news.findFirst({
+                  where: { title: newsItem.title },
                 });
-                totalSaved++;
+
+                if (!existing) {
+                  await prisma.news.create({
+                    data: {
+                      title: newsItem.title,
+                      summary: newsItem.summary,
+                      content: newsItem.content,
+                      coverImage: newsItem.coverImage,
+                      category: newsItem.category,
+                      author: newsItem.author,
+                      publishDate: new Date(newsItem.publishDate),
+                      views: 0,
+                    },
+                  });
+                  totalSaved++;
+                }
+              } catch (error) {
+                logService.error('NewsSync', `保存新闻失败: ${newsItem.title}`);
               }
-            } catch (error) {
-              logService.error('NewsSync', `保存新闻失败: ${newsItem.title}`);
             }
           }
         } catch (error) {
@@ -284,10 +293,88 @@ export const syncService = {
         }
       }
 
-      logService.success('NewsSync', `新闻同步完成，新增 ${totalSaved} 条新闻`);
+      if (totalSaved > 0) {
+        logService.success('NewsSync', `新闻同步完成，新增 ${totalSaved} 条新闻`);
+      } else {
+        logService.info('NewsSync', '本次未获取到新新闻');
+      }
     } catch (error) {
       logService.error('NewsSync', '新闻同步失败');
       console.error('同步新闻失败:', error);
+    }
+  },
+
+  // 添加新闻种子数据
+  async seedNewsData(): Promise<void> {
+    const seedNews = [
+      {
+        title: '英超：曼城3-1战胜利物浦',
+        summary: '哈兰德梅开二度，曼城在安菲尔德取得关键胜利',
+        content: '在昨晚的英超焦点战中，曼城客场3-1战胜利物浦。哈兰德上下半场各进一球，德布劳内助攻并打入一球。这场胜利让曼城在积分榜上领先优势扩大到5分。',
+        category: '英超',
+        author: 'Football',
+      },
+      {
+        title: '皇马官宣：签下年轻中场新星',
+        summary: '皇马从切尔西签下18岁中场，转会费达到7000万欧元',
+        content: '皇马官方宣布，从切尔西签下了18岁的英格兰中场新星。这笔转会费高达7000万欧元，创下了俱乐部引援纪录。',
+        category: '转会',
+        author: 'Football',
+      },
+      {
+        title: '欧冠抽签结果出炉',
+        summary: '拜仁将对阵巴黎，皇马遭遇曼城',
+        content: '今天进行的欧冠淘汰赛抽签仪式上，拜仁慕尼黑抽到了巴黎圣日耳曼，而皇马将对阵卫冕冠军曼城。这些对决都将是火星撞地球的精彩比赛。',
+        category: '欧冠',
+        author: 'Football',
+      },
+      {
+        title: '梅西谈退役计划：还想再踢2年',
+        summary: '阿根廷球星在接受采访时表示希望继续职业生涯',
+        content: '在最新的采访中，梅西表示自己的身体状态依然良好，希望能够再踢至少2年。他目前在迈阿密国际效力，帮助球队取得了多项荣誉。',
+        category: '球员',
+        author: 'Football',
+      },
+      {
+        title: '西甲：巴萨战平马竞',
+        summary: '莱万进球，格列兹曼扳平比分',
+        content: '在西甲第23轮的比赛中，巴塞罗那主场1-1战平马德里竞技。莱万多夫斯基上半场为巴萨取得领先，格列兹曼下半场扳平比分。',
+        category: '西甲',
+        author: 'Football',
+      },
+      {
+        title: '曼联主帅：我们需要在转会窗口补强',
+        summary: '滕哈赫呼吁俱乐部在冬季转会期引援',
+        content: '曼联主帅在赛后新闻发布会上表示，球队需要在即将到来的冬季转会窗口进行补强，尤其是中场和边锋位置。',
+        category: '英超',
+        author: 'Football',
+      },
+    ];
+
+    let added = 0;
+    for (const news of seedNews) {
+      try {
+        const existing = await prisma.news.findFirst({
+          where: { title: news.title },
+        });
+
+        if (!existing) {
+          await prisma.news.create({
+            data: {
+              ...news,
+              publishDate: new Date(),
+              views: 0,
+            },
+          });
+          added++;
+        }
+      } catch (error) {
+        console.error(`添加种子新闻失败: ${news.title}`, error);
+      }
+    }
+
+    if (added > 0) {
+      logService.success('NewsSync', `已添加 ${added} 条种子新闻数据`);
     }
   },
 };

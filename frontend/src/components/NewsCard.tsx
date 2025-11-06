@@ -30,7 +30,7 @@ const NewsCard = ({ news }: NewsCardProps) => {
         href={news.externalUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="glass-card overflow-hidden block hover-lift group"
+        className="border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden block hover:border-gray-900 dark:hover:border-white transition-colors group"
       >
         <NewsCardContent news={news} isExternalNews={true} formatDate={formatDate} />
       </a>
@@ -40,7 +40,7 @@ const NewsCard = ({ news }: NewsCardProps) => {
   // 渲染内部链接卡片
   if (isClickable && typeof news.id === 'number') {
     return (
-      <Link to={`/news/${news.id}`} className="glass-card overflow-hidden block hover-lift group">
+      <Link to={`/news/${news.id}`} className="border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden block hover:border-gray-900 dark:hover:border-white transition-colors group">
         <NewsCardContent news={news} isExternalNews={false} formatDate={formatDate} />
       </Link>
     );
@@ -48,7 +48,7 @@ const NewsCard = ({ news }: NewsCardProps) => {
 
   // 不可点击的卡片（爬虫新闻但没有URL）
   return (
-    <div className="glass-card overflow-hidden block opacity-75 cursor-not-allowed">
+    <div className="border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden block opacity-75 cursor-not-allowed">
       <NewsCardContent news={news} isExternalNews={false} formatDate={formatDate} />
     </div>
   );
@@ -76,7 +76,7 @@ const NewsCardContent = ({
       )}
       <div className="p-4">
         <div className="flex items-center space-x-2 mb-2">
-          <span className="badge bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-300">{news.category}</span>
+          <span className="badge bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-300 rounded-full">{news.category}</span>
           {news.author && <span className="text-xs text-gray-500 dark:text-gray-400">• {news.author}</span>}
           {isExternalNews && (
             <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">

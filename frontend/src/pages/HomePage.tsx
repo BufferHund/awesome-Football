@@ -66,7 +66,7 @@ const HomePage = () => {
 
         <Link
           to="/matches"
-          className="inline-block px-6 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-black text-sm font-medium hover:bg-gray-700 dark:hover:bg-gray-200 transition-colors"
+          className="inline-block px-6 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-black text-sm font-medium hover:bg-gray-700 dark:hover:bg-gray-200 transition-colors rounded-full"
         >
           查看赛事
         </Link>
@@ -83,7 +83,7 @@ const HomePage = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {liveMatches.map((match) => (
-              <MatchCard key={match.id} match={match} />
+              <MatchCard key={match.id} match={match} compact />
             ))}
           </div>
         </section>
@@ -100,11 +100,11 @@ const HomePage = () => {
         {todayMatches.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {todayMatches.slice(0, 4).map((match) => (
-              <MatchCard key={match.id} match={match} />
+              <MatchCard key={match.id} match={match} compact />
             ))}
           </div>
         ) : (
-          <div className="py-12 text-center border border-gray-200 dark:border-gray-800">
+          <div className="py-12 text-center border border-gray-200 dark:border-gray-800 rounded-2xl">
             <Trophy className="w-10 h-10 text-gray-400 mx-auto mb-3" />
             <p className="text-gray-600 dark:text-gray-400 text-sm">今日暂无比赛</p>
           </div>
