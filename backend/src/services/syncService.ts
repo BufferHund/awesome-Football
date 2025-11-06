@@ -1,5 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { footballApiService, ApiMatch, LEAGUES } from './footballApi';
+import { webScraperService } from './webScraper';
+import { logService } from './logService';
 
 const prisma = new PrismaClient();
 
@@ -231,31 +233,105 @@ export const syncService = {
     };
     return typeMap[apiType] || apiType;
   },
+
+  // 同步新闻数据
+  async syncNews(): Promise<void> {
+    try {
+      logService.info('NewsSync', '开始同步新闻...');
+
+      // 从多个来源抓取新闻
+      const sources = [
+        { name: 'BBC Sport', fn: () => webScraperService.scrapeBBCFootballNews() },
+        { name: 'ESPN', fn: () => webScraperService.scrapeESPNFootballNews() },
+        { name: 'Goal.com', fn: () => webScraperService.scrapeGoalNews() },
+      ];
+
+      let totalSaved = 0;
+
+      for (const source of sources) {
+        try {
+          const newsItems = await source.fn();
+          logService.info('NewsSync', `从 ${source.name} 获取到 ${newsItems.length} 条新闻`);
+
+          for (const newsItem of newsItems) {
+            try {
+              // 检查是否已存在相同标题的新闻（去重）
+              const existing = await prisma.news.findFirst({
+                where: { title: newsItem.title },
+              });
+
+              if (!existing) {
+                await prisma.news.create({
+                  data: {
+                    title: newsItem.title,
+                    summary: newsItem.summary,
+                    content: newsItem.content,
+                    coverImage: newsItem.coverImage,
+                    category: newsItem.category,
+                    author: newsItem.author,
+                    publishDate: new Date(newsItem.publishDate),
+                    views: 0,
+                  },
+                });
+                totalSaved++;
+              }
+            } catch (error) {
+              logService.error('NewsSync', `保存新闻失败: ${newsItem.title}`);
+            }
+          }
+        } catch (error) {
+          logService.error('NewsSync', `从 ${source.name} 抓取新闻失败`);
+        }
+      }
+
+      logService.success('NewsSync', `新闻同步完成，新增 ${totalSaved} 条新闻`);
+    } catch (error) {
+      logService.error('NewsSync', '新闻同步失败');
+      console.error('同步新闻失败:', error);
+    }
+  },
 };
 
-// 定时任务 - 每5分钟更新一次直播比赛
+// 定时任务 - 优化频率，减少API调用
 export function startSyncScheduler() {
-  // 立即执行一次
+  logService.info('Scheduler', '启动数据同步调度器...');
+
+  // 立即执行一次初始同步
   syncService.syncTodayMatches();
   syncService.syncLiveMatches();
+  syncService.syncNews();
 
-  // 每5分钟更新直播比赛
+  logService.success('Scheduler', '初始数据同步完成');
+
+  // 每10分钟更新直播比赛（减少从每5分钟）
   setInterval(() => {
+    logService.info('Scheduler', '执行直播比赛同步...');
     syncService.syncLiveMatches();
-  }, 5 * 60 * 1000);
+  }, 10 * 60 * 1000);
 
-  // 每小时更新今日比赛
+  // 每2小时更新今日比赛（减少从每1小时）
   setInterval(() => {
+    logService.info('Scheduler', '执行今日比赛同步...');
     syncService.syncTodayMatches();
-  }, 60 * 60 * 1000);
+  }, 2 * 60 * 60 * 1000);
 
-  // 每天凌晨2点同步积分榜
+  // 每6小时同步新闻（新增）
+  setInterval(() => {
+    logService.info('Scheduler', '执行新闻同步...');
+    syncService.syncNews();
+  }, 6 * 60 * 60 * 1000);
+
+  // 每天凌晨3点同步积分榜（一天一次即可）
   setInterval(() => {
     const now = new Date();
-    if (now.getHours() === 2) {
+    if (now.getHours() === 3) {
+      logService.info('Scheduler', '执行积分榜同步...');
       syncService.syncStandings(LEAGUES.PREMIER_LEAGUE, '英超');
       syncService.syncStandings(LEAGUES.LA_LIGA, '西甲');
       syncService.syncStandings(LEAGUES.BUNDESLIGA, '德甲');
+      syncService.syncStandings(LEAGUES.SERIE_A, '意甲');
     }
   }, 60 * 60 * 1000);
+
+  logService.success('Scheduler', '所有定时任务已设置');
 }
