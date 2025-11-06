@@ -17,6 +17,7 @@ import authRoutes from './routes/auth.routes';
 
 import { startSyncScheduler } from './services/syncService';
 import { logService } from './services/logService';
+import { initService } from './services/initService';
 
 dotenv.config();
 
@@ -75,24 +76,43 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
   res.status(500).json({ error: 'Something went wrong!' });
 });
 
-// 启动服务器
-app.listen(port, () => {
-  console.log(`🚀 Server running on port ${port}`);
-  console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
+// 异步启动函数
+async function startServer() {
+  try {
+    // 1. 初始化数据库（填充种子数据）
+    console.log('🔧 Initializing database...');
+    await initService.initialize();
+    console.log('✅ Database initialized successfully');
 
-  // 记录启动日志
-  logService.success('Server', `服务器启动成功，端口: ${port}`);
-  logService.info('Server', `运行环境: ${process.env.NODE_ENV || 'development'}`);
+    // 2. 启动服务器
+    app.listen(port, () => {
+      console.log(`🚀 Server running on port ${port}`);
+      console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
 
-  // 启动自动数据同步
-  if (process.env.ENABLE_AUTO_SYNC === 'true') {
-    console.log('🔄 Starting auto sync scheduler...');
-    logService.info('Scheduler', '自动同步调度器已启动');
-    startSyncScheduler();
-  } else {
-    logService.info('Scheduler', '自动同步已禁用，使用手动同步');
+      // 记录启动日志
+      logService.success('Server', `服务器启动成功，端口: ${port}`);
+      logService.info('Server', `运行环境: ${process.env.NODE_ENV || 'development'}`);
+
+      // 3. 启动自动数据同步（延迟5秒，确保数据库就绪）
+      if (process.env.ENABLE_AUTO_SYNC === 'true') {
+        setTimeout(() => {
+          console.log('🔄 Starting auto sync scheduler...');
+          logService.info('Scheduler', '自动同步调度器已启动');
+          startSyncScheduler();
+        }, 5000);
+      } else {
+        logService.info('Scheduler', '自动同步已禁用，使用手动同步');
+      }
+    });
+  } catch (error) {
+    console.error('❌ Failed to start server:', error);
+    logService.error('Server', '服务器启动失败', error);
+    process.exit(1);
   }
-});
+}
+
+// 启动服务器
+startServer();
 
 // 优雅关闭
 process.on('SIGINT', async () => {

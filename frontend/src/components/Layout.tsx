@@ -90,36 +90,43 @@ const Layout = () => {
                 ))}
               </nav>
 
-              <Link
-                to="/membership"
-                className="px-3 py-1.5 text-sm font-medium bg-gray-900 dark:bg-white text-white dark:text-black hover:bg-gray-700 dark:hover:bg-gray-200 transition-colors rounded-full"
-              >
-                {t('nav.membership')}
-              </Link>
-
               <ThemeToggle />
 
               {/* 用户认证按钮 */}
               {isAuthenticated && user ? (
-                <Link
-                  to="/profile"
-                  className="flex items-center justify-center w-9 h-9 bg-gray-100 dark:bg-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors rounded-full overflow-hidden"
-                  title={user.username}
-                >
-                  {user.avatar ? (
-                    <img
-                      src={user.avatar}
-                      alt={user.username}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <UserIcon className="w-5 h-5 text-gray-900 dark:text-white" />
-                  )}
-                </Link>
+                user.membershipTier !== 'FREE' ? (
+                  // 会员用户：显示VIP标志（黑色风格）
+                  <Link
+                    to="/profile"
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors rounded-full"
+                    title={`${user.username} - ${user.membershipTier}`}
+                  >
+                    <Crown className="w-4 h-4" />
+                    <span className="text-sm font-bold">VIP</span>
+                  </Link>
+                ) : (
+                  // 普通用户：显示头像
+                  <Link
+                    to="/profile"
+                    className="flex items-center justify-center w-9 h-9 bg-gray-100 dark:bg-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors rounded-full overflow-hidden"
+                    title={user.username}
+                  >
+                    {user.avatar ? (
+                      <img
+                        src={user.avatar}
+                        alt={user.username}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <UserIcon className="w-5 h-5 text-gray-900 dark:text-white" />
+                    )}
+                  </Link>
+                )
               ) : (
+                // 未登录：显示登录按钮
                 <Link
                   to="/login"
-                  className="px-3 py-1.5 text-sm font-medium border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white hover:border-gray-900 dark:hover:border-white transition-colors rounded-full"
+                  className="px-4 py-1.5 text-sm font-medium bg-gray-900 dark:bg-white text-white dark:text-black hover:bg-gray-700 dark:hover:bg-gray-200 transition-colors rounded-full"
                 >
                   登录
                 </Link>
