@@ -15,43 +15,13 @@ const ForumPage = () => {
   const [sortBy, setSortBy] = useState<SortBy>('latest');
   const [showCreateModal, setShowCreateModal] = useState(false);
 
-  const categories: { value: Category; label: string; icon: JSX.Element; gradient: string }[] = [
-    {
-      value: 'all',
-      label: '全部动态',
-      icon: <Trophy className="w-5 h-5" />,
-      gradient: 'from-yellow-500 to-orange-500'
-    },
-    {
-      value: '综合讨论',
-      label: '足坛热点',
-      icon: <Flame className="w-5 h-5" />,
-      gradient: 'from-red-500 to-pink-500'
-    },
-    {
-      value: '战术分析',
-      label: '战术板',
-      icon: <Target className="w-5 h-5" />,
-      gradient: 'from-blue-500 to-cyan-500'
-    },
-    {
-      value: '球员评价',
-      label: '球星点评',
-      icon: <Users className="w-5 h-5" />,
-      gradient: 'from-purple-500 to-indigo-500'
-    },
-    {
-      value: '赛事预测',
-      label: '赛事前瞻',
-      icon: <Zap className="w-5 h-5" />,
-      gradient: 'from-green-500 to-emerald-500'
-    },
-    {
-      value: '转会爆料',
-      label: '转会风云',
-      icon: <TrendingUp className="w-5 h-5" />,
-      gradient: 'from-orange-500 to-red-500'
-    },
+  const categories: { value: Category; label: string }[] = [
+    { value: 'all', label: '全部动态' },
+    { value: '综合讨论', label: '足坛热点' },
+    { value: '战术分析', label: '战术板' },
+    { value: '球员评价', label: '球星点评' },
+    { value: '赛事预测', label: '赛事前瞻' },
+    { value: '转会爆料', label: '转会风云' },
   ];
 
   useEffect(() => {
@@ -123,128 +93,87 @@ const ForumPage = () => {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-4 border-t-primary-600 border-r-transparent border-b-primary-600 border-l-transparent mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-300 font-medium">加载精彩内容中...</p>
+          <div className="w-12 h-12 border-2 border-gray-900 dark:border-white border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400">加载中...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      {/* 顶部英雄区 - 体育风格 */}
-      <div className="relative rounded-3xl overflow-hidden shadow-2xl">
-        {/* 背景装饰 */}
-        <div className="absolute inset-0 bg-gradient-to-br from-green-600 via-emerald-600 to-teal-600"></div>
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMzLjMxNCAwIDYgMi42ODYgNiA2cy0yLjY4NiA2LTYgNi02LTIuNjg2LTYtNiAyLjY4Ni02IDYtNm0wLTJjLTQuNDE4IDAtOCAzLjU4Mi04IDhzMy41ODIgOCA4IDggOC0zLjU4MiA4LTgtMy41ODItOC04LTh6IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9Ii4xIi8+PC9nPjwvc3ZnPg==')] opacity-20"></div>
-        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-white/20 to-transparent rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-black/20 to-transparent rounded-full blur-3xl"></div>
-
-        <div className="relative z-10 px-6 md:px-10 py-8 md:py-12">
-          <div className="flex items-center justify-between">
-            <div className="space-y-3">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
-                  <MessageCircle className="w-7 h-7 text-white" />
-                </div>
-                <div>
-                  <h1 className="text-3xl md:text-5xl font-black text-white drop-shadow-2xl tracking-tight">
-                    懂球圈
-                  </h1>
-                  <p className="text-white/90 text-base md:text-lg font-medium mt-1">
-                    全球球迷聚集地 · 热议每一场比赛
-                  </p>
-                </div>
-              </div>
-
-              {/* 统计数据 */}
-              <div className="flex items-center gap-6 mt-4 text-white/90">
-                <div className="flex items-center gap-2">
-                  <Users className="w-5 h-5" />
-                  <span className="text-sm font-semibold">23.5万+球迷</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <MessageCircle className="w-5 h-5" />
-                  <span className="text-sm font-semibold">日均8000+讨论</span>
-                </div>
-              </div>
-            </div>
-
-            <button
-              onClick={() => setShowCreateModal(true)}
-              className="group flex items-center gap-3 px-8 py-4 bg-white hover:bg-gray-50 text-green-600 font-bold rounded-2xl shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95 transition-all duration-300"
-            >
-              <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center group-hover:bg-green-200 transition-colors">
-                <Zap className="w-6 h-6 text-green-600" />
-              </div>
-              <div className="text-left hidden md:block">
-                <div className="text-lg leading-none">发表观点</div>
-                <div className="text-xs text-gray-500 mt-1">分享你的足球见解</div>
-              </div>
-            </button>
+    <div className="space-y-12 max-w-7xl mx-auto">
+      {/* 页面标题 */}
+      <div className="py-8 border-b border-gray-200 dark:border-gray-800">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <span className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+              Community
+            </span>
           </div>
+          <button
+            onClick={() => setShowCreateModal(true)}
+            className="px-4 py-2 bg-gray-900 dark:bg-white text-white dark:text-black font-medium hover:bg-gray-700 dark:hover:bg-gray-200 transition-colors"
+          >
+            发表观点
+          </button>
         </div>
+
+        <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-3 tracking-tight">
+          懂球圈
+        </h1>
+        <p className="text-lg text-gray-600 dark:text-gray-400">
+          全球球迷聚集地 · 热议每一场比赛
+        </p>
       </div>
 
-      {/* 分类导航 - 专业体育风格 */}
-      <div className="glass-card p-4">
-        <div className="flex items-center gap-3 overflow-x-auto scrollbar-hide pb-2">
+      {/* 分类导航 */}
+      <div>
+        <div className="flex flex-wrap gap-3 border-b border-gray-200 dark:border-gray-800 pb-6">
           {categories.map((cat) => (
             <button
               key={cat.value}
               onClick={() => setSelectedCategory(cat.value)}
               className={`
-                group relative flex items-center gap-2.5 px-5 py-3.5 rounded-2xl whitespace-nowrap
-                font-bold text-sm transition-all duration-300 flex-shrink-0
+                px-4 py-2 font-medium transition-colors
                 ${selectedCategory === cat.value
-                  ? `bg-gradient-to-r ${cat.gradient} text-white shadow-lg shadow-${cat.gradient}/50 scale-105`
-                  : 'bg-gray-100 dark:bg-dark-200 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-dark-100 hover:scale-105'
+                  ? 'bg-gray-900 dark:bg-white text-white dark:text-black'
+                  : 'border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white hover:border-gray-900 dark:hover:border-white'
                 }
               `}
             >
-              <div className={`${selectedCategory === cat.value ? 'animate-pulse' : ''}`}>
-                {cat.icon}
-              </div>
-              <span>{cat.label}</span>
-              {selectedCategory === cat.value && (
-                <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-8 h-1 bg-white rounded-full"></div>
-              )}
+              {cat.label}
             </button>
           ))}
         </div>
       </div>
 
-      {/* 排序和筛选栏 */}
-      <div className="glass-card p-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setSortBy('latest')}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm transition-all ${
-                sortBy === 'latest'
-                  ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg'
-                  : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-dark-200'
-              }`}
-            >
-              <Clock className="w-4 h-4" />
-              最新
-            </button>
-            <button
-              onClick={() => setSortBy('hot')}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm transition-all ${
-                sortBy === 'hot'
-                  ? 'bg-gradient-to-r from-red-600 to-orange-600 text-white shadow-lg'
-                  : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-dark-200'
-              }`}
-            >
-              <Flame className="w-4 h-4" />
-              最热
-            </button>
-          </div>
+      {/* 排序栏 */}
+      <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-800 pb-6">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setSortBy('latest')}
+            className={`text-sm font-medium transition-colors ${
+              sortBy === 'latest'
+                ? 'text-gray-900 dark:text-white'
+                : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+            }`}
+          >
+            最新
+          </button>
+          <button
+            onClick={() => setSortBy('hot')}
+            className={`text-sm font-medium transition-colors ${
+              sortBy === 'hot'
+                ? 'text-gray-900 dark:text-white'
+                : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+            }`}
+          >
+            最热
+          </button>
+        </div>
 
-          <div className="text-sm text-gray-500 dark:text-gray-400 font-medium">
-            共 <span className="text-primary-600 dark:text-primary-400 font-bold">{posts.length}</span> 条动态
-          </div>
+        <div className="text-sm text-gray-500 dark:text-gray-400">
+          {posts.length} 条动态
         </div>
       </div>
 
