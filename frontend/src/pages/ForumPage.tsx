@@ -101,40 +101,30 @@ const ForumPage = () => {
   }
 
   return (
-    <div className="space-y-12 max-w-7xl mx-auto">
+    <div className="space-y-8 max-w-7xl mx-auto">
       {/* 页面标题 */}
-      <div className="py-8 border-b border-gray-200 dark:border-gray-800">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <span className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-              Community
-            </span>
-          </div>
-          <button
-            onClick={() => setShowCreateModal(true)}
-            className="px-4 py-2 bg-gray-900 dark:bg-white text-white dark:text-black font-medium hover:bg-gray-700 dark:hover:bg-gray-200 transition-colors"
-          >
-            发表观点
-          </button>
-        </div>
-
-        <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-3 tracking-tight">
+      <div className="flex items-center justify-between py-4">
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white tracking-tight">
           懂球圈
         </h1>
-        <p className="text-lg text-gray-600 dark:text-gray-400">
-          全球球迷聚集地 · 热议每一场比赛
-        </p>
+        <button
+          onClick={() => setShowCreateModal(true)}
+          className="px-4 py-2 text-sm font-medium bg-gray-900 dark:bg-white text-white dark:text-black hover:bg-gray-700 dark:hover:bg-gray-200 transition-colors"
+        >
+          发表观点
+        </button>
       </div>
 
-      {/* 分类导航 */}
-      <div>
-        <div className="flex flex-wrap gap-3 border-b border-gray-200 dark:border-gray-800 pb-6">
+      {/* 分类和排序 - 合并为一个区域 */}
+      <div className="space-y-3">
+        {/* 分类导航 */}
+        <div className="flex flex-wrap gap-3">
           {categories.map((cat) => (
             <button
               key={cat.value}
               onClick={() => setSelectedCategory(cat.value)}
               className={`
-                px-4 py-2 font-medium transition-colors
+                px-4 py-2 text-sm font-medium transition-colors
                 ${selectedCategory === cat.value
                   ? 'bg-gray-900 dark:bg-white text-white dark:text-black'
                   : 'border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white hover:border-gray-900 dark:hover:border-white'
@@ -145,52 +135,50 @@ const ForumPage = () => {
             </button>
           ))}
         </div>
+
+        {/* 排序栏 */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setSortBy('latest')}
+              className={`text-sm font-medium transition-colors ${
+                sortBy === 'latest'
+                  ? 'text-gray-900 dark:text-white'
+                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+              }`}
+            >
+              最新
+            </button>
+            <button
+              onClick={() => setSortBy('hot')}
+              className={`text-sm font-medium transition-colors ${
+                sortBy === 'hot'
+                  ? 'text-gray-900 dark:text-white'
+                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+              }`}
+            >
+              最热
+            </button>
+          </div>
+
+          <div className="text-sm text-gray-500 dark:text-gray-400">
+            {posts.length} 条动态
+          </div>
+        </div>
       </div>
 
-      {/* 排序栏 */}
-      <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-800 pb-6">
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => setSortBy('latest')}
-            className={`text-sm font-medium transition-colors ${
-              sortBy === 'latest'
-                ? 'text-gray-900 dark:text-white'
-                : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
-            }`}
-          >
-            最新
-          </button>
-          <button
-            onClick={() => setSortBy('hot')}
-            className={`text-sm font-medium transition-colors ${
-              sortBy === 'hot'
-                ? 'text-gray-900 dark:text-white'
-                : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
-            }`}
-          >
-            最热
-          </button>
-        </div>
-
-        <div className="text-sm text-gray-500 dark:text-gray-400">
-          {posts.length} 条动态
-        </div>
-      </div>
-
-      {/* 帖子列表 - 体育卡片风格 */}
+      {/* 帖子列表 */}
       <div className="space-y-4">
         {posts.length === 0 ? (
-          <div className="glass-card p-16 text-center">
-            <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-dark-200 dark:to-dark-300 rounded-3xl flex items-center justify-center">
-              <MessageCircle className="w-12 h-12 text-gray-400 dark:text-gray-500" />
-            </div>
-            <p className="text-gray-500 dark:text-gray-400 text-xl font-bold mb-3">暂无动态</p>
-            <p className="text-gray-400 dark:text-gray-500 text-sm mb-6">快来发表你的足球观点吧！</p>
+          <div className="py-20 text-center border border-gray-200 dark:border-gray-800">
+            <MessageCircle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+            <p className="text-gray-600 dark:text-gray-400 mb-2">暂无动态</p>
+            <p className="text-sm text-gray-500 dark:text-gray-500 mb-6">快来发表你的足球观点吧</p>
             <button
               onClick={() => setShowCreateModal(true)}
-              className="px-8 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-bold rounded-xl hover:shadow-xl transition-all"
+              className="px-6 py-2 bg-gray-900 dark:bg-white text-white dark:text-black text-sm font-medium hover:bg-gray-700 dark:hover:bg-gray-200 transition-colors"
             >
-              立即发声
+              发表观点
             </button>
           </div>
         ) : (
@@ -200,90 +188,83 @@ const ForumPage = () => {
               to={`/forum/${post.id}`}
               className="block group"
             >
-              <div className="glass-card p-5 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 border-l-4 border-transparent hover:border-primary-500">
+              <div className="border border-gray-200 dark:border-gray-800 p-5 hover:border-gray-900 dark:hover:border-white transition-colors">
                 <div className="flex items-start gap-4">
-                  {/* 作者头像 - 更专业的展示 */}
-                  <div className="flex-shrink-0 relative">
+                  {/* 作者头像 */}
+                  <div className="flex-shrink-0">
                     {post.authorAvatar ? (
                       <img
                         src={post.authorAvatar}
                         alt={post.author}
-                        className="w-14 h-14 rounded-2xl border-2 border-gray-200 dark:border-gray-700 object-cover"
+                        className="w-12 h-12 bg-gray-100 dark:bg-gray-900 object-cover"
                       />
                     ) : (
-                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white font-black text-xl shadow-lg">
+                      <div className="w-12 h-12 bg-gray-900 dark:bg-white flex items-center justify-center text-white dark:text-black text-sm font-bold">
                         {post.author.charAt(0)}
                       </div>
                     )}
-                    {/* 在线状态指示器 */}
-                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 border-4 border-white dark:border-dark-100 rounded-full"></div>
                   </div>
 
                   {/* 帖子内容 */}
                   <div className="flex-1 min-w-0">
-                    {/* 标题行 */}
-                    <div className="flex items-center gap-2 mb-2 flex-wrap">
+                    {/* 作者和时间 */}
+                    <div className="flex items-center gap-2 mb-2 flex-wrap text-sm">
+                      <span className="font-medium text-gray-900 dark:text-white">{post.author}</span>
+                      <span className="text-gray-400 dark:text-gray-500">·</span>
+                      <span className="text-gray-500 dark:text-gray-400">{formatTime(post.createdAt)}</span>
                       {post.isPinned && (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-gradient-to-r from-red-600 to-pink-600 text-white text-xs font-bold rounded-lg shadow-md">
-                          <Trophy className="w-3 h-3" />
-                          置顶
-                        </span>
+                        <>
+                          <span className="text-gray-400 dark:text-gray-500">·</span>
+                          <span className="text-gray-900 dark:text-white">置顶</span>
+                        </>
                       )}
                       {post.isHot && (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-gradient-to-r from-orange-600 to-red-600 text-white text-xs font-bold rounded-lg shadow-md animate-pulse">
-                          <Flame className="w-3 h-3" />
-                          热门
-                        </span>
+                        <>
+                          <span className="text-gray-400 dark:text-gray-500">·</span>
+                          <span className="text-gray-900 dark:text-white">热门</span>
+                        </>
                       )}
-                      <h3 className="text-lg md:text-xl font-black text-gray-900 dark:text-gray-100 line-clamp-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
-                        {post.title}
-                      </h3>
                     </div>
 
-                    {/* 作者和时间 */}
-                    <div className="flex items-center gap-3 mb-3">
-                      <span className="text-sm font-bold text-primary-600 dark:text-primary-400">{post.author}</span>
-                      <span className="text-xs text-gray-400 dark:text-gray-500">{formatTime(post.createdAt)}</span>
-                      <span className="px-2 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-xs font-semibold rounded-md">
-                        {post.category}
-                      </span>
-                    </div>
+                    {/* 标题 */}
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">
+                      {post.title}
+                    </h3>
 
                     {/* 内容预览 */}
-                    <p className="text-gray-600 dark:text-gray-400 text-sm md:text-base line-clamp-2 mb-4 leading-relaxed">
+                    <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-2 mb-3">
                       {post.content}
                     </p>
 
-                    {/* 标签 */}
-                    {post.tags.length > 0 && (
-                      <div className="flex items-center gap-2 mb-4 flex-wrap">
+                    {/* 标签和分类 */}
+                    {(post.tags.length > 0 || post.category) && (
+                      <div className="flex items-center gap-2 mb-3 flex-wrap text-xs text-gray-500 dark:text-gray-400">
+                        {post.category && <span>{post.category}</span>}
+                        {post.tags.length > 0 && post.category && <span>·</span>}
                         {post.tags.slice(0, 3).map((tag, index) => (
-                          <span
-                            key={index}
-                            className="inline-flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 text-blue-600 dark:text-blue-400 rounded-lg text-xs font-bold border border-blue-200 dark:border-blue-800"
-                          >
+                          <span key={index}>
                             #{tag}
                           </span>
                         ))}
                         {post.tags.length > 3 && (
-                          <span className="text-xs text-gray-400">+{post.tags.length - 3}</span>
+                          <span>+{post.tags.length - 3}</span>
                         )}
                       </div>
                     )}
 
-                    {/* 图片预览 - 更紧凑的展示 */}
+                    {/* 图片预览 */}
                     {post.images.length > 0 && (
-                      <div className="flex gap-2 mb-4">
+                      <div className="flex gap-2 mb-3">
                         {post.images.slice(0, 3).map((img, index) => (
-                          <div key={index} className="relative group/img">
+                          <div key={index} className="relative">
                             <img
                               src={img}
                               alt={`图片${index + 1}`}
-                              className="w-24 h-24 object-cover rounded-xl border-2 border-gray-200 dark:border-gray-700 group-hover/img:scale-110 transition-transform"
+                              className="w-20 h-20 object-cover bg-gray-100 dark:bg-gray-900"
                             />
                             {index === 2 && post.images.length > 3 && (
-                              <div className="absolute inset-0 bg-black/60 rounded-xl flex items-center justify-center">
-                                <span className="text-white font-bold text-lg">+{post.images.length - 3}</span>
+                              <div className="absolute inset-0 bg-black/50 flex items-center justify-center text-white text-sm font-medium">
+                                +{post.images.length - 3}
                               </div>
                             )}
                           </div>
@@ -291,25 +272,19 @@ const ForumPage = () => {
                       </div>
                     )}
 
-                    {/* 互动数据 - 体育风格的数据展示 */}
-                    <div className="flex items-center gap-6 text-sm">
-                      <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer group/stat">
-                        <div className="w-8 h-8 bg-gray-100 dark:bg-dark-200 rounded-lg flex items-center justify-center group-hover/stat:bg-blue-100 dark:group-hover/stat:bg-blue-900/30 transition-colors">
-                          <Eye className="w-4 h-4" />
-                        </div>
-                        <span className="font-bold">{formatNumber(post.views)}</span>
+                    {/* 互动数据 */}
+                    <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+                      <div className="flex items-center gap-1">
+                        <Eye className="w-4 h-4" />
+                        <span>{formatNumber(post.views)}</span>
                       </div>
-                      <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors cursor-pointer group/stat">
-                        <div className="w-8 h-8 bg-gray-100 dark:bg-dark-200 rounded-lg flex items-center justify-center group-hover/stat:bg-red-100 dark:group-hover/stat:bg-red-900/30 transition-colors">
-                          <ThumbsUp className="w-4 h-4" />
-                        </div>
-                        <span className="font-bold">{formatNumber(post.likes)}</span>
+                      <div className="flex items-center gap-1">
+                        <ThumbsUp className="w-4 h-4" />
+                        <span>{formatNumber(post.likes)}</span>
                       </div>
-                      <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400 transition-colors cursor-pointer group/stat">
-                        <div className="w-8 h-8 bg-gray-100 dark:bg-dark-200 rounded-lg flex items-center justify-center group-hover/stat:bg-green-100 dark:group-hover/stat:bg-green-900/30 transition-colors">
-                          <MessageCircle className="w-4 h-4" />
-                        </div>
-                        <span className="font-bold">{formatNumber(post.commentsCount)}</span>
+                      <div className="flex items-center gap-1">
+                        <MessageCircle className="w-4 h-4" />
+                        <span>{formatNumber(post.commentsCount)}</span>
                       </div>
                     </div>
                   </div>

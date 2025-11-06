@@ -42,30 +42,22 @@ const MatchesPage = () => {
   ] as const;
 
   return (
-    <div className="space-y-12 max-w-7xl mx-auto">
+    <div className="space-y-8 max-w-7xl mx-auto">
       {/* 页面标题 */}
-      <div className="py-8 border-b border-gray-200 dark:border-gray-800">
-        <div className="mb-4">
-          <span className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-            Match Center
-          </span>
-        </div>
-        <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-3 tracking-tight">
+      <div className="flex items-center justify-between py-4">
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white tracking-tight">
           赛事中心
         </h1>
-        <p className="text-lg text-gray-600 dark:text-gray-400">
-          实时比分 · 赛程赛果 · 数据统计
-        </p>
       </div>
 
       {/* 过滤器 - The Verge极简风格 */}
-      <div className="flex flex-wrap gap-3 border-b border-gray-200 dark:border-gray-800 pb-6">
+      <div className="flex flex-wrap gap-3">
         {filterOptions.map(({ value, label }) => (
           <button
             key={value}
             onClick={() => setFilter(value)}
             className={`
-              px-4 py-2 font-medium transition-colors
+              px-4 py-2 text-sm font-medium transition-colors
               ${filter === value
                 ? 'bg-gray-900 dark:bg-white text-white dark:text-black'
                 : 'border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white hover:border-gray-900 dark:hover:border-white'
