@@ -55,50 +55,52 @@ const Layout = () => {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col relative">
-      {/* 装饰性背景 */}
-      <div className="fixed inset-0 grid-bg opacity-50 pointer-events-none"></div>
+    <div className="min-h-screen flex flex-col relative bg-gray-50 dark:bg-dark-100">
+      {/* 体育风格背景 - 足球场纹理 */}
+      <div className="fixed inset-0 opacity-[0.03] pointer-events-none bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')]"></div>
 
-      {/* 顶部导航栏 - 扁平化设计 */}
+      {/* 顶部导航栏 - 专业体育平台风格 */}
       <header className={`${
         liquidGlassEnabled
           ? 'liquid-nav'
           : md3Enabled
           ? 'md3-nav'
-          : 'bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border-b border-gray-200/80 dark:border-zinc-800/80'
-      } sticky top-0 z-50`}>
+          : 'bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 dark:from-green-700 dark:via-emerald-700 dark:to-teal-700'
+      } sticky top-0 z-50 shadow-lg shadow-green-500/20`}>
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             <div
               onClick={handleLogoClick}
               className="flex items-center gap-3 cursor-pointer select-none group"
             >
-              <div className="relative w-9 h-9 flex items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 shadow-sm group-hover:shadow-md transition-all">
-                <Trophy className="w-5 h-5 text-white" />
+              <div className="relative w-10 h-10 flex items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg group-hover:bg-white/30 transition-all duration-300 group-hover:scale-110">
+                <Trophy className="w-6 h-6 text-white drop-shadow-lg" />
               </div>
-              <span className="text-xl font-bold text-gray-900 dark:text-white tracking-tight">{t('home.title')}</span>
+              <div className="flex flex-col">
+                <span className="text-xl md:text-2xl font-black text-white tracking-tight drop-shadow-md">{t('home.title')}</span>
+                <span className="text-[10px] text-white/80 font-medium -mt-1 hidden md:block">全球球迷聚集地</span>
+              </div>
               {clickCount > 0 && clickCount < 7 && (
-                <span className="text-xs badge badge-live">
+                <span className="text-xs px-2 py-0.5 bg-white/20 backdrop-blur-sm text-white rounded-full font-bold">
                   {clickCount}/7
                 </span>
               )}
             </div>
 
-            <div className="flex items-center gap-2">
-              <nav className="hidden md:flex items-center gap-1">
+            <div className="flex items-center gap-3">
+              <nav className="hidden md:flex items-center gap-2">
                 {navItems.map(({ path, label, icon: Icon }) => (
                     <Link
                     key={path}
                     to={path}
                     className={`
-                      flex items-center gap-2 px-3 py-2 text-sm font-medium
-                      transition-all duration-200
+                      flex items-center gap-2 px-4 py-2 text-sm font-bold
+                      transition-all duration-200 rounded-xl
                       ${md3Enabled
                         ? `md3-nav-item ${isActive(path) ? 'md3-nav-item-active' : ''}`
-                        : `rounded-lg ${isActive(path)
-                          ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400'
-                          : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-zinc-800/50'
-                        }`
+                        : isActive(path)
+                          ? 'bg-white/25 backdrop-blur-sm text-white shadow-lg scale-105'
+                          : 'text-white/90 hover:text-white hover:bg-white/15 hover:scale-105'
                       }
                     `}
                   >
@@ -110,7 +112,7 @@ const Layout = () => {
 
               <Link
                 to="/membership"
-                className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 text-white text-sm font-medium shadow-sm hover:shadow-md transition-all duration-200"
+                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 text-white text-sm font-black shadow-lg shadow-amber-500/30 hover:shadow-xl hover:shadow-amber-500/40 hover:scale-105 transition-all duration-200"
               >
                 <Crown className="w-4 h-4" />
                 <span className="hidden lg:inline">{t('nav.membership')}</span>
@@ -127,44 +129,50 @@ const Layout = () => {
         <Outlet />
       </main>
 
-      {/* 底部导航（移动端）- 扁平化设计 */}
+      {/* 底部导航（移动端）- 专业体育平台风格 */}
       <nav className={`md:hidden fixed bottom-0 left-0 right-0 ${
         liquidGlassEnabled
           ? 'liquid-nav'
           : md3Enabled
           ? 'md3-bottom-nav'
-          : 'bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl border-t border-gray-200 dark:border-zinc-800'
-      } z-50 safe-area-bottom`}>
-        <div className="flex justify-around px-2 py-1">
+          : 'bg-white/95 dark:bg-dark-200/95 backdrop-blur-xl border-t-2 border-green-500/20 dark:border-green-500/30'
+      } z-50 safe-area-bottom shadow-2xl shadow-green-500/10`}>
+        <div className="flex justify-around px-2 py-2">
           {navItems.map(({ path, label, icon: Icon }) => (
             <Link
               key={path}
               to={path}
               className={`
-                flex flex-col items-center py-2 px-3 flex-1 text-xs font-medium
-                transition-all duration-200
+                flex flex-col items-center py-2 px-2 flex-1 text-[10px] font-bold
+                transition-all duration-200 rounded-xl
                 ${md3Enabled
                   ? `md3-bottom-nav-item ${isActive(path) ? 'md3-bottom-nav-item-active' : ''}`
-                  : `rounded-lg ${isActive(path)
-                    ? 'text-primary-600 dark:text-primary-400'
+                  : isActive(path)
+                    ? 'text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 scale-105'
                     : 'text-gray-600 dark:text-gray-400'
-                  }`
                 }
               `}
             >
-              <Icon className={`w-5 h-5 mb-1 ${isActive(path) ? 'stroke-[2.5]' : 'stroke-2'}`} />
-              <span>{label}</span>
+              <Icon className={`w-6 h-6 mb-1 ${isActive(path) ? 'stroke-[2.5]' : 'stroke-2'}`} />
+              <span className="truncate w-full text-center">{label}</span>
             </Link>
           ))}
         </div>
       </nav>
 
-      {/* 底部信息 */}
-      <footer className="bg-white dark:bg-zinc-900 border-t border-gray-200 dark:border-zinc-800 py-8 mb-16 md:mb-0 relative z-10">
+      {/* 底部信息 - 专业体育平台风格 */}
+      <footer className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 dark:from-dark-300 dark:via-dark-200 dark:to-dark-300 py-12 mb-16 md:mb-0 relative z-10 border-t border-gray-700 dark:border-gray-800">
         <div className="container mx-auto px-4">
           <div className="text-center">
-            <p className="text-sm text-gray-600 dark:text-gray-400">&copy; 2025 {t('home.title')}</p>
-            <p className="text-xs mt-2 text-gray-400 dark:text-gray-600">Powered by Modern React</p>
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="w-10 h-10 flex items-center justify-center rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600 shadow-lg">
+                <Trophy className="w-6 h-6 text-white" />
+              </div>
+              <span className="text-2xl font-black text-white">{t('home.title')}</span>
+            </div>
+            <p className="text-sm text-gray-400 mb-2">全球球迷聚集地 · 实时足球资讯平台</p>
+            <p className="text-xs text-gray-500">&copy; 2025 {t('home.title')}. All rights reserved.</p>
+            <p className="text-xs mt-3 text-gray-600">Powered by Modern Football Technology</p>
           </div>
         </div>
       </footer>
