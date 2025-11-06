@@ -4,8 +4,6 @@ import { Home, Trophy, Users, Newspaper, ShoppingBag, Crown, MessageSquare } fro
 import { useTranslation } from 'react-i18next';
 import ThemeToggle from './ThemeToggle';
 import { themeService } from '../services/theme';
-import { useLiquidGlass } from '../hooks/useLiquidGlass';
-import { useMaterialDesign3 } from '../hooks/useMaterialDesign3';
 
 const Layout = () => {
   const { t } = useTranslation();
@@ -13,8 +11,6 @@ const Layout = () => {
   const navigate = useNavigate();
   const [clickCount, setClickCount] = useState(0);
   const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const { isEnabled: liquidGlassEnabled } = useLiquidGlass();
-  const { isEnabled: md3Enabled } = useMaterialDesign3();
 
   useEffect(() => {
     themeService.initTheme();
@@ -57,13 +53,7 @@ const Layout = () => {
   return (
     <div className="min-h-screen flex flex-col relative bg-white dark:bg-black">
       {/* 顶部导航栏 - The Verge极简风格 */}
-      <header className={`${
-        liquidGlassEnabled
-          ? 'liquid-nav'
-          : md3Enabled
-          ? 'md3-nav'
-          : 'bg-white dark:bg-black border-b border-gray-200 dark:border-gray-800'
-      } sticky top-0 z-50`}>
+      <header className="bg-white dark:bg-black border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50">
         <div className="container mx-auto px-4 md:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14">
             <div
@@ -87,11 +77,9 @@ const Layout = () => {
                     to={path}
                     className={`
                       text-sm font-medium transition-colors
-                      ${md3Enabled
-                        ? `md3-nav-item ${isActive(path) ? 'md3-nav-item-active' : ''}`
-                        : isActive(path)
-                          ? 'text-gray-900 dark:text-white'
-                          : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                      ${isActive(path)
+                        ? 'text-gray-900 dark:text-white'
+                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                       }
                     `}
                   >
@@ -119,13 +107,7 @@ const Layout = () => {
       </main>
 
       {/* 底部导航（移动端）- The Verge极简风格 */}
-      <nav className={`md:hidden fixed bottom-0 left-0 right-0 ${
-        liquidGlassEnabled
-          ? 'liquid-nav'
-          : md3Enabled
-          ? 'md3-bottom-nav'
-          : 'bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800'
-      } z-50 safe-area-bottom`}>
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800 z-50 safe-area-bottom">
         <div className="flex justify-around px-4 py-2">
           {navItems.map(({ path, label, icon: Icon }) => (
             <Link
@@ -134,11 +116,9 @@ const Layout = () => {
               className={`
                 flex flex-col items-center py-2 px-2 flex-1 text-[10px] font-medium
                 transition-colors
-                ${md3Enabled
-                  ? `md3-bottom-nav-item ${isActive(path) ? 'md3-bottom-nav-item-active' : ''}`
-                  : isActive(path)
-                    ? 'text-gray-900 dark:text-white'
-                    : 'text-gray-500 dark:text-gray-400'
+                ${isActive(path)
+                  ? 'text-gray-900 dark:text-white'
+                  : 'text-gray-500 dark:text-gray-400'
                 }
               `}
             >

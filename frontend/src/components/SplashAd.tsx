@@ -101,7 +101,7 @@ const SplashAd = ({ onClose }: SplashAdProps) => {
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end justify-center p-8">
                 <div className="text-center text-white">
                   <h2 className="text-4xl font-bold mb-2 animate-slide-up">
-                    懂球帝 Pro
+                    Premium
                   </h2>
                   <p className="text-xl opacity-90 animate-slide-up animation-delay-200">
                     开启全新足球观赛体验
@@ -131,7 +131,7 @@ const SplashAd = ({ onClose }: SplashAdProps) => {
                 </svg>
               </div>
               <h1 className="text-5xl font-bold text-white mb-4">
-                懂球帝 Pro 会员
+                Premium
               </h1>
               <p className="text-2xl text-green-200">
                 解锁全部高级功能，畅享足球世界

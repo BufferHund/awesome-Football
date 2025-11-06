@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Match, News } from '../types';
 import { matchService, newsService } from '../services/api';
 import MatchCard from '../components/MatchCard';
@@ -7,6 +8,7 @@ import NewsCard from '../components/NewsCard';
 import { TrendingUp, Newspaper, ChevronRight, ShoppingBag, Sparkles, Crown, Flame, Zap, Users, Trophy, Target } from 'lucide-react';
 
 const HomePage = () => {
+  const { t } = useTranslation();
   const [liveMatches, setLiveMatches] = useState<Match[]>([]);
   const [todayMatches, setTodayMatches] = useState<Match[]>([]);
   const [latestNews, setLatestNews] = useState<News[]>([]);
@@ -55,7 +57,7 @@ const HomePage = () => {
       {/* Hero Section - 精简版 */}
       <div className="py-6 md:py-8">
         <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-4 tracking-tight leading-none">
-          懂球帝
+          {t('home.title')}
         </h1>
 
         <p className="text-lg text-gray-600 dark:text-gray-400 mb-6 max-w-2xl">

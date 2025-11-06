@@ -2,8 +2,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { configService, syncTriggerService, DetailedSyncResult } from '../services/config';
 import BackendLogViewer from '../components/BackendLogViewer';
-import { useLiquidGlass } from '../hooks/useLiquidGlass';
-import { useMaterialDesign3 } from '../hooks/useMaterialDesign3';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 import {
   Settings,
@@ -20,9 +18,7 @@ import {
   ChevronUp,
   Clock,
   AlertCircle,
-  BookOpen,
-  Sparkles,
-  Layers
+  BookOpen
 } from 'lucide-react';
 
 interface SyncResult extends DetailedSyncResult {
@@ -36,8 +32,6 @@ const SettingsPage = () => {
   const [config, setConfig] = useState(configService.getConfig());
   const [syncResults, setSyncResults] = useState<SyncResult[]>([]);
   const [loading, setLoading] = useState<string | null>(null);
-  const { isEnabled: liquidGlassEnabled, toggle: toggleLiquidGlass } = useLiquidGlass();
-  const { isEnabled: md3Enabled, toggle: toggleMD3 } = useMaterialDesign3();
 
   const handleSave = () => {
     configService.saveConfig(config);
@@ -122,153 +116,6 @@ const SettingsPage = () => {
       </div>
 
       <div className="container mx-auto px-4 py-6 max-w-4xl">
-        {/* LiquidGlass效果设置 - 限免开放 */}
-        <section className="glass-card p-6 mb-6 animate-slide-up border-2 border-cyan-500/30">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center space-x-2">
-              <Sparkles className="w-5 h-5 text-cyan-500" />
-              <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-                iOS 16 LiquidGlass效果
-              </h2>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-red-500 to-orange-500 animate-pulse-soft">
-                🎉 限时免费
-              </span>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  启用LiquidGlass效果
-                </label>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  严格遵循Apple iOS 16设计规范，流动玻璃态UI
-                </p>
-              </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={liquidGlassEnabled}
-                  onChange={toggleLiquidGlass}
-                  className="sr-only peer"
-                />
-                <div className="w-11 h-6 bg-gray-200 dark:bg-zinc-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-cyan-300 dark:peer-focus:ring-cyan-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-cyan-500 peer-checked:to-blue-500"></div>
-              </label>
-            </div>
-
-            {/* LiquidGlass效果预览 */}
-            {liquidGlassEnabled && (
-              <div className="animate-fade-in">
-                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">效果预览：</p>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <div className="liquid-card p-4 text-center">
-                    <Sparkles className="w-8 h-8 mx-auto mb-2 text-cyan-500" />
-                    <p className="text-sm font-medium">卡片效果</p>
-                  </div>
-                  <div className="liquid-card p-4 text-center">
-                    <div className="liquid-badge mx-auto mb-2">
-                      徽章效果
-                    </div>
-                    <p className="text-sm font-medium">徽章效果</p>
-                  </div>
-                  <div className="liquid-card p-4 text-center">
-                    <button className="liquid-btn">按钮效果</button>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            <div className="bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-cyan-900/20 dark:to-blue-900/20 rounded-lg p-4 border border-cyan-200 dark:border-cyan-800">
-              <div className="flex items-start space-x-3">
-                <Sparkles className="w-5 h-5 text-cyan-600 dark:text-cyan-400 mt-0.5 flex-shrink-0" />
-                <div>
-                  <p className="text-sm font-medium text-cyan-900 dark:text-cyan-100 mb-1">
-                    🎉 限时免费开放
-                  </p>
-                  <p className="text-xs text-cyan-700 dark:text-cyan-300">
-                    采用Apple官方iOS 16设计规范，使用Framer Motion实现流畅动画效果。为导航栏、卡片提供毛玻璃质感，现已全面免费开放！
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Material Design 3效果设置 - 限免开放 */}
-        <section className="glass-card p-6 mb-6 animate-slide-up border-2 border-indigo-500/30">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center space-x-2">
-              <Layers className="w-5 h-5 text-indigo-500" />
-              <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-                Material Design 3效果
-              </h2>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-red-500 to-orange-500 animate-pulse-soft">
-                🎉 限时免费
-              </span>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  启用Material Design 3效果
-                </label>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  严格遵循Google Material Design 3规范，Material You风格
-                </p>
-              </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={md3Enabled}
-                  onChange={toggleMD3}
-                  className="sr-only peer"
-                />
-                <div className="w-11 h-6 bg-gray-200 dark:bg-zinc-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 dark:peer-focus:ring-indigo-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-indigo-500 peer-checked:to-purple-500"></div>
-              </label>
-            </div>
-
-            {/* Material Design 3效果预览 */}
-            {md3Enabled && (
-              <div className="animate-fade-in">
-                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">效果预览：</p>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <div className="md3-card text-center">
-                    <Layers className="w-8 h-8 mx-auto mb-2 text-indigo-500" />
-                    <p className="text-sm font-medium">Elevated卡片</p>
-                  </div>
-                  <div className="md3-card-filled text-center">
-                    <div className="md3-chip-filled mx-auto mb-2">
-                      Filled芯片
-                    </div>
-                    <p className="text-sm font-medium">Filled变体</p>
-                  </div>
-                  <div className="text-center">
-                    <button className="md3-btn-filled">Filled按钮</button>
-                    <button className="md3-btn-tonal mt-2">Tonal按钮</button>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            <div className="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-lg p-4 border border-indigo-200 dark:border-indigo-800">
-              <div className="flex items-start space-x-3">
-                <Layers className="w-5 h-5 text-indigo-600 dark:text-indigo-400 mt-0.5 flex-shrink-0" />
-                <div>
-                  <p className="text-sm font-medium text-indigo-900 dark:text-indigo-100 mb-1">
-                    🎉 限时免费开放
-                  </p>
-                  <p className="text-xs text-indigo-700 dark:text-indigo-300">
-                    采用Google官方Material Design 3规范，使用MUI (Material-UI) v5组件库。提供Surface Elevation、State Layer等现代化交互效果，现已全面免费开放！
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* 语言设置 */}
         <section className="glass-card p-6 mb-6 animate-slide-up">
           <div className="flex items-center space-x-2 mb-4">
