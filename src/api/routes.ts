@@ -2,10 +2,18 @@ import express, { Request, Response } from 'express';
 import Database from '../database/db';
 import { Team, Player, Match, Product, User } from '../models/types';
 import BettingService from '../services/bettingService';
+import { requireAuth, optionalAuth } from '../auth/middleware';
 
 const router = express.Router();
 const db = Database.getInstance();
 const bettingService = new BettingService();
+
+// ========== 认证说明 ==========
+// 本应用使用SuperAuth统一认证平台
+// - 公开接口: 无需认证
+// - 登录可选: optionalAuth() - 登录后提供更多功能
+// - 需要登录: requireAuth() - 必须真实用户登录
+// - 允许虚拟用户: requireAuth({ allowVirtual: true })
 
 // ========== 球队相关API ==========
 
@@ -51,8 +59,8 @@ router.get('/teams/:id', async (req: Request, res: Response) => {
   }
 });
 
-// 创建新球队（并持久化到数据库）
-router.post('/teams', async (req: Request, res: Response) => {
+// 创建新球队（并持久化到数据库）- 需要管理员权限
+router.post('/teams', requireAuth(), async (req: Request, res: Response) => {
   try {
     const team: Omit<Team, 'id'> = req.body;
 
@@ -121,8 +129,8 @@ router.get('/players/team/:teamId', async (req: Request, res: Response) => {
   }
 });
 
-// 创建新球员（并持久化到数据库）
-router.post('/players', async (req: Request, res: Response) => {
+// 创建新球员（并持久化到数据库）- 需要管理员权限
+router.post('/players', requireAuth(), async (req: Request, res: Response) => {
   try {
     const player: Omit<Player, 'id'> = req.body;
 
@@ -200,8 +208,8 @@ router.get('/matches/team/:teamId', async (req: Request, res: Response) => {
   }
 });
 
-// 创建新比赛（并持久化到数据库）
-router.post('/matches', async (req: Request, res: Response) => {
+// 创建新比赛（并持久化到数据库）- 需要管理员权限
+router.post('/matches', requireAuth(), async (req: Request, res: Response) => {
   try {
     const match: Omit<Match, 'id'> = req.body;
 
@@ -330,8 +338,8 @@ router.get('/products/:id', async (req: Request, res: Response) => {
   }
 });
 
-// 创建新商品（并持久化到数据库）
-router.post('/products', async (req: Request, res: Response) => {
+// 创建新商品（并持久化到数据库）- 需要管理员权限
+router.post('/products', requireAuth(), async (req: Request, res: Response) => {
   try {
     const product: Omit<Product, 'id'> = req.body;
 
@@ -453,10 +461,11 @@ router.get('/users/:id/stats', async (req: Request, res: Response) => {
   }
 });
 
-// ========== 赌球相关API ==========
+// ========== 投注相关API ==========
+// 注意：所有投注操作需要真实用户登录
 
-// 创建投注
-router.post('/bets', async (req: Request, res: Response) => {
+// 创建投注（需要真实用户登录）
+router.post('/bets', requireAuth(), async (req: Request, res: Response) => {
   try {
     const { userId, matchId, betType, amount } = req.body;
 
@@ -482,8 +491,8 @@ router.post('/bets', async (req: Request, res: Response) => {
   }
 });
 
-// 获取用户的所有投注
-router.get('/bets/user/:userId', async (req: Request, res: Response) => {
+// 获取用户的所有投注（需要登录）
+router.get('/bets/user/:userId', requireAuth(), async (req: Request, res: Response) => {
   try {
     const userId = parseInt(req.params.userId);
     const bets = await db.getBetsByUserId(userId);

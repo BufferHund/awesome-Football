@@ -215,7 +215,8 @@ class FootballCrawler {
         homeScore: 2,
         awayScore: 0,
         matchDate: '2024-11-10',
-        competition: '欧冠联赛'
+        competition: '欧冠联赛',
+        status: 'finished' as const
       });
     }
 
@@ -226,7 +227,8 @@ class FootballCrawler {
         homeScore: 1,
         awayScore: 1,
         matchDate: '2024-11-12',
-        competition: '欧冠联赛'
+        competition: '欧冠联赛',
+        status: 'finished' as const
       });
 
       matches.push({
@@ -235,7 +237,8 @@ class FootballCrawler {
         homeScore: 0,
         awayScore: 3,
         matchDate: '2024-11-15',
-        competition: '欧冠联赛'
+        competition: '欧冠联赛',
+        status: 'finished' as const
       });
     }
 

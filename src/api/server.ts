@@ -1,5 +1,7 @@
 import express, { Express } from 'express';
+import cookieParser from 'cookie-parser';
 import routes from './routes';
+import authRoutes from '../auth/authRoutes';
 
 // 创建并配置Express服务器
 function createServer(): Express {
@@ -8,6 +10,7 @@ function createServer(): Express {
   // 中间件
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
+  app.use(cookieParser());
 
   // 日志中间件
   app.use((req, res, next) => {
@@ -15,7 +18,13 @@ function createServer(): Express {
     next();
   });
 
-  // API路由
+  // 静态文件服务（前端页面）
+  app.use(express.static('public'));
+
+  // 认证API路由
+  app.use('/api/auth', authRoutes);
+
+  // 业务API路由
   app.use('/api', routes);
 
   // 健康检查端点
@@ -27,14 +36,26 @@ function createServer(): Express {
   });
 
   // 根路径
-  app.get('/', (req, res) => {
+  app.get('/api', (req, res) => {
     res.json({
       message: '欢迎使用足球数据API',
       endpoints: {
-        teams: '/api/teams',
-        players: '/api/players',
-        matches: '/api/matches',
-        stats: '/api/stats',
+        auth: {
+          login: 'POST /api/auth/login',
+          register: 'POST /api/auth/register',
+          logout: 'POST /api/auth/logout',
+          me: 'GET /api/auth/me',
+          portalLogin: 'GET /api/auth/portal-login',
+          portalRegister: 'GET /api/auth/portal-register'
+        },
+        data: {
+          teams: '/api/teams',
+          players: '/api/players',
+          matches: '/api/matches',
+          products: '/api/products',
+          users: '/api/users',
+          bets: '/api/bets'
+        },
         health: '/health'
       }
     });

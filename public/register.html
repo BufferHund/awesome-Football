@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚽ 足球应用 - 注册</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h1>⚽ 足球应用</h1>
+            </div>
+            <div class="nav-menu">
+                <a href="/">首页</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="auth-container">
+            <div class="auth-card">
+                <h2>📝 注册新账号</h2>
+                <p class="auth-subtitle">选择注册方式</p>
+
+                <!-- Tab切换 -->
+                <div class="auth-tabs">
+                    <button class="auth-tab active" data-tab="direct">内置注册（推荐）</button>
+                    <button class="auth-tab" data-tab="portal">统一账号注册</button>
+                </div>
+
+                <!-- Direct API注册表单 -->
+                <div class="tab-content" id="directTab">
+                    <form id="registerForm">
+                        <div class="form-group">
+                            <label for="username">用户名 *</label>
+                            <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                required
+                                placeholder="3-20个字符，字母数字下划线"
+                                pattern="[a-zA-Z0-9_]{3,20}"
+                                title="用户名长度3-20个字符，只能包含字母、数字和下划线"
+                                autocomplete="username"
+                            >
+                            <small>用户名将作为您的唯一标识</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">邮箱 *</label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                required
+                                placeholder="your@email.com"
+                                autocomplete="email"
+                            >
+                            <small>请输入有效的邮箱地址</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">密码 *</label>
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                required
+                                placeholder="至少6个字符"
+                                minlength="6"
+                                autocomplete="new-password"
+                            >
+                            <small>密码长度至少6个字符</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="passwordConfirm">确认密码 *</label>
+                            <input
+                                type="password"
+                                id="passwordConfirm"
+                                name="passwordConfirm"
+                                required
+                                placeholder="再次输入密码"
+                                minlength="6"
+                                autocomplete="new-password"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success btn-block">
+                                注册
+                            </button>
+                        </div>
+
+                        <div id="registerMessage" class="message" style="display: none;"></div>
+
+                        <div class="auth-footer">
+                            <p>已有账号？ <a href="/login.html">立即登录</a></p>
+                        </div>
+                    </form>
+
+                    <div class="info-box">
+                        <h4>💡 注册后您将获得：</h4>
+                        <ul>
+                            <li>🎁 1000个虚拟金币</li>
+                            <li>🎮 参与趣味猜球活动</li>
+                            <li>🛍️ 购买足球周边商品</li>
+                            <li>📊 查看个人统计数据</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Portal重定向注册 -->
+                <div class="tab-content" id="portalTab" style="display: none;">
+                    <div class="portal-info">
+                        <p>点击下方按钮，将跳转到SuperAuth统一认证平台注册</p>
+
+                        <div class="form-group">
+                            <button id="portalRegisterBtn" class="btn btn-success btn-block">
+                                前往统一账号注册 →
+                            </button>
+                        </div>
+
+                        <div class="info-box">
+                            <h4>🔒 统一账号注册特点：</h4>
+                            <ul>
+                                <li>✅ 最高安全性，密码不离开认证平台</li>
+                                <li>✅ 一次注册，全平台通用</li>
+                                <li>✅ 统一的用户界面</li>
+                                <li>✅ 自动同步到所有集成应用</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 足球应用. All rights reserved.</p>
+    </footer>
+
+    <script src="/auth.js"></script>
+    <script>
+        // Tab切换逻辑
+        document.querySelectorAll('.auth-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // 移除所有active类
+                document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+
+                // 激活当前tab
+                tab.classList.add('active');
+                const tabId = tab.dataset.tab;
+
+                if (tabId === 'direct') {
+                    document.getElementById('directTab').style.display = 'block';
+                } else if (tabId === 'portal') {
+                    document.getElementById('portalTab').style.display = 'block';
+                }
+            });
+        });
+
+        // Direct API注册表单提交
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const passwordConfirm = document.getElementById('passwordConfirm').value;
+            const messageDiv = document.getElementById('registerMessage');
+
+            // 前端验证
+            if (password !== passwordConfirm) {
+                showMessage(messageDiv, '两次输入的密码不一致', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                showMessage(messageDiv, '密码长度至少6个字符', 'error');
+                return;
+            }
+
+            if (username.length < 3 || username.length > 20) {
+                showMessage(messageDiv, '用户名长度必须在3-20个字符之间', 'error');
+                return;
+            }
+
+            if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+                showMessage(messageDiv, '用户名只能包含字母、数字和下划线', 'error');
+                return;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showMessage(messageDiv, '请输入有效的邮箱地址', 'error');
+                return;
+            }
+
+            try {
+                const result = await register(username, email, password);
+
+                if (result.success) {
+                    showMessage(messageDiv, '注册成功！正在跳转...', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 1000);
+                } else {
+                    showMessage(messageDiv, result.message || '注册失败', 'error');
+                }
+            } catch (error) {
+                showMessage(messageDiv, '注册失败，请稍后重试', 'error');
+            }
+        });
+
+        // Portal注册按钮
+        document.getElementById('portalRegisterBtn').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/api/auth/portal-register?return=' + encodeURIComponent(window.location.origin + '/'));
+                const result = await response.json();
+
+                if (result.success && result.portalUrl) {
+                    window.location.href = result.portalUrl;
+                } else {
+                    alert('获取Portal注册地址失败');
+                }
+            } catch (error) {
+                alert('请求失败，请稍后重试');
+            }
+        });
+
+        // 工具函数：显示消息
+        function showMessage(element, message, type) {
+            element.textContent = message;
+            element.className = 'message message-' + type;
+            element.style.display = 'block';
+        }
+
+        // 检查是否已登录
+        window.addEventListener('DOMContentLoaded', async () => {
+            const user = await checkAuth();
+            if (user && !user.isVirtual) {
+                // 已经是真实用户登录，跳转到首页
+                window.location.href = '/';
+            }
+        });
+    </script>
+</body>
+</html>

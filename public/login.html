@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚽ 足球应用 - 登录</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h1>⚽ 足球应用</h1>
+            </div>
+            <div class="nav-menu">
+                <a href="/">首页</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="auth-container">
+            <div class="auth-card">
+                <h2>🔐 登录账号</h2>
+                <p class="auth-subtitle">选择登录方式</p>
+
+                <!-- Tab切换 -->
+                <div class="auth-tabs">
+                    <button class="auth-tab active" data-tab="direct">内置登录（推荐）</button>
+                    <button class="auth-tab" data-tab="portal">统一账号登录</button>
+                </div>
+
+                <!-- Direct API登录表单 -->
+                <div class="tab-content" id="directTab">
+                    <form id="loginForm">
+                        <div class="form-group">
+                            <label for="username">用户名</label>
+                            <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                required
+                                placeholder="请输入用户名"
+                                autocomplete="username"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">密码</label>
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                required
+                                placeholder="请输入密码"
+                                autocomplete="current-password"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary btn-block">
+                                登录
+                            </button>
+                        </div>
+
+                        <div id="loginMessage" class="message" style="display: none;"></div>
+
+                        <div class="auth-footer">
+                            <p>还没有账号？ <a href="/register.html">立即注册</a></p>
+                        </div>
+                    </form>
+
+                    <div class="info-box">
+                        <h4>💡 内置登录特点：</h4>
+                        <ul>
+                            <li>✅ 快速便捷，在本页面完成登录</li>
+                            <li>✅ 无需跳转，用户体验流畅</li>
+                            <li>✅ 默认推荐方式</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Portal重定向登录 -->
+                <div class="tab-content" id="portalTab" style="display: none;">
+                    <div class="portal-info">
+                        <p>点击下方按钮，将跳转到SuperAuth统一认证平台登录</p>
+
+                        <div class="form-group">
+                            <button id="portalLoginBtn" class="btn btn-success btn-block">
+                                前往统一账号登录 →
+                            </button>
+                        </div>
+
+                        <div class="info-box">
+                            <h4>🔒 统一账号登录特点：</h4>
+                            <ul>
+                                <li>✅ 最高安全性，密码不离开认证平台</li>
+                                <li>✅ 单点登录（SSO），一次登录全平台通用</li>
+                                <li>✅ 统一的用户界面</li>
+                                <li>✅ 适合企业环境和多应用场景</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 足球应用. All rights reserved.</p>
+    </footer>
+
+    <script src="/auth.js"></script>
+    <script>
+        // Tab切换逻辑
+        document.querySelectorAll('.auth-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // 移除所有active类
+                document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+
+                // 激活当前tab
+                tab.classList.add('active');
+                const tabId = tab.dataset.tab;
+
+                if (tabId === 'direct') {
+                    document.getElementById('directTab').style.display = 'block';
+                } else if (tabId === 'portal') {
+                    document.getElementById('portalTab').style.display = 'block';
+                }
+            });
+        });
+
+        // Direct API登录表单提交
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const messageDiv = document.getElementById('loginMessage');
+
+            try {
+                const result = await login(username, password);
+
+                if (result.success) {
+                    showMessage(messageDiv, '登录成功！正在跳转...', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 1000);
+                } else {
+                    showMessage(messageDiv, result.message || '登录失败', 'error');
+                }
+            } catch (error) {
+                showMessage(messageDiv, '登录失败，请稍后重试', 'error');
+            }
+        });
+
+        // Portal登录按钮
+        document.getElementById('portalLoginBtn').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/api/auth/portal-login?return=' + encodeURIComponent(window.location.origin + '/'));
+                const result = await response.json();
+
+                if (result.success && result.portalUrl) {
+                    window.location.href = result.portalUrl;
+                } else {
+                    alert('获取Portal登录地址失败');
+                }
+            } catch (error) {
+                alert('请求失败，请稍后重试');
+            }
+        });
+
+        // 工具函数：显示消息
+        function showMessage(element, message, type) {
+            element.textContent = message;
+            element.className = 'message message-' + type;
+            element.style.display = 'block';
+        }
+
+        // 检查是否已登录
+        window.addEventListener('DOMContentLoaded', async () => {
+            const user = await checkAuth();
+            if (user && !user.isVirtual) {
+                // 已经是真实用户登录，跳转到首页
+                window.location.href = '/';
+            }
+        });
+    </script>
+</body>
+</html>

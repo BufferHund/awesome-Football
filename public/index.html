@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚽ 足球应用 - 首页</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h1>⚽ 足球应用</h1>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <a href="/">首页</a>
+                <a href="/teams.html">球队</a>
+                <a href="/matches.html">比赛</a>
+                <a href="/products.html">商城</a>
+                <a href="/betting.html">趣味猜球</a>
+            </div>
+            <div class="nav-auth" id="navAuth">
+                <!-- 将通过JavaScript动态填充 -->
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="hero">
+            <h2>欢迎来到足球应用</h2>
+            <p>获取最新的足球数据、参与趣味猜球、购买周边商品</p>
+        </section>
+
+        <section class="user-info" id="userInfo" style="display: none;">
+            <div class="card">
+                <h3>👤 个人信息</h3>
+                <div class="user-details">
+                    <p><strong>用户名:</strong> <span id="username"></span></p>
+                    <p><strong>邮箱:</strong> <span id="email"></span></p>
+                    <p><strong>金币:</strong> <span id="coins">1000</span> 💰</p>
+                    <p><strong>状态:</strong> <span id="userType" class="badge"></span></p>
+                </div>
+            </div>
+        </section>
+
+        <section class="features">
+            <h3>主要功能</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>⚽ 球队数据</h4>
+                    <p>查看各大豪门球队的详细信息</p>
+                    <a href="/teams.html" class="btn btn-secondary">查看球队</a>
+                </div>
+                <div class="feature-card">
+                    <h4>🏆 比赛信息</h4>
+                    <p>实时更新的比赛结果和赛程</p>
+                    <a href="/matches.html" class="btn btn-secondary">查看比赛</a>
+                </div>
+                <div class="feature-card">
+                    <h4>🛍️ 商城</h4>
+                    <p>购买足球周边商品</p>
+                    <a href="/products.html" class="btn btn-secondary">进入商城</a>
+                </div>
+                <div class="feature-card">
+                    <h4>🎲 趣味猜球</h4>
+                    <p>使用虚拟金币参与猜球活动</p>
+                    <a href="/betting.html" class="btn btn-secondary">开始猜球</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="auth-info" id="authInfo">
+            <div class="card">
+                <h3>🔐 认证模式说明</h3>
+                <p>本应用支持两种登录方式：</p>
+                <ul>
+                    <li><strong>内置登录（推荐）：</strong>使用应用自己的登录表单，快速便捷</li>
+                    <li><strong>统一账号登录：</strong>使用SuperAuth Portal统一身份认证，安全可靠</li>
+                </ul>
+                <div class="auth-buttons">
+                    <a href="/login.html" class="btn btn-primary">立即登录</a>
+                    <a href="/register.html" class="btn btn-success">立即注册</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 足球应用. All rights reserved.</p>
+    </footer>
+
+    <script src="/auth.js"></script>
+    <script>
+        // 页面加载时检查登录状态
+        window.addEventListener('DOMContentLoaded', async () => {
+            const user = await checkAuth();
+
+            if (user) {
+                // 已登录，显示用户信息
+                document.getElementById('userInfo').style.display = 'block';
+                document.getElementById('authInfo').style.display = 'none';
+
+                document.getElementById('username').textContent = user.username;
+                document.getElementById('email').textContent = user.email || '未设置';
+
+                const userTypeSpan = document.getElementById('userType');
+                if (user.isVirtual) {
+                    userTypeSpan.textContent = '虚拟用户';
+                    userTypeSpan.className = 'badge badge-warning';
+                } else {
+                    userTypeSpan.textContent = '正式会员';
+                    userTypeSpan.className = 'badge badge-success';
+                }
+            } else {
+                // 未登录，显示认证信息
+                document.getElementById('userInfo').style.display = 'none';
+                document.getElementById('authInfo').style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

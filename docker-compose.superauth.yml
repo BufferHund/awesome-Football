@@ -1,0 +1,49 @@
+# Docker Compose 配置 - 集成SuperAuth
+# 此配置用于将足球应用连接到SuperAuth统一认证平台
+#
+# 使用方法：
+# 1. 确保SuperAuth已启动：cd /path/to/SuperAuth && docker-compose up -d
+# 2. 创建共享网络（如果未创建）：docker network create superauth-network
+# 3. 启动足球应用：docker-compose -f docker-compose.superauth.yml up -d
+
+version: '3.8'
+
+services:
+  football-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: awesome-football-superauth
+    restart: unless-stopped
+    ports:
+      - "2000:2000"
+    volumes:
+      # 挂载数据目录，使数据库持久化
+      - football-data:/app/data
+      - ./football.db:/app/football.db
+    environment:
+      - NODE_ENV=production
+      - PORT=2000
+      # SuperAuth配置
+      - GATEWAY_URL=http://gateway:4000
+      - PORTAL_URL=http://localhost
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:2000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - superauth-network
+    depends_on:
+      - gateway
+      - redis
+
+# 使用SuperAuth的外部网络
+networks:
+  superauth-network:
+    external: true
+
+volumes:
+  football-data:
+    driver: local

@@ -16,6 +16,9 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=2000
+      # SuperAuth配置（如果已部署SuperAuth，请取消注释并配置）
+      - GATEWAY_URL=${GATEWAY_URL:-http://gateway:4000}
+      - PORTAL_URL=${PORTAL_URL:-http://localhost}
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:2000/health"]
       interval: 30s
@@ -32,3 +35,6 @@ volumes:
 networks:
   football-network:
     driver: bridge
+  # 如果需要连接到SuperAuth网络，取消下面的注释
+  # superauth-network:
+  #   external: true

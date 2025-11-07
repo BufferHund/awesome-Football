@@ -35,6 +35,9 @@ RUN npm ci --only=production
 # 从构建阶段复制编译后的代码
 COPY --from=builder /app/dist ./dist
 
+# 复制前端静态文件
+COPY public ./public
+
 # 创建数据目录用于存放数据库文件
 RUN mkdir -p /app/data
 

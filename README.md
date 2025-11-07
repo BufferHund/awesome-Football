@@ -13,10 +13,18 @@
 ✅ **SQLite数据库** - 轻量级本地数据库持久化
 
 ### 新增功能
+🔐 **统一身份认证** - 集成SuperAuth，支持双模式登录（内置表单/Portal SSO）
 🛍️ **商品系统** - 12件足球相关商品，支持分类查询
 🎲 **趣味猜球** - 虚拟金币投注系统，支持主胜/客胜/平局投注
 👥 **用户系统** - 用户管理、金币系统、投注统计
 🏆 **排行榜** - 根据用户金币数量排名
+
+### 认证特性
+✅ **双模式登录** - 内置表单登录（推荐）/ Portal统一登录（SSO）
+✅ **用户注册** - 支持两种注册方式
+✅ **Session管理** - 基于SuperAuth的分布式Session
+✅ **Token认证** - JWT Token安全认证
+✅ **受保护API** - 敏感操作需要真实用户登录
 
 ## 项目结构
 
@@ -28,6 +36,10 @@ awesome-Football/
 │   ├── database/        # 数据库相关
 │   │   ├── schema.ts    # 数据库表结构（6张表）
 │   │   └── db.ts        # 数据库操作（持久化逻辑）
+│   ├── auth/           # 认证模块 🆕
+│   │   ├── superAuthClient.ts  # SuperAuth客户端
+│   │   ├── middleware.ts       # 认证中间件
+│   │   └── authRoutes.ts       # 认证API路由
 │   ├── data/           # Mock数据
 │   │   ├── mockData.ts        # 球队、球员、比赛数据
 │   │   ├── productMockData.ts # 商品数据
@@ -42,8 +54,17 @@ awesome-Football/
 │   ├── scripts/        # 工具脚本
 │   │   └── initDatabase.ts  # 数据库初始化脚本
 │   └── index.ts        # 应用入口
+├── public/             # 前端静态文件 🆕
+│   ├── index.html      # 首页
+│   ├── login.html      # 登录页（双模式）
+│   ├── register.html   # 注册页（双模式）
+│   ├── styles.css      # 样式文件
+│   └── auth.js         # 认证工具库
 ├── package.json
 ├── tsconfig.json
+├── .env.example        # 环境变量示例 🆕
+├── docker-compose.superauth.yml  # SuperAuth集成配置 🆕
+├── SUPERAUTH_INTEGRATION.md      # 集成文档 🆕
 └── football.db         # SQLite数据库文件（运行后生成）
 ```
 
@@ -111,6 +132,110 @@ npm run dev
 1. 自动将Mock数据持久化到数据库（球队、球员、比赛、商品、用户）
 2. 运行爬虫获取额外数据并持久化
 3. 启动API服务器在 `http://localhost:2000`
+
+访问应用：
+- **主页**：http://localhost:2000/
+- **登录页**：http://localhost:2000/login.html
+- **注册页**：http://localhost:2000/register.html
+
+## 🔐 SuperAuth统一认证集成
+
+本应用已集成SuperAuth统一身份认证平台，支持双模式登录。
+
+### 认证模式对比
+
+| 特性 | 内置登录（推荐）| Portal统一登录（SSO） |
+|------|----------------|---------------------|
+| **用户体验** | ⭐⭐⭐⭐⭐ 快速便捷 | ⭐⭐⭐⭐ 需要跳转 |
+| **安全性** | ⭐⭐⭐⭐ 高 | ⭐⭐⭐⭐⭐ 最高 |
+| **适用场景** | 日常使用 | 企业环境、多应用 |
+| **登录流程** | 在本页面完成 | 跳转到Portal |
+| **SSO支持** | ✓ 支持 | ✓ 完整支持 |
+
+### 快速体验（独立运行）
+
+无需SuperAuth，应用可独立运行：
+
+```bash
+npm run dev
+
+# 访问 http://localhost:2000
+# 注意：认证功能将不可用（显示错误提示）
+```
+
+### 完整功能（集成SuperAuth）
+
+**前置条件**：已部署SuperAuth
+
+```bash
+# 1. 克隆并启动SuperAuth
+git clone https://github.com/BufferHund/SuperAuth.git
+cd SuperAuth
+./start-everything.sh
+
+# 2. 创建共享网络
+docker network create superauth-network
+
+# 3. 启动足球应用（集成模式）
+cd /path/to/awesome-Football
+docker-compose -f docker-compose.superauth.yml up -d
+
+# 4. 访问应用
+open http://localhost:2000
+```
+
+### 认证API
+
+#### 登录（Direct API）
+```bash
+POST /api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin123"
+}
+```
+
+#### 注册（Direct API）
+```bash
+POST /api/auth/register
+Content-Type: application/json
+
+{
+  "username": "newuser",
+  "email": "user@example.com",
+  "password": "password123"
+}
+```
+
+#### Portal登录（重定向模式）
+```bash
+GET /api/auth/portal-login?return=http://localhost:2000/
+```
+
+#### 获取当前用户
+```bash
+GET /api/auth/me
+```
+
+#### 登出
+```bash
+POST /api/auth/logout
+```
+
+### 受保护的API
+
+以下API端点需要认证：
+
+- 🔒 `POST /api/teams` - 创建球队（管理员）
+- 🔒 `POST /api/players` - 创建球员（管理员）
+- 🔒 `POST /api/matches` - 创建比赛（管理员）
+- 🔒 `POST /api/products` - 创建商品（管理员）
+- 🔒 `POST /api/bets` - 创建投注（需登录）
+- 🔒 `GET /api/bets/user/:userId` - 查看投注（需登录）
+
+📖 **详细集成文档**：[SUPERAUTH_INTEGRATION.md](./SUPERAUTH_INTEGRATION.md)
 
 ## 📡 API端点
 
