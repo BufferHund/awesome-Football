@@ -48,7 +48,7 @@ export interface User {
   id: number;
   username: string;
   email: string;
-  coins: number; // 虚拟金币（用于趣味赌球）
+  coins: number; // 虚拟金币（用于趣味猜球）
   createdAt?: string;
 }
 

@@ -1,6 +1,6 @@
 import { User } from '../models/types';
 
-// 用户Mock数据（用于趣味赌球功能）
+// 用户Mock数据（用于趣味猜球功能）
 export const mockUsers: Omit<User, 'id'>[] = [
   {
     username: '足球狂热者',
@@ -8,7 +8,7 @@ export const mockUsers: Omit<User, 'id'>[] = [
     coins: 1000
   },
   {
-    username: '赌球达人',
+    username: '猜球达人',
     email: 'betmaster@example.com',
     coins: 2500
   },

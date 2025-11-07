@@ -5,12 +5,12 @@ import { mockTeams, getMockPlayers, getMockMatches } from './data/mockData';
 import { mockProducts } from './data/productMockData';
 import { mockUsers } from './data/userMockData';
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 2000;
 
 async function main() {
   console.log('\n============================================');
   console.log('  ⚽ 足球应用演示 - 完整版');
-  console.log('  数据持久化 + 商品系统 + 趣味赌球');
+  console.log('  数据持久化 + 商品系统 + 趣味猜球');
   console.log('============================================\n');
 
   const db = Database.getInstance();
@@ -89,7 +89,7 @@ async function main() {
       console.log(`  POST http://localhost:${PORT}/api/users          - 创建新用户`);
       console.log(`  GET  http://localhost:${PORT}/api/users/:id/stats - 获取用户投注统计`);
 
-      console.log('\n🎲 趣味赌球:');
+      console.log('\n🎲 趣味猜球:');
       console.log(`  POST http://localhost:${PORT}/api/bets           - 创建投注（持久化）`);
       console.log(`  GET  http://localhost:${PORT}/api/bets/user/:userId - 获取用户投注`);
       console.log(`  GET  http://localhost:${PORT}/api/leaderboard    - 获取金币排行榜`);
@@ -101,7 +101,7 @@ async function main() {
       console.log('  ✓ 爬虫数据已持久化到数据库');
       console.log('  ✓ API创建的数据会持久化到数据库');
       console.log('  ✓ 商品系统（12件商品）');
-      console.log('  ✓ 趣味赌球系统（虚拟金币）');
+      console.log('  ✓ 趣味猜球系统（虚拟金币）');
       console.log('  ✓ 用户系统（5个测试用户）');
       console.log('============================================\n');
     });

@@ -1,6 +1,6 @@
 # awesome-Football ⚽
 
-一个功能完整的足球应用演示，包含数据持久化、商品系统和趣味赌球功能。
+一个功能完整的足球应用演示，包含数据持久化、商品系统和趣味猜球功能。
 
 ## 🎯 功能特性
 
@@ -14,7 +14,7 @@
 
 ### 新增功能
 🛍️ **商品系统** - 12件足球相关商品，支持分类查询
-🎲 **趣味赌球** - 虚拟金币投注系统，支持主胜/客胜/平局投注
+🎲 **趣味猜球** - 虚拟金币投注系统，支持主胜/客胜/平局投注
 👥 **用户系统** - 用户管理、金币系统、投注统计
 🏆 **排行榜** - 根据用户金币数量排名
 
@@ -33,7 +33,7 @@ awesome-Football/
 │   │   ├── productMockData.ts # 商品数据
 │   │   └── userMockData.ts    # 用户数据
 │   ├── services/       # 业务逻辑
-│   │   └── bettingService.ts  # 赌球服务（投注、结算）
+│   │   └── bettingService.ts  # 猜球服务（投注、结算）
 │   ├── crawler/        # 爬虫模块
 │   │   └── footballCrawler.ts  # 爬虫逻辑（含持久化）
 │   ├── api/            # API模块
@@ -72,7 +72,7 @@ npm run dev
 应用将会：
 1. 自动将Mock数据持久化到数据库（球队、球员、比赛、商品、用户）
 2. 运行爬虫获取额外数据并持久化
-3. 启动API服务器在 `http://localhost:3000`
+3. 启动API服务器在 `http://localhost:2000`
 
 ## 📡 API端点
 
@@ -109,7 +109,7 @@ npm run dev
 - `GET /api/users/:id/stats` - 获取用户投注统计
 - `POST /api/users` - 创建新用户
 
-### 🎲 赌球相关
+### 🎲 猜球相关
 
 - `POST /api/bets` - 创建投注（持久化到数据库）
 - `GET /api/bets/user/:userId` - 获取用户的所有投注
@@ -154,7 +154,7 @@ await crawler.crawlAndSaveMatches();    // 保存比赛到数据库
 
 ```bash
 # 创建新球队（会持久化到数据库）
-curl -X POST http://localhost:3000/api/teams \
+curl -X POST http://localhost:2000/api/teams \
   -H "Content-Type: application/json" \
   -d '{
     "name": "切尔西",
@@ -170,33 +170,33 @@ curl -X POST http://localhost:3000/api/teams \
 
 ```bash
 # 获取所有球队
-curl http://localhost:3000/api/teams
+curl http://localhost:2000/api/teams
 
 # 获取球队的球员
-curl http://localhost:3000/api/players/team/1
+curl http://localhost:2000/api/players/team/1
 ```
 
 ### 2. 查询商品
 
 ```bash
 # 获取所有商品
-curl http://localhost:3000/api/products
+curl http://localhost:2000/api/products
 
 # 根据分类查询商品
-curl http://localhost:3000/api/products/category/球衣
+curl http://localhost:2000/api/products/category/球衣
 ```
 
-### 3. 趣味赌球 - 完整流程
+### 3. 趣味猜球 - 完整流程
 
 ```bash
 # 步骤1: 获取所有用户
-curl http://localhost:3000/api/users
+curl http://localhost:2000/api/users
 
 # 步骤2: 获取即将开始的比赛
-curl http://localhost:3000/api/matches
+curl http://localhost:2000/api/matches
 
 # 步骤3: 用户1对比赛3投注（主队胜，投注100金币）
-curl -X POST http://localhost:3000/api/bets \
+curl -X POST http://localhost:2000/api/bets \
   -H "Content-Type: application/json" \
   -d '{
     "userId": 1,
@@ -206,10 +206,10 @@ curl -X POST http://localhost:3000/api/bets \
   }'
 
 # 步骤4: 查看用户的投注记录
-curl http://localhost:3000/api/bets/user/1
+curl http://localhost:2000/api/bets/user/1
 
 # 步骤5: 更新比赛结果（管理员操作，自动结算投注）
-curl -X PUT http://localhost:3000/api/matches/3/result \
+curl -X PUT http://localhost:2000/api/matches/3/result \
   -H "Content-Type: application/json" \
   -d '{
     "homeScore": 2,
@@ -218,17 +218,17 @@ curl -X PUT http://localhost:3000/api/matches/3/result \
   }'
 
 # 步骤6: 查看用户投注统计
-curl http://localhost:3000/api/users/1/stats
+curl http://localhost:2000/api/users/1/stats
 
 # 步骤7: 查看金币排行榜
-curl http://localhost:3000/api/leaderboard
+curl http://localhost:2000/api/leaderboard
 ```
 
 ### 4. 创建新数据
 
 ```bash
 # 创建新球员
-curl -X POST http://localhost:3000/api/players \
+curl -X POST http://localhost:2000/api/players \
   -H "Content-Type: application/json" \
   -d '{
     "name": "哈兰德",
@@ -239,7 +239,7 @@ curl -X POST http://localhost:3000/api/players \
   }'
 
 # 创建新商品
-curl -X POST http://localhost:3000/api/products \
+curl -X POST http://localhost:2000/api/products \
   -H "Content-Type: application/json" \
   -d '{
     "name": "足球袜子",
@@ -276,8 +276,8 @@ npm run init-db  # 初始化数据库
 - Mock数据会在应用启动时自动保存到数据库
 - 爬虫模块目前使用模拟数据，可以替换为真实的API调用
 
-### 趣味赌球系统
-- ⚠️ **纯娱乐性质** - 这是一个趣味赌球系统，使用虚拟金币，不涉及真实货币
+### 趣味猜球系统
+- ⚠️ **纯娱乐性质** - 这是一个趣味猜球系统，使用虚拟金币，不涉及真实货币
 - 每个新用户默认获得 1000 虚拟金币
 - 只能对状态为 `upcoming`（即将开始）的比赛进行投注
 - 投注类型：`home`（主队胜）、`away`（客队胜）、`draw`（平局）

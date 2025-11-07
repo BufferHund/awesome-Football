@@ -1,7 +1,7 @@
 import Database from '../database/db';
 import { Bet, Match, User } from '../models/types';
 
-// 趣味赌球服务类
+// 趣味猜球服务类
 // 注意：这是纯娱乐性质的虚拟投注系统，不涉及真实货币
 class BettingService {
   private db: Database;
