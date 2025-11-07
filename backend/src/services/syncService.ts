@@ -420,3 +420,29 @@ export function startSyncScheduler() {
 
   logService.success('Scheduler', '所有定时任务已设置');
 }
+
+/**
+ * 一次性启动同步 - 仅在应用启动时执行一次
+ * 用于在不启动定时任务的情况下获取初始数据
+ */
+export async function performInitialSync(): Promise<void> {
+  logService.info('InitialSync', '开始执行一次性数据同步...');
+
+  try {
+    // 并行执行所有同步任务以加快速度
+    await Promise.allSettled([
+      syncService.syncTodayMatches(),
+      syncService.syncLiveMatches(),
+      syncService.syncNews(),
+      // 同步主要联赛积分榜
+      syncService.syncStandings(LEAGUES.PREMIER_LEAGUE, '英超'),
+      syncService.syncStandings(LEAGUES.LA_LIGA, '西甲'),
+    ]);
+
+    logService.success('InitialSync', '一次性数据同步完成');
+  } catch (error) {
+    logService.error('InitialSync', '一次性数据同步失败', error);
+    // 不抛出错误，让应用继续启动
+  }
+}
+

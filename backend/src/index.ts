@@ -14,7 +14,7 @@ import logRoutes from './routes/logs';
 import forumRoutes from './routes/forum.routes';
 import authRoutes from './routes/auth.routes';
 
-import { startSyncScheduler } from './services/syncService';
+import { startSyncScheduler, performInitialSync } from './services/syncService';
 import { logService } from './services/logService';
 import { initService } from './services/initService';
 import { prisma } from './prisma';
@@ -91,15 +91,22 @@ async function startServer() {
       logService.success('Server', `服务器启动成功，端口: ${port}`);
       logService.info('Server', `运行环境: ${process.env.NODE_ENV || 'development'}`);
 
-      // 3. 启动自动数据同步（延迟5秒，确保数据库就绪）
+      // 3. 数据同步策略
       if (process.env.ENABLE_AUTO_SYNC === 'true') {
+        // 启用定时自动同步（会频繁调用API）
         setTimeout(() => {
           console.log('🔄 Starting auto sync scheduler...');
           logService.info('Scheduler', '自动同步调度器已启动');
           startSyncScheduler();
         }, 5000);
       } else {
-        logService.info('Scheduler', '自动同步已禁用，使用手动同步');
+        // 仅执行一次性启动同步，不启动定时任务
+        setTimeout(async () => {
+          console.log('🔄 Performing initial data sync...');
+          logService.info('InitialSync', '执行一次性启动同步（不启动定时任务）');
+          await performInitialSync();
+          console.log('✅ Initial sync completed');
+        }, 5000);
       }
     });
   } catch (error) {
