@@ -1,6 +1,6 @@
 import express from 'express';
 import { prisma } from '../prisma';
-import { authMiddleware, requireEmailVerification } from '../middleware/authMiddleware';
+import { authenticate, requireEmailVerification } from '../middleware/authMiddleware';
 import { logService } from '../services/logService';
 
 const router = express.Router();
@@ -8,10 +8,10 @@ const router = express.Router();
 /**
  * 创建预测 - 需要登录和邮箱验证
  */
-router.post('/', authMiddleware, requireEmailVerification, async (req, res) => {
+router.post('/', authenticate, requireEmailVerification, async (req, res) => {
   try {
     const { matchId, predictedHomeScore, predictedAwayScore, predictedWinner } = req.body;
-    const userId = (req as any).user.id;
+    const userId = (req as any).user.userId;
 
     // 验证必填字段
     if (!matchId || predictedHomeScore == null || predictedAwayScore == null || !predictedWinner) {
@@ -77,9 +77,9 @@ router.post('/', authMiddleware, requireEmailVerification, async (req, res) => {
 /**
  * 获取我的预测列表
  */
-router.get('/my', authMiddleware, async (req, res) => {
+router.get('/my', authenticate, async (req, res) => {
   try {
-    const userId = (req as any).user.id;
+    const userId = (req as any).user.userId;
     const { status } = req.query; // SCHEDULED, FINISHED
 
     const where: any = { userId };
@@ -178,9 +178,9 @@ router.get('/leaderboard', async (req, res) => {
 /**
  * 获取用户的排行榜排名
  */
-router.get('/my-rank', authMiddleware, async (req, res) => {
+router.get('/my-rank', authenticate, async (req, res) => {
   try {
-    const userId = (req as any).user.id;
+    const userId = (req as any).user.userId;
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
