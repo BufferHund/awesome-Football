@@ -27,12 +27,12 @@ services:
     container_name: football-backend
     environment:
       DATABASE_URL: postgresql://football:football123@postgres:5432/footballdb?schema=public
-      PORT: 3000
+      PORT: 1999
       NODE_ENV: development
       FOOTBALL_API_KEY: 12e8a5698563f70a78726d993d1ff15c
       ENABLE_AUTO_SYNC: false
     ports:
-      - "3000:3000"
+      - "1999:1999"
     depends_on:
       postgres:
         condition: service_healthy
@@ -49,7 +49,7 @@ services:
       dockerfile: Dockerfile
     container_name: football-frontend
     ports:
-      - "5173:5173"
+      - "2000:2000"
     depends_on:
       - backend
     volumes:

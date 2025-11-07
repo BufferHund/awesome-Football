@@ -29,7 +29,7 @@ COPY .env* ./
 COPY start.sh ./
 
 # 暴露端口
-EXPOSE 3000
+EXPOSE 1999
 
 # 使用改进的启动脚本（包含数据库连接重试和更好的错误处理）
 CMD ["sh", "start.sh"]

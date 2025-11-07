@@ -12,7 +12,7 @@ RUN npm install
 COPY . .
 
 # 暴露端口
-EXPOSE 5173
+EXPOSE 2000
 
 # 启动开发服务器
 CMD ["npm", "run", "dev"]

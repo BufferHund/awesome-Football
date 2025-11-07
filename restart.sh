@@ -40,11 +40,11 @@ echo ""
 echo "7️⃣  测试API连接..."
 echo ""
 echo "测试 /api/health:"
-curl -s http://localhost:3000/api/health || echo "❌ 后端未响应"
+curl -s http://localhost:1999/api/health || echo "❌ 后端未响应"
 echo ""
 
 echo "测试 /api/teams:"
-curl -s http://localhost:3000/api/teams | head -c 200
+curl -s http://localhost:1999/api/teams | head -c 200
 echo ""
 
 echo ""
@@ -59,6 +59,6 @@ echo "查看数据库："
 echo "  docker exec -it football-backend npx prisma studio"
 echo ""
 echo "访问应用："
-echo "  前端: http://localhost:5173"
-echo "  后端: http://localhost:3000"
+echo "  前端: http://localhost:2000"
+echo "  后端: http://localhost:1999"
 echo ""
