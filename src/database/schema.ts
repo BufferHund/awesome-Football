@@ -32,9 +32,46 @@ export const createTablesSQL = `
     awayScore INTEGER DEFAULT 0,
     matchDate TEXT NOT NULL,
     competition TEXT,
+    status TEXT DEFAULT 'upcoming',
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (homeTeamId) REFERENCES teams(id),
     FOREIGN KEY (awayTeamId) REFERENCES teams(id)
+  );
+
+  -- 商品表
+  CREATE TABLE IF NOT EXISTS products (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    description TEXT,
+    price REAL NOT NULL,
+    category TEXT NOT NULL,
+    imageUrl TEXT,
+    stock INTEGER DEFAULT 0,
+    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
+
+  -- 用户表
+  CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL UNIQUE,
+    email TEXT NOT NULL UNIQUE,
+    coins INTEGER DEFAULT 1000,
+    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
+
+  -- 投注表
+  CREATE TABLE IF NOT EXISTS bets (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    userId INTEGER NOT NULL,
+    matchId INTEGER NOT NULL,
+    betType TEXT NOT NULL,
+    amount REAL NOT NULL,
+    odds REAL NOT NULL,
+    status TEXT DEFAULT 'pending',
+    potentialWin REAL NOT NULL,
+    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (userId) REFERENCES users(id),
+    FOREIGN KEY (matchId) REFERENCES matches(id)
   );
 
   -- 创建索引以提升查询性能
@@ -42,4 +79,9 @@ export const createTablesSQL = `
   CREATE INDEX IF NOT EXISTS idx_matches_homeTeamId ON matches(homeTeamId);
   CREATE INDEX IF NOT EXISTS idx_matches_awayTeamId ON matches(awayTeamId);
   CREATE INDEX IF NOT EXISTS idx_matches_date ON matches(matchDate);
+  CREATE INDEX IF NOT EXISTS idx_matches_status ON matches(status);
+  CREATE INDEX IF NOT EXISTS idx_bets_userId ON bets(userId);
+  CREATE INDEX IF NOT EXISTS idx_bets_matchId ON bets(matchId);
+  CREATE INDEX IF NOT EXISTS idx_bets_status ON bets(status);
+  CREATE INDEX IF NOT EXISTS idx_products_category ON products(category);
 `;

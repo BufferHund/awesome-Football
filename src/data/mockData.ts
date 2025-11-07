@@ -135,7 +135,8 @@ export const getMockMatches = (teamIds: number[]): Omit<Match, 'id'>[] => [
     homeScore: 2,
     awayScore: 1,
     matchDate: '2024-11-01',
-    competition: '西甲联赛'
+    competition: '西甲联赛',
+    status: 'finished' // 已结束的比赛
   },
   {
     homeTeamId: teamIds[1],
@@ -143,30 +144,34 @@ export const getMockMatches = (teamIds: number[]): Omit<Match, 'id'>[] => [
     homeScore: 1,
     awayScore: 3,
     matchDate: '2024-10-15',
-    competition: '西甲联赛'
+    competition: '西甲联赛',
+    status: 'finished' // 已结束的比赛
   },
   {
     homeTeamId: teamIds[2],
     awayTeamId: teamIds[3],
-    homeScore: 1,
-    awayScore: 1,
-    matchDate: '2024-10-20',
-    competition: '欧冠联赛'
+    homeScore: 0,
+    awayScore: 0,
+    matchDate: '2025-11-20',
+    competition: '欧冠联赛',
+    status: 'upcoming' // 即将开始的比赛（可以投注）
   },
   {
     homeTeamId: teamIds[3],
     awayTeamId: teamIds[4],
-    homeScore: 3,
+    homeScore: 0,
     awayScore: 0,
-    matchDate: '2024-10-25',
-    competition: '欧冠联赛'
+    matchDate: '2025-11-25',
+    competition: '欧冠联赛',
+    status: 'upcoming' // 即将开始的比赛（可以投注）
   },
   {
     homeTeamId: teamIds[4],
     awayTeamId: teamIds[2],
-    homeScore: 2,
-    awayScore: 2,
-    matchDate: '2024-11-05',
-    competition: '友谊赛'
+    homeScore: 0,
+    awayScore: 0,
+    matchDate: '2025-12-05',
+    competition: '友谊赛',
+    status: 'upcoming' // 即将开始的比赛（可以投注）
   }
 ];
