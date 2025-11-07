@@ -63,13 +63,14 @@ export class InitService {
 
     try {
       // 检查各表的数据
-      const [teamCount, matchCount, newsCount] = await Promise.all([
+      const [teamCount, matchCount, newsCount, productCount] = await Promise.all([
         prisma.team.count(),
         prisma.match.count(),
         prisma.news.count(),
+        prisma.product.count(),
       ]);
 
-      logService.info('InitService', `当前数据量 - Teams: ${teamCount}, Matches: ${matchCount}, News: ${newsCount}`);
+      logService.info('InitService', `当前数据量 - Teams: ${teamCount}, Matches: ${matchCount}, News: ${newsCount}, Products: ${productCount}`);
 
       // 如果数据为空，填充种子数据
       if (teamCount === 0) {
@@ -82,6 +83,10 @@ export class InitService {
 
       if (newsCount === 0) {
         await this.seedNews();
+      }
+
+      if (productCount === 0) {
+        await this.seedProducts();
       }
 
       logService.success('InitService', '种子数据检查完成');
@@ -246,6 +251,151 @@ export class InitService {
     }
 
     logService.success('InitService', `填充了 ${news.length} 条新闻`);
+  }
+
+  /**
+   * 填充商品种子数据
+   */
+  private async seedProducts(): Promise<void> {
+    logService.info('InitService', '填充商品种子数据...');
+
+    const products = [
+      // 会员套餐
+      {
+        name: '基础会员月卡',
+        description: '解锁基础功能，移除广告，享受高清直播',
+        price: 19.9,
+        originalPrice: 29.9,
+        discount: 33,
+        image: 'https://images.unsplash.com/photo-1614632537197-38a17061c2bd?w=400',
+        category: 'MEMBERSHIP',
+        membershipType: 'BASIC',
+        membershipDuration: 30,
+        stock: 999,
+        isFeatured: true,
+        isAvailable: true,
+      },
+      {
+        name: '专业会员季卡',
+        description: '包含基础功能，额外赠送数据分析工具，独家战术解读',
+        price: 49.9,
+        originalPrice: 89.7,
+        discount: 44,
+        image: 'https://images.unsplash.com/photo-1522778526097-ce0a22ceb253?w=400',
+        category: 'MEMBERSHIP',
+        membershipType: 'PRO',
+        membershipDuration: 90,
+        stock: 999,
+        isFeatured: true,
+        isAvailable: true,
+      },
+      {
+        name: '终极会员年卡',
+        description: '所有功能解锁，赛事预测工具，专家一对一咨询，优先客服',
+        price: 168,
+        originalPrice: 358.8,
+        discount: 53,
+        image: 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=400',
+        category: 'MEMBERSHIP',
+        membershipType: 'ULTIMATE',
+        membershipDuration: 365,
+        stock: 999,
+        isFeatured: true,
+        isAvailable: true,
+      },
+      // 球衣周边
+      {
+        name: '曼联主场球衣 23/24',
+        description: '官方正版授权，透气速干面料，刺绣队徽',
+        price: 299,
+        originalPrice: 399,
+        discount: 25,
+        image: 'https://images.unsplash.com/photo-1516478379841-42fa66925778?w=400',
+        category: 'JERSEY',
+        stock: 50,
+        isFeatured: false,
+        isAvailable: true,
+      },
+      {
+        name: '皇马客场球衣 23/24',
+        description: '经典黑金配色，Adidas正品，球迷版',
+        price: 329,
+        originalPrice: 429,
+        discount: 23,
+        image: 'https://images.unsplash.com/photo-1551076805-e1869033e561?w=400',
+        category: 'JERSEY',
+        stock: 35,
+        isFeatured: false,
+        isAvailable: true,
+      },
+      {
+        name: '巴萨经典复古球衣',
+        description: '90年代经典设计，限量发售，收藏必备',
+        price: 259,
+        originalPrice: 359,
+        discount: 28,
+        image: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=400',
+        category: 'JERSEY',
+        stock: 20,
+        isFeatured: true,
+        isAvailable: true,
+      },
+      // 球迷周边
+      {
+        name: '足球战术板套装',
+        description: '专业教练战术板，可擦写，附带战术笔和磁力棋子',
+        price: 89,
+        originalPrice: 129,
+        discount: 31,
+        image: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=400',
+        category: 'MERCHANDISE',
+        stock: 100,
+        isFeatured: false,
+        isAvailable: true,
+      },
+      {
+        name: '签名足球收藏版',
+        description: '印有球星签名图案，FIFA认证用球，赠送展示盒',
+        price: 199,
+        originalPrice: 299,
+        discount: 33,
+        image: 'https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?w=400',
+        category: 'MERCHANDISE',
+        stock: 45,
+        isFeatured: true,
+        isAvailable: true,
+      },
+      {
+        name: '球迷围巾套装',
+        description: '多支球队可选，双面设计，官方授权',
+        price: 79,
+        originalPrice: 99,
+        discount: 20,
+        image: 'https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?w=400',
+        category: 'MERCHANDISE',
+        stock: 150,
+        isFeatured: false,
+        isAvailable: true,
+      },
+      {
+        name: '限量版球队徽章礼盒',
+        description: '五大联赛球队徽章收藏礼盒，精美包装，送礼佳品',
+        price: 129,
+        originalPrice: 169,
+        discount: 24,
+        image: 'https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=400',
+        category: 'MERCHANDISE',
+        stock: 60,
+        isFeatured: false,
+        isAvailable: true,
+      },
+    ];
+
+    for (const product of products) {
+      await prisma.product.create({ data: product });
+    }
+
+    logService.success('InitService', `填充了 ${products.length} 个商品`);
   }
 }
 

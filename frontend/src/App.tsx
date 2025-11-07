@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ErrorBoundary from './components/ErrorBoundary';
 import { AuthProvider } from './contexts/AuthContext';
+import { ToastProvider } from './contexts/ToastContext';
 import Layout from './components/Layout';
 import HomePage from './pages/HomePage';
 import MatchesPage from './pages/MatchesPage';
@@ -22,34 +23,36 @@ import ProfilePage from './pages/ProfilePage';
 function App() {
   return (
     <ErrorBoundary>
-      <AuthProvider>
-        <Router>
-          <Routes>
-            <Route path="/" element={<Layout />}>
-              <Route index element={<HomePage />} />
-              <Route path="matches" element={<MatchesPage />} />
-              <Route path="matches/:id" element={<MatchDetailPage />} />
-              <Route path="standings" element={<StandingsPage />} />
-              <Route path="teams" element={<TeamsPage />} />
-              <Route path="teams/:id" element={<TeamDetailPage />} />
-              <Route path="news" element={<NewsPage />} />
-              <Route path="news/:id" element={<NewsDetailPage />} />
-              <Route path="forum" element={<ForumPage />} />
-              <Route path="forum/:id" element={<ForumPostPage />} />
-              <Route path="shop" element={<ShopPage />} />
-              <Route path="profile" element={<ProfilePage />} />
-            </Route>
-            {/* 登录页面 - 独立路由 */}
-            <Route path="/login" element={<LoginPage />} />
-            {/* 隐藏的设置页面 - 独立路由 */}
-            <Route path="/secret-settings-panel" element={<SettingsPage />} />
-            {/* API文档和调试页面 */}
-            <Route path="/api-docs" element={<ApiDocsPage />} />
-            {/* 会员购买页面 */}
-            <Route path="/membership" element={<MembershipPage />} />
-          </Routes>
-        </Router>
-      </AuthProvider>
+      <ToastProvider>
+        <AuthProvider>
+          <Router>
+            <Routes>
+              <Route path="/" element={<Layout />}>
+                <Route index element={<HomePage />} />
+                <Route path="matches" element={<MatchesPage />} />
+                <Route path="matches/:id" element={<MatchDetailPage />} />
+                <Route path="standings" element={<StandingsPage />} />
+                <Route path="teams" element={<TeamsPage />} />
+                <Route path="teams/:id" element={<TeamDetailPage />} />
+                <Route path="news" element={<NewsPage />} />
+                <Route path="news/:id" element={<NewsDetailPage />} />
+                <Route path="forum" element={<ForumPage />} />
+                <Route path="forum/:id" element={<ForumPostPage />} />
+                <Route path="shop" element={<ShopPage />} />
+                <Route path="profile" element={<ProfilePage />} />
+              </Route>
+              {/* 登录页面 - 独立路由 */}
+              <Route path="/login" element={<LoginPage />} />
+              {/* 隐藏的设置页面 - 独立路由 */}
+              <Route path="/secret-settings-panel" element={<SettingsPage />} />
+              {/* API文档和调试页面 */}
+              <Route path="/api-docs" element={<ApiDocsPage />} />
+              {/* 会员购买页面 */}
+              <Route path="/membership" element={<MembershipPage />} />
+            </Routes>
+          </Router>
+        </AuthProvider>
+      </ToastProvider>
     </ErrorBoundary>
   );
 }

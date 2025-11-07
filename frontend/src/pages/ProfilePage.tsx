@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useToast } from '../contexts/ToastContext';
 import { authServiceClient } from '../services/authService';
 import {
   User as UserIcon,
@@ -19,6 +20,7 @@ import {
 const ProfilePage = () => {
   const navigate = useNavigate();
   const { user, logout, isAuthenticated, refreshUser } = useAuth();
+  const { showToast, showConfirm } = useToast();
   const [loading, setLoading] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deletePassword, setDeletePassword] = useState('');
@@ -41,7 +43,7 @@ const ProfilePage = () => {
       setVerificationToken(token);
       setShowVerificationInfo(true);
     } catch (error: any) {
-      alert(error.message || '发送验证邮件失败');
+      showToast(error.message || '发送验证邮件失败', 'error');
     } finally {
       setLoading(false);
     }
@@ -50,7 +52,7 @@ const ProfilePage = () => {
   const handleCopyVerificationLink = () => {
     const verificationUrl = `${window.location.origin}/api/auth/verify-email/${verificationToken}`;
     navigator.clipboard.writeText(verificationUrl);
-    alert('验证链接已复制到剪贴板');
+    showToast('验证链接已复制到剪贴板', 'success');
   };
 
   const handleLogout = async () => {
@@ -59,7 +61,7 @@ const ProfilePage = () => {
       await logout();
       navigate('/');
     } catch (error: any) {
-      alert(error.message || '注销失败');
+      showToast(error.message || '注销失败', 'error');
     } finally {
       setLoading(false);
     }
@@ -74,14 +76,15 @@ const ProfilePage = () => {
       return;
     }
 
-    if (!confirm('确定要删除账户吗？此操作不可撤销！')) {
+    const confirmed = await showConfirm('确定要删除账户吗？此操作不可撤销！');
+    if (!confirmed) {
       return;
     }
 
     setLoading(true);
     try {
       await authServiceClient.deleteAccount(deletePassword);
-      alert('账户已成功删除');
+      showToast('账户已成功删除', 'success');
       navigate('/');
     } catch (error: any) {
       setDeleteError(error.message || '删除账户失败');
