@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Match } from '../types';
 import { matchService } from '../services/api';
 import { MapPin, Calendar, Trophy } from 'lucide-react';
+import PredictionForm from '../components/PredictionForm';
 
 const MatchDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -141,6 +142,9 @@ const MatchDetailPage = () => {
           </div>
         </div>
       )}
+
+      {/* 趣味猜球 */}
+      <PredictionForm match={match} />
     </div>
   );
 };

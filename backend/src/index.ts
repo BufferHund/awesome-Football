@@ -13,6 +13,7 @@ import syncRoutes from './routes/sync';
 import logRoutes from './routes/logs';
 import forumRoutes from './routes/forum.routes';
 import authRoutes from './routes/auth.routes';
+import predictionRoutes from './routes/prediction.routes';
 
 import { startSyncScheduler, performInitialSync } from './services/syncService';
 import { logService } from './services/logService';
@@ -50,6 +51,7 @@ app.use('/api/news', newsRoutes);
 app.use('/api/sync', syncRoutes);
 app.use('/api/logs', logRoutes);
 app.use('/api/forum', forumRoutes);
+app.use('/api/predictions', predictionRoutes);
 
 // 根路径
 app.get('/', (req, res) => {

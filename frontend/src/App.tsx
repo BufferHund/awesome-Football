@@ -19,6 +19,7 @@ import MembershipPage from './pages/MembershipPage';
 import ShopPage from './pages/ShopPage';
 import LoginPage from './pages/LoginPage';
 import ProfilePage from './pages/ProfilePage';
+import LeaderboardPage from './pages/LeaderboardPage';
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
                 <Route path="forum/:id" element={<ForumPostPage />} />
                 <Route path="shop" element={<ShopPage />} />
                 <Route path="profile" element={<ProfilePage />} />
+                <Route path="leaderboard" element={<LeaderboardPage />} />
               </Route>
               {/* 登录页面 - 独立路由 */}
               <Route path="/login" element={<LoginPage />} />
