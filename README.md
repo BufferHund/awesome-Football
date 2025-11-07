@@ -49,13 +49,51 @@ awesome-Football/
 
 ## 快速开始
 
-### 1. 安装依赖
+### 方式一：使用 Docker（推荐）
+
+**使用 Docker Compose（最简单）：**
+
+```bash
+# 构建并启动容器
+docker-compose up -d
+
+# 查看日志
+docker-compose logs -f
+
+# 停止容器
+docker-compose down
+```
+
+**或使用 Docker 命令：**
+
+```bash
+# 构建镜像
+docker build -t awesome-football .
+
+# 运行容器
+docker run -d \
+  --name awesome-football \
+  -p 2000:2000 \
+  -v $(pwd)/football.db:/app/football.db \
+  awesome-football
+
+# 查看日志
+docker logs -f awesome-football
+
+# 停止容器
+docker stop awesome-football
+docker rm awesome-football
+```
+
+### 方式二：本地运行
+
+**1. 安装依赖**
 
 ```bash
 npm install
 ```
 
-### 2. 初始化数据库（可选）
+**2. 初始化数据库（可选）**
 
 使用Mock数据初始化数据库：
 
@@ -63,7 +101,7 @@ npm install
 npm run init-db
 ```
 
-### 3. 启动应用
+**3. 启动应用**
 
 ```bash
 npm run dev
@@ -261,11 +299,32 @@ curl -X POST http://localhost:2000/api/products \
 
 ## 开发命令
 
+### 本地开发
+
 ```bash
 npm run dev      # 开发模式运行
 npm run build    # 编译TypeScript
 npm start        # 生产模式运行
 npm run init-db  # 初始化数据库
+```
+
+### Docker 命令
+
+```bash
+# 使用 Docker Compose
+docker-compose up -d           # 启动容器（后台运行）
+docker-compose up              # 启动容器（查看日志）
+docker-compose down            # 停止并删除容器
+docker-compose logs -f         # 查看实时日志
+docker-compose restart         # 重启容器
+docker-compose ps              # 查看容器状态
+
+# 使用 Docker
+docker build -t awesome-football .                    # 构建镜像
+docker run -p 2000:2000 awesome-football              # 运行容器
+docker ps                                             # 查看运行中的容器
+docker logs -f awesome-football                       # 查看容器日志
+docker exec -it awesome-football sh                   # 进入容器
 ```
 
 ## ⚠️ 重要说明
@@ -289,6 +348,50 @@ npm run init-db  # 初始化数据库
 - 12件足球相关商品（球衣、装备、训练器材、周边）
 - 支持按分类查询：球衣、装备、训练器材、周边
 - 商品数据会持久化到数据库
+
+## 🐳 Docker 部署说明
+
+### 镜像特性
+
+- ✅ **多阶段构建** - 优化镜像大小
+- ✅ **Alpine Linux** - 轻量级基础镜像
+- ✅ **非root用户** - 增强安全性
+- ✅ **健康检查** - 自动监控应用状态
+- ✅ **数据持久化** - 通过 Volume 保存数据库文件
+
+### 环境变量
+
+可以通过环境变量配置应用：
+
+```bash
+# 在 docker-compose.yml 中设置
+environment:
+  - NODE_ENV=production
+  - PORT=2000
+```
+
+或在 docker run 命令中：
+
+```bash
+docker run -e PORT=2000 -e NODE_ENV=production -p 2000:2000 awesome-football
+```
+
+### 数据持久化
+
+数据库文件会保存在容器外部，确保数据不会丢失：
+
+- Docker Compose: 使用 named volume `football-data`
+- Docker 命令: 使用 `-v` 参数挂载本地目录
+
+### 健康检查
+
+应用包含健康检查端点 `/health`，Docker 会自动监控：
+
+```bash
+# 检查容器健康状态
+docker ps
+# STATUS 列会显示 "healthy" 或 "unhealthy"
+```
 
 ## License
 

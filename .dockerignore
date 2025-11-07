@@ -1,0 +1,48 @@
+# Node.js
+node_modules
+npm-debug.log
+yarn-error.log
+
+# 编译输出
+dist
+
+# 数据库文件
+*.db
+*.db-journal
+
+# 环境变量
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose.yml
+
+# 文档
+README.md
+*.md
+
+# 测试
+coverage
+.nyc_output
+
+# 日志
+logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
